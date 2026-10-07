@@ -135,6 +135,29 @@ header{position:sticky;top:0;z-index:30;backdrop-filter:blur(14px);background:co
 .noresult{text-align:center;color:var(--muted);font-size:14px;padding:50px 20px;font-weight:600}
 .shopbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
 .shopbar .pills{margin:0}
+/* 한국/외국 분리 탭 */
+.geotabs{display:flex;gap:8px;margin-bottom:16px}
+.geotab{flex:1;max-width:160px;background:var(--card);border:1.5px solid var(--line);color:var(--muted);border-radius:14px;padding:12px;font-size:14px;font-weight:800;transition:.16s}
+.geotab:hover{border-color:var(--violet);color:var(--violet)}
+.geotab.active{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 18px #7b5cff38}
+/* 인기 섹션 */
+.hotsec{margin:4px 0 24px}
+/* 리스트형 상품 */
+.listhead{font-size:15px;font-weight:900;margin:8px 2px 12px;letter-spacing:-.4px}
+.rows{display:flex;flex-direction:column;gap:9px}
+.prow{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px 16px;box-shadow:var(--shadow-sm);cursor:pointer;transition:.14s}
+.prow:hover{border-color:var(--violet);box-shadow:var(--shadow);transform:translateX(2px)}
+.prow-ic{width:42px;height:42px;border-radius:12px;color:#fff;display:grid;place-items:center;font-size:18px;font-weight:900;flex-shrink:0;box-shadow:var(--shadow-sm)}
+.prow-main{flex:1;min-width:0}
+.prow-name{font-size:14px;font-weight:800;display:flex;align-items:center;gap:7px}
+.prow-name .kr{font-size:10px;font-weight:800;color:#fff;background:linear-gradient(120deg,#ff4f81,#7b5cff);padding:2px 7px;border-radius:20px}
+.prow-sub{font-size:11px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prow-price{text-align:right;flex-shrink:0}
+.prow-price .big{font:900 17px 'Space Grotesk',sans-serif;color:var(--ink);letter-spacing:-.5px}
+.prow-price .per{font-size:10px;color:var(--muted);font-weight:600;margin-top:1px}
+.prow-buy{background:var(--grad-soft);color:var(--violet);border-radius:11px;padding:10px 15px;font-size:12px;font-weight:900;flex-shrink:0;transition:.14s}
+.prow-buy:hover{background:var(--grad);color:#fff}
+@media(max-width:620px){.prow-sub{white-space:normal} .prow-buy{padding:9px 11px}}
 /* 🇰🇷 한국 프리미엄 */
 .krp{margin:4px 0 22px;background:linear-gradient(115deg,#ff4f8112,#7b5cff12);border:1.5px solid #ff4f8133;border-radius:22px;padding:18px 18px 8px}
 .krp-head{display:flex;align-items:baseline;gap:10px;margin:0 2px 14px;flex-wrap:wrap}
@@ -317,6 +340,9 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
 .aprofit.minus{color:var(--pop)}
 .pedit{width:92px;background:var(--soft);border:1.5px solid var(--line);border-radius:9px;padding:7px 9px;font:800 12.5px 'Space Grotesk',sans-serif;color:var(--violet);text-align:right;transition:.14s}
 .pedit:focus{outline:none;border-color:var(--violet)}
+.hotbtn{font-size:16px;opacity:.28;filter:grayscale(1);transition:.14s;padding:4px}
+.hotbtn.on{opacity:1;filter:none}
+.hotbtn:hover{opacity:.7}
 .attrs{white-space:nowrap}
 .attr{display:inline-block;font-size:9.5px;font-weight:800;padding:3px 7px;border-radius:7px;margin:1px}
 .attr.y{background:#13d7c41a;color:var(--teal)}
@@ -393,6 +419,15 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
 .oorder-go{width:100%;background:var(--grad);color:#fff;font-weight:800;font-size:16px;padding:15px;border-radius:15px;box-shadow:0 14px 30px #7b5cff4d;transition:.16s}
 .oorder-go:hover{transform:translateY(-2px);box-shadow:0 18px 38px #7b5cff5e}
 .osafe{text-align:center;font-size:11px;color:var(--muted);margin-top:13px}
+/* 상품 상세 모달 */
+.dt-price{margin:4px 0 16px;font-size:14px;color:var(--muted)}
+.dt-price b{font:900 32px 'Space Grotesk',sans-serif;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-1px}
+.dt-price span{display:block;font-size:12px;margin-top:4px}
+.dt-desc{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-size:13.5px;line-height:1.6;color:var(--ink);margin-bottom:14px}
+.dt-info{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.dt-info .di{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.dt-info .di label{font-size:11px;color:var(--muted);font-weight:700;display:block;margin-bottom:4px}
+.dt-info .di b{font-size:14px;font-weight:800}
 /* 헤더 지갑 버튼 */
 .wallet-btn{display:inline-flex;align-items:center;gap:6px;background:var(--grad-soft);border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:9px 13px;font-size:12.5px;font-weight:700;transition:.16s}
 .wallet-btn b{font-family:'Space Grotesk',sans-serif;font-weight:900;color:var(--violet)}
@@ -702,18 +737,27 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
             <option value="high">가격 높은순</option>
           </select>
         </div>
+        <!-- 🇰🇷 한국인 / 🌍 외국인 분리 탭 -->
+        <div class="geotabs">
+          <button class="geotab active" data-origin="kr">🇰🇷 한국인</button>
+          <button class="geotab" data-origin="global">🌍 외국인</button>
+          <button class="geotab" data-origin="all">전체</button>
+        </div>
+
         <div class="shopbar">
           <div class="pills" id="pills"><!-- 카테고리: 관리자 설정 기반 동적 렌더 --></div>
           <select class="sort" id="geoSel"><option value="all">🌍 모든 나라</option></select>
         </div>
 
-        <!-- 🇰🇷 한국 프리미엄 -->
-        <section class="krp" id="krPremium" style="display:none">
-          <div class="krp-head"><h3>🇰🇷 한국 프리미엄</h3><span>실제 한국 유저 기반 · 품질 최상</span></div>
-          <div class="krp-row" id="krpRow"></div>
+        <!-- 🔥 인기 상품(박스) -->
+        <section class="hotsec" id="hotSec" style="display:none">
+          <div class="krp-head"><h3>🔥 인기 상품</h3><span>지금 제일 많이 찾는 상품</span></div>
+          <div class="cards" id="hotRow"></div>
         </section>
 
-        <div class="cards" id="cards"><!-- JS가 상품 카드를 렌더링합니다 --></div>
+        <!-- 전체 상품(리스트형) -->
+        <div class="listhead" id="listHead" style="display:none">전체 상품</div>
+        <div class="rows" id="cards"><!-- JS가 리스트 렌더 --></div>
         <div class="noresult" id="noResult" style="display:none">검색 결과가 없어요. 다른 키워드로 찾아보세요.</div>
 
         <div class="more" id="moreWrap"><button id="moreBtn" onclick="showMore()">상품 더 보기 <span id="moreCount"></span></button></div>
@@ -952,7 +996,7 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
       </div>
       <div class="tablewrap">
         <table>
-          <thead><tr><th>상품 · 설명</th><th>종류</th><th>나라</th><th>수량 범위</th><th>속성</th><th>공급처</th><th>도매가</th><th>판매가 (이익)</th><th>공개</th></tr></thead>
+          <thead><tr><th>상품 · 설명</th><th>종류</th><th>나라</th><th>수량 범위</th><th>속성</th><th>공급처</th><th>도매가</th><th>판매가 (이익)</th><th>🔥인기</th><th>공개</th></tr></thead>
           <tbody id="aRows"></tbody>
         </table>
       </div>
@@ -1152,6 +1196,23 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
   </div>
 </div>
 
+<!-- 상품 상세 모달 -->
+<div id="detailModal" class="omodal">
+  <div class="omodal-box">
+    <button class="omodal-x" onclick="closeDetail()" aria-label="닫기">✕</button>
+    <div class="omodal-head">
+      <div class="omodal-ic" id="dtIcon">◎</div>
+      <div><h3 id="dtName">상품명</h3><div class="omodal-src" id="dtPlat"></div></div>
+    </div>
+    <div class="dt-price"><b id="dtPer1">₩2</b> <small>/ 1개</small> <span id="dtPer1k"></span></div>
+    <div class="omodal-chips" id="dtChips"></div>
+    <div class="dt-desc" id="dtDesc"></div>
+    <div class="dt-info" id="dtInfo"></div>
+    <button class="oorder-go" onclick="detailToOrder()">🚀 이 상품 주문하기</button>
+    <div class="osafe">🔒 비밀번호를 요구하지 않는 안전 방식으로 전달됩니다.</div>
+  </div>
+</div>
+
 <!-- 주문 모달 -->
 <div id="orderModal" class="omodal">
   <div class="omodal-box">
@@ -1239,6 +1300,10 @@ function defaultLive(){
 function loadLive(){ try{const s=localStorage.getItem('supply_live'); if(s)return new Set(JSON.parse(s));}catch(e){} return defaultLive(); }
 function saveLive(){ try{localStorage.setItem('supply_live',JSON.stringify([...LIVE]));}catch(e){} }
 let LIVE=loadLive();
+/* 인기상품(박스로 크게 노출) — 관리자가 지정. 나머지는 리스트형. */
+function loadHot(){ try{const s=localStorage.getItem('supply_hot'); if(s)return new Set(JSON.parse(s));}catch(e){} return new Set(); }
+function saveHot(){ try{localStorage.setItem('supply_hot',JSON.stringify([...HOT]));}catch(e){} }
+let HOT=loadHot();
 
 /* ===== 카테고리(종류) — 관리자가 수정·추가·삭제·숨김. key=상품 group값. ===== */
 function defaultCats(){
@@ -1258,13 +1323,14 @@ function renderPills(){
   box.querySelectorAll('.pill').forEach(b=>b.addEventListener('click',()=>{kind=b.dataset.kind;renderPills();resetAndRender();}));
 }
 
-let platform='all',kind='all',geo='all',sortMode='reco',shown=12;
+let platform='all',kind='all',geo='all',sortMode='reco',shown=20,origin='kr';
 const cardsBox=document.getElementById('cards');
 
 function matchedAll(onlyLive){
   const q=document.getElementById('search').value.trim().toLowerCase();
   let list=CAT.filter(c=>
     (!onlyLive||LIVE.has(c.id))&&
+    (origin==='all'||(origin==='kr'?c.premium:!c.premium))&&   // 🇰🇷한국인 / 🌍외국인 분리
     (platform==='all'||c.plat===platform)&&
     (kind==='all'||c.group===kind)&&
     (geo==='all'||c.geo===geo)&&
@@ -1274,6 +1340,22 @@ function matchedAll(onlyLive){
   else if(sortMode==='low')list.sort((a,b)=>priceOf(a)-priceOf(b));
   else if(sortMode==='high')list.sort((a,b)=>priceOf(b)-priceOf(a));
   return list;
+}
+/* 리스트형 한 줄 */
+function rowHtml(c){
+  const unit=unitOf(c),cls=clsOf(c),pr=priceOf(c),refillTxt=c.refill?'리필 포함':'리필 미포함';
+  return `<div class="prow" data-platform="${esc(c.plat)}" data-kind="${esc(c.group)}"
+    data-name="${esc(c.ko)}" data-icon="${esc(c.ic)}" data-iconcls="${cls}"
+    data-price="${pr}" data-min="${c.min}" data-max="${c.max}" data-unit="${unit}" data-start="0~수 시간" data-refill="${refillTxt}"
+    data-ph="${esc(phOf(c))}" onclick="openDetail(this)">
+    <div class="prow-ic ${cls}">${esc(c.ic)}</div>
+    <div class="prow-main">
+      <div class="prow-name">${esc(c.ko)}${c.premium?'<span class="kr">🇰🇷 한국인</span>':''}</div>
+      <div class="prow-sub">${esc(c.desc||'')} · 최소 ${c.min.toLocaleString('ko-KR')}${unit}~ · ${refillTxt}</div>
+    </div>
+    <div class="prow-price"><div class="big">${per1(pr)}</div><div class="per">1${unit}당 · 1,000당 ₩${pr.toLocaleString('ko-KR')}</div></div>
+    <button class="prow-buy" onclick="event.stopPropagation();openOrder(this.closest('.prow'))">주문</button>
+  </div>`;
 }
 function cardHtml(c){
   const unit=unitOf(c),cls=clsOf(c),refillTxt=c.refill?'리필 포함':'리필 미포함',pr=priceOf(c);
@@ -1298,22 +1380,28 @@ function cardHtml(c){
   </article>`;
 }
 function renderCards(){
-  const noFilter=platform==='all'&&kind==='all'&&geo==='all'&&!document.getElementById('search').value.trim();
-  // 🇰🇷 한국 프리미엄 섹션(필터 없을 때만, 공개된 것)
-  const krp=document.getElementById('krPremium');
-  const kr=noFilter?CAT.filter(c=>c.premium&&LIVE.has(c.id)).slice(0,10):[];
-  if(kr.length){document.getElementById('krpRow').innerHTML=kr.map(cardHtml).join('');krp.style.display='block';}
-  else krp.style.display='none';
-  // 메인 그리드(공개된 것만)
-  const list=matchedAll(true), slice=list.slice(0,shown);
-  cardsBox.innerHTML=slice.map(cardHtml).join('');
+  const list=matchedAll(true);
+  // 🔥 인기(박스) = 관리자 HOT 지정 중 현재 필터에 맞는 것
+  const hot=list.filter(c=>HOT.has(c.id)).slice(0,8);
+  const hotSec=document.getElementById('hotSec');
+  if(hot.length){document.getElementById('hotRow').innerHTML=hot.map(cardHtml).join('');hotSec.style.display='block';}
+  else hotSec.style.display='none';
+  // 📋 전체(리스트) = 인기 제외 나머지
+  const rest=list.filter(c=>!HOT.has(c.id)), slice=rest.slice(0,shown);
+  cardsBox.innerHTML=slice.map(rowHtml).join('');
+  document.getElementById('listHead').style.display=slice.length?'block':'none';
   document.getElementById('noResult').style.display=list.length?'none':'block';
-  const more=document.getElementById('moreWrap'),rest=list.length-slice.length;
-  if(rest>0){more.style.display='flex';document.getElementById('moreCount').textContent=`(+${rest.toLocaleString('ko-KR')})`;}
+  const more=document.getElementById('moreWrap'),left=rest.length-slice.length;
+  if(left>0){more.style.display='flex';document.getElementById('moreCount').textContent=`(+${left.toLocaleString('ko-KR')})`;}
   else more.style.display='none';
 }
-function showMore(){shown+=12;renderCards();}
-function resetAndRender(){shown=12;renderCards();}
+function showMore(){shown+=20;renderCards();}
+function resetAndRender(){shown=20;renderCards();}
+/* 한국/외국 분리 탭 */
+document.querySelectorAll('.geotab').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.geotab').forEach(x=>x.classList.toggle('active',x===b));
+  origin=b.dataset.origin;resetAndRender();
+}));
 
 /* 사이드바(실제 공급 플랫폼) 채우기 — 재호출 가능(동기화 후 갱신) */
 function fillSide(){
@@ -1407,6 +1495,7 @@ function adminRender(){
       <div class="arow-sub">1개 <b>${per1(pr)}</b></div>
       <div class="aprofit${profit<0?' minus':''}">${profit>=0?'+':''}₩${profit.toLocaleString('ko-KR')}${PRICEOVER[c.id]>0?' ✏️':''}</div>
     </td>
+    <td><button class="hotbtn${HOT.has(c.id)?' on':''}" data-hot="${esc(c.id)}" title="고객 화면에 박스(인기)로 크게 노출">🔥</button></td>
     <td><span class="toggle${LIVE.has(c.id)?' on':''}" data-id="${esc(c.id)}"></span></td>
   </tr>`;}).join('');
   document.getElementById('aPager').innerHTML=
@@ -1422,6 +1511,8 @@ function bulkLive(on){
   toast(on?'현재 목록을 전체 공개했습니다':'현재 목록을 숨겼습니다');
 }
 document.getElementById('aRows').addEventListener('click',e=>{
+  const hb=e.target.closest('.hotbtn');
+  if(hb){const id=hb.dataset.hot; HOT.has(id)?HOT.delete(id):HOT.add(id); hb.classList.toggle('on'); saveHot(); try{renderCards();}catch(e){} return;}
   const t=e.target.closest('.toggle'); if(!t)return;
   const id=t.dataset.id;
   LIVE.has(id)?LIVE.delete(id):LIVE.add(id);
@@ -1623,8 +1714,33 @@ document.getElementById('authModal').addEventListener('click',e=>{if(e.target.id
 /* ===== 주문 모달 ===== */
 const won=n=>'₩'+Math.round(n).toLocaleString('ko-KR');
 let odData=null;
+/* 상품 상세 모달 */
+let detailEl=null;
+function openDetail(el){
+  detailEl=el; const d=el.dataset;
+  const ic=document.getElementById('dtIcon'); ic.textContent=d.icon; ic.className='omodal-ic '+d.iconcls;
+  document.getElementById('dtName').textContent=d.name;
+  document.getElementById('dtPlat').innerHTML=`<i class="sourcedot"></i>플랫폼 <span>${d.platform||d.plat||''}</span>`;
+  document.getElementById('dtPer1').textContent=per1(+d.price);
+  document.getElementById('dtPer1k').innerHTML=`<span>1,000${d.unit}당 ₩${(+d.price).toLocaleString('ko-KR')}</span>`;
+  document.getElementById('dtChips').innerHTML=
+    `<span class="meta">최소 ${(+d.min).toLocaleString('ko-KR')}${d.unit}</span>`+
+    `<span class="meta">최대 ${(+d.max).toLocaleString('ko-KR')}${d.unit}</span>`+
+    `<span class="meta">${d.refill}</span>`+`<span class="meta">1개 단위 주문</span>`;
+  document.getElementById('dtDesc').textContent=d.desc||el.querySelector('.prow-sub')?.textContent||'';
+  document.getElementById('dtInfo').innerHTML=
+    `<div class="di"><label>최소 주문</label><b>${(+d.min).toLocaleString('ko-KR')}${d.unit}</b></div>`+
+    `<div class="di"><label>최대 주문</label><b>${(+d.max).toLocaleString('ko-KR')}${d.unit}</b></div>`+
+    `<div class="di"><label>예상 시작</label><b>${d.start}</b></div>`+
+    `<div class="di"><label>리필</label><b>${d.refill}</b></div>`;
+  document.getElementById('detailModal').classList.add('show');
+}
+function closeDetail(){const m=document.getElementById('detailModal');if(m)m.classList.remove('show');}
+function detailToOrder(){ if(detailEl)openOrder(detailEl); }
+
 function openOrder(btn){
-  const c=btn.closest('.card');const d=c.dataset;
+  const c=btn.closest('.card')||btn.closest('.prow')||btn;const d=c.dataset;
+  closeDetail();
   odData={price:+d.price,min:+d.min,max:+d.max,unit:d.unit};
   // 헤더
   const ic=document.getElementById('odIcon');
@@ -1678,6 +1794,7 @@ function submitOrder(){
   toast(`주문 접수(시안): ${odData.unit} ${q.toLocaleString('ko-KR')} · ${won(odData.price*q/1000)}`);
 }
 document.getElementById('orderModal').addEventListener('click',e=>{if(e.target.id==='orderModal')closeOrder();});
+document.getElementById('detailModal').addEventListener('click',e=>{if(e.target.id==='detailModal')closeDetail();});
 
 /* ===== 충전 / 지갑 ===== */
 let chargeAmt=50000,chargePm='가상계좌';
