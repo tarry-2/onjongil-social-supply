@@ -133,6 +133,16 @@ header{position:sticky;top:0;z-index:30;backdrop-filter:blur(14px);background:co
 .sort{border:1.5px solid var(--line);background:var(--card);padding:10px 32px 10px 14px;border-radius:12px;font-size:12px;color:var(--ink);font-weight:800;-webkit-appearance:none;appearance:none;cursor:pointer;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M3 4.5L6 7.5L9 4.5' stroke='%236a6f8c' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>");background-repeat:no-repeat;background-position:right 12px center}
 .sort:focus{outline:none;border-color:var(--violet)}
 .noresult{text-align:center;color:var(--muted);font-size:14px;padding:50px 20px;font-weight:600}
+.shopbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.shopbar .pills{margin:0}
+/* 🇰🇷 한국 프리미엄 */
+.krp{margin:4px 0 22px;background:linear-gradient(115deg,#ff4f8112,#7b5cff12);border:1.5px solid #ff4f8133;border-radius:22px;padding:18px 18px 8px}
+.krp-head{display:flex;align-items:baseline;gap:10px;margin:0 2px 14px;flex-wrap:wrap}
+.krp-head h3{font-size:17px;font-weight:900;margin:0;letter-spacing:-.5px}
+.krp-head span{font-size:11.5px;color:var(--muted);font-weight:600}
+.krp-row{display:flex;gap:12px;overflow-x:auto;padding-bottom:10px;scrollbar-width:thin}
+.krp-row .card{min-width:230px;flex-shrink:0}
+.krp-row .card:before{background:linear-gradient(115deg,var(--pop),var(--violet))}
 .pills{display:flex;gap:8px;overflow:auto;margin-bottom:18px;padding-bottom:3px;scrollbar-width:none}
 .pills::-webkit-scrollbar{display:none}
 .pill{white-space:nowrap;padding:10px 16px;border:1.5px solid var(--line);border-radius:30px;background:var(--card);color:var(--muted);font-size:12.5px;font-weight:800;transition:.16s}
@@ -148,7 +158,11 @@ header{position:sticky;top:0;z-index:30;backdrop-filter:blur(14px);background:co
 .socialicon{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;font-size:17px;font-weight:900;color:#fff;box-shadow:var(--shadow-sm)}
 .ig{background:linear-gradient(140deg,#f9517d,#f4a04a)} .tt{background:#111} .tg{background:#2aabdf}
 .sp{background:#1db954} .fb{background:#2a7bf0} .ds{background:#5865f2} .yt{background:#ff2d55}
+.tw{background:#9146ff} .kk{background:#53fc18;color:#111} .xk{background:#111} .vk{background:#0077ff}
+.lk{background:#f9d923;color:#111} .rd{background:#ff4500} .th{background:#111} .sc{background:#ff5500}
+.scl{background:#ff7700} .rb{background:#85c742} .tv{background:#19d66b} .etc{background:linear-gradient(140deg,#13d7c4,#7b5cff)}
 .tag{font-size:10px;font-weight:900;color:#fff;background:var(--pop);padding:6px 10px;border-radius:30px;transform:rotate(2deg)}
+.tag.krtag{background:linear-gradient(120deg,#ff4f81,#7b5cff)}
 .cardbody{padding:0 16px 14px}
 .card h3{font-size:15.5px;font-weight:800;letter-spacing:-.3px;margin:0 0 6px}
 .carddesc{color:var(--muted);font-size:11.5px;line-height:1.5;min-height:34px}
@@ -260,6 +274,21 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
 .admin-out:hover{border-color:var(--pop);color:var(--pop)}
 .admin-sub{font-size:14px;font-weight:800;margin:26px 0 12px;display:flex;align-items:center;gap:10px}
 .admin-sub span{font-size:10.5px;font-weight:700;color:var(--muted)}
+/* 관리자 상품 공개 관리 */
+.apbar{display:flex;gap:9px;padding:16px 18px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.apbar .oinput{flex:1;min-width:160px;padding:10px 14px;font-size:13px}
+.apbar .sort{padding:10px 30px 10px 12px}
+.apbulk{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px;flex-wrap:wrap;background:var(--soft);border-bottom:1px solid var(--line)}
+.apbulk #aCount{font-size:12.5px;font-weight:800;color:var(--muted)}
+.apbulk-btns{display:flex;gap:8px}
+.apbulk-btns button{padding:9px 14px;font-size:12px}
+.apager{display:flex;align-items:center;justify-content:center;gap:12px;padding:16px;font-size:13px;font-weight:700}
+.apager button{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:8px 14px;font-weight:800;transition:.14s}
+.apager button:hover:not(:disabled){border-color:var(--violet);color:var(--violet)}
+.apager button:disabled{opacity:.4;cursor:default}
+#aRows .toggle{cursor:pointer}
+#aRows td strong{font-weight:700}
+.aprice{font-family:'Space Grotesk',sans-serif;font-weight:800;color:var(--violet)}
 /* 관리자 로그인 모달 */
 .amodal{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(10,11,22,.55);backdrop-filter:blur(6px)}
 .amodal.show{display:flex;animation:fade .25s ease}
@@ -622,16 +651,10 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
     </section>
 
     <section class="content">
-      <aside class="side">
+      <aside class="side" id="platSide">
         <h3>플랫폼</h3>
-        <button class="selected" data-platform="all">전체 상품 <span class="count">1,284</span></button>
-        <button data-platform="Instagram">📸 Instagram <span class="count">326</span></button>
-        <button data-platform="TikTok">🎵 TikTok <span class="count">241</span></button>
-        <button data-platform="YouTube">▶️ YouTube <span class="count">198</span></button>
-        <button data-platform="Telegram">✈️ Telegram <span class="count">184</span></button>
-        <button data-platform="Spotify">🎧 Spotify <span class="count">152</span></button>
-        <button data-platform="Facebook">👍 Facebook <span class="count">203</span></button>
-        <button data-platform="Discord">💬 Discord <span class="count">178</span></button>
+        <button class="selected" data-platform="all">전체 상품 <span class="count"></span></button>
+        <!-- JS가 실제 공급 플랫폼으로 채웁니다 -->
       </aside>
 
       <div class="main">
@@ -647,14 +670,25 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
             <option value="high">가격 높은순</option>
           </select>
         </div>
-        <div class="pills">
-          <button class="pill active" data-kind="all">전체</button>
-          <button class="pill" data-kind="팔로워">팔로워</button>
-          <button class="pill" data-kind="좋아요">좋아요</button>
-          <button class="pill" data-kind="조회수">조회수</button>
-          <button class="pill" data-kind="멤버">멤버</button>
-          <button class="pill" data-kind="재생">재생</button>
+        <div class="shopbar">
+          <div class="pills">
+            <button class="pill active" data-kind="all">전체</button>
+            <button class="pill" data-kind="팔로워">팔로워</button>
+            <button class="pill" data-kind="좋아요">좋아요</button>
+            <button class="pill" data-kind="조회수">조회수</button>
+            <button class="pill" data-kind="시청자">라이브 시청자</button>
+            <button class="pill" data-kind="멤버">멤버</button>
+            <button class="pill" data-kind="재생">재생</button>
+            <button class="pill" data-kind="댓글">댓글</button>
+          </div>
+          <select class="sort" id="geoSel"><option value="all">🌍 모든 나라</option></select>
         </div>
+
+        <!-- 🇰🇷 한국 프리미엄 -->
+        <section class="krp" id="krPremium" style="display:none">
+          <div class="krp-head"><h3>🇰🇷 한국 프리미엄</h3><span>실제 한국 유저 기반 · 품질 최상</span></div>
+          <div class="krp-row" id="krpRow"></div>
+        </section>
 
         <div class="cards" id="cards"><!-- JS가 상품 카드를 렌더링합니다 --></div>
         <div class="noresult" id="noResult" style="display:none">검색 결과가 없어요. 다른 키워드로 찾아보세요.</div>
@@ -839,31 +873,38 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
 
     <h3 class="admin-sub">📊 내부 지표</h3>
     <div class="stats">
-      <div class="stat"><label>전체 수집 상품</label><strong>6,842</strong><em>공급처에서 동기화됨</em></div>
-      <div class="stat"><label>한국어 변환 완료</label><strong>6,105</strong><em>자동 분류 진행 중</em></div>
-      <div class="stat"><label>판매 중</label><strong>1,284</strong><em>검토 기준 통과</em></div>
-      <div class="stat"><label>리셀러 주문</label><strong>328</strong><em>이번 달</em></div>
+      <div class="stat"><label>전체 상품</label><strong id="aTotal">0</strong><em>2개 공급처 수집·한국어화</em></div>
+      <div class="stat"><label>판매 공개 중</label><strong id="aLiveN">0</strong><em>고객에게 노출</em></div>
+      <div class="stat"><label>🇰🇷 한국 프리미엄</label><strong id="aKrN">0</strong><em>보유 상품</em></div>
+      <div class="stat"><label>연결 공급처</label><strong>2</strong><em>Stream·SMB</em></div>
     </div>
 
-    <h3 class="admin-sub">🗂️ 상품 검토 및 공개</h3>
+    <h3 class="admin-sub">🗂️ 상품 공개 관리 <span>토글 켠 것만 고객에게 보입니다</span></h3>
     <section class="panel">
-      <div class="panelhead"><h3>공급처 상품 → 판매 공개</h3><span>전체 6,842 · 판매 공개 1,284</span></div>
+      <div class="apbar">
+        <input id="aSearch" class="oinput" placeholder="🔍 상품·플랫폼 검색">
+        <select id="aPlat" class="sort"><option value="all">모든 플랫폼</option></select>
+        <select id="aKind" class="sort"><option value="all">모든 종류</option></select>
+        <select id="aGeo" class="sort"><option value="all">모든 나라</option></select>
+      </div>
+      <div class="apbulk">
+        <span id="aCount">—</span>
+        <div class="apbulk-btns">
+          <button class="admin-dash" onclick="bulkLive(true)">현재 목록 전체 공개</button>
+          <button class="admin-out" onclick="bulkLive(false)">현재 목록 숨김</button>
+        </div>
+      </div>
       <div class="tablewrap">
         <table>
-          <thead><tr><th>상품</th><th>플랫폼</th><th>공급처</th><th>도매가</th><th>공개</th></tr></thead>
-          <tbody>
-            <tr><td><strong>인스타그램 팔로워 · 리필 30일</strong></td><td>Instagram</td><td><span class="sourcechip">SMB Panel</span></td><td>₩1,120/1K</td><td><span class="toggle on"></span></td></tr>
-            <tr><td><strong>틱톡 좋아요 · 점진 전달</strong></td><td>TikTok</td><td><span class="sourcechip">SMB Panel</span></td><td>₩410/1K</td><td><span class="toggle on"></span></td></tr>
-            <tr><td><strong>Twitch 라이브 시청자</strong></td><td>Twitch</td><td><span class="sourcechip">Stream-Promotion</span></td><td>₩2,400/1K</td><td><span class="toggle on"></span></td></tr>
-            <tr><td><strong>텔레그램 채널 멤버</strong></td><td>Telegram</td><td><span class="sourcechip">SMB Panel</span></td><td>₩2,060/1K</td><td><span class="toggle"></span></td></tr>
-            <tr><td><strong>Spotify 트랙 재생</strong></td><td>Spotify</td><td><span class="sourcechip">Stream-Promotion</span></td><td>₩1,380/1K</td><td><span class="toggle on"></span></td></tr>
-          </tbody>
+          <thead><tr><th>상품</th><th>플랫폼</th><th>나라</th><th>도매가</th><th>판매가</th><th>공개</th></tr></thead>
+          <tbody id="aRows"></tbody>
         </table>
       </div>
-      <div class="quality"><span>✳</span><span><b>상품 공개 기준</b> 리필 조건·최소/최대 수량·가격 변동 여부를 기준으로 자동 분류합니다. 공개 전에 관리자가 일괄 검토할 수 있습니다.</span></div>
+      <div class="apager" id="aPager"></div>
+      <div class="quality"><span>✳</span><span><b>판매가</b>는 도매가 × 마진(기본 2.5배)으로 자동 계산됩니다. <b>공개 토글</b>을 켠 상품만 서비스 몰에 노출됩니다.</span></div>
     </section>
 
-    <div class="footnote">관리자 콘솔 · 수치·잔액은 구조를 보여주기 위한 시안 데이터입니다.</div>
+    <div class="footnote">관리자 콘솔 · 공급처 실데이터 9,134개(Stream-Promotion·SMB Panel) · 잔액은 시안입니다.</div>
   </div>
 </main>
 
@@ -1105,83 +1146,186 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
   </div>
 </div>
 
+<script src="services.js"></script>
 <script>
-/* ===== 상품 카탈로그(데이터 기반 렌더) ===== */
-// popular=인기순 가중치(높을수록 상위). 전부 SMB Panel/Stream-Promotion 2곳 공급.
-const PRODUCTS=[
-  {p:'Instagram',k:'팔로워',name:'인스타그램 팔로워 (한국인)',icon:'◎',cls:'ig',tag:'한국인',src:'SMB Panel',price:1900,min:100,max:100000,unit:'명',start:'0~1시간',refill:'30일 리필',ph:'https://instagram.com/내아이디',desc:'실제 한국 계정 · 점진 전달',metas:['최소 100','30일 리필','API 주문'],pop:98},
-  {p:'Instagram',k:'팔로워',name:'인스타그램 팔로워 (해외)',icon:'◎',cls:'ig',tag:'최저가',src:'SMB Panel',price:900,min:100,max:500000,unit:'명',start:'0~1시간',refill:'30일 리필',ph:'https://instagram.com/내아이디',desc:'가성비 해외 계정 · 대량 가능',metas:['최소 100','대량 가능','API 주문'],pop:90},
-  {p:'Instagram',k:'좋아요',name:'인스타그램 좋아요',icon:'◎',cls:'ig',tag:'인기',src:'SMB Panel',price:500,min:50,max:50000,unit:'개',start:'0~30분',refill:'7일 리필',ph:'https://instagram.com/p/게시물',desc:'게시물·릴스 좋아요 즉시형',metas:['최소 50','빠른 시작','취소 가능'],pop:95},
-  {p:'Instagram',k:'조회수',name:'인스타그램 릴스 조회수',icon:'◎',cls:'ig',tag:'릴스',src:'SMB Panel',price:300,min:100,max:1000000,unit:'회',start:'0~1시간',refill:'리필 미포함',ph:'https://instagram.com/reel/릴스',desc:'릴스·동영상 조회수',metas:['최소 100','대량 가능','API 주문'],pop:88},
-  {p:'TikTok',k:'팔로워',name:'틱톡 팔로워',icon:'♪',cls:'tt',tag:'성장',src:'SMB Panel',price:1600,min:50,max:100000,unit:'명',start:'0~1시간',refill:'30일 리필',ph:'https://tiktok.com/@내아이디',desc:'계정 성장용 팔로워',metas:['최소 50','30일 리필','API 주문'],pop:86},
-  {p:'TikTok',k:'좋아요',name:'틱톡 좋아요',icon:'♪',cls:'tt',tag:'인기',src:'SMB Panel',price:720,min:50,max:50000,unit:'개',start:'0~30분',refill:'30일 리필',ph:'https://tiktok.com/@내아이디/video/...',desc:'영상별 시작·리필 표시',metas:['최소 50','리필 30일','취소 가능'],pop:93},
-  {p:'TikTok',k:'조회수',name:'틱톡 조회수',icon:'♪',cls:'tt',tag:'최저가',src:'SMB Panel',price:120,min:100,max:10000000,unit:'회',start:'0~30분',refill:'리필 미포함',ph:'https://tiktok.com/@내아이디/video/...',desc:'초대량 조회수 · 바이럴용',metas:['최소 100','초대량','빠른 시작'],pop:91},
-  {p:'YouTube',k:'팔로워',name:'유튜브 구독자',icon:'▶',cls:'yt',tag:'프리미엄',src:'Stream-Promotion',price:8900,min:100,max:50000,unit:'명',start:'0~6시간',refill:'30일 리필',ph:'https://youtube.com/@내채널',desc:'채널 구독자 · 안전 속도',metas:['최소 100','30일 리필','안전 속도'],pop:84},
-  {p:'YouTube',k:'조회수',name:'유튜브 조회수',icon:'▶',cls:'yt',tag:'인기',src:'Stream-Promotion',price:1200,min:1000,max:10000000,unit:'회',start:'0~12시간',refill:'리필 미포함',ph:'https://youtube.com/watch?v=...',desc:'동영상 조회수 · 리텐션 양호',metas:['최소 1,000','대량 가능','API 주문'],pop:89},
-  {p:'YouTube',k:'좋아요',name:'유튜브 좋아요',icon:'▶',cls:'yt',tag:'참여',src:'Stream-Promotion',price:1100,min:50,max:50000,unit:'개',start:'0~3시간',refill:'30일 리필',ph:'https://youtube.com/watch?v=...',desc:'영상 좋아요 · 참여 지표',metas:['최소 50','30일 리필','취소 가능'],pop:80},
-  {p:'Telegram',k:'멤버',name:'텔레그램 채널 멤버',icon:'➤',cls:'tg',tag:'채널 성장',src:'SMB Panel',price:3400,min:100,max:50000,unit:'명',start:'0~2시간',refill:'리필 미포함',ph:'https://t.me/내채널',desc:'공개 채널 멤버 추가',metas:['최소 100','설명 확인','API 주문'],pop:78},
-  {p:'Telegram',k:'조회수',name:'텔레그램 포스트 조회수',icon:'➤',cls:'tg',tag:'노출',src:'SMB Panel',price:90,min:100,max:1000000,unit:'회',start:'0~1시간',refill:'리필 미포함',ph:'https://t.me/내채널/123',desc:'최근 게시물 조회수',metas:['최소 100','초대량','빠른 시작'],pop:72},
-  {p:'Spotify',k:'재생',name:'Spotify 트랙 재생',icon:'◖',cls:'sp',tag:'음악',src:'SMB Panel',price:2100,min:500,max:1000000,unit:'회',start:'0~6시간',refill:'리필 미포함',ph:'https://open.spotify.com/track/...',desc:'트랙 재생수 · 로열티 집계형',metas:['최소 500','트랙 링크','API 주문'],pop:76},
-  {p:'Spotify',k:'팔로워',name:'Spotify 팔로워',icon:'◖',cls:'sp',tag:'아티스트',src:'SMB Panel',price:2600,min:100,max:100000,unit:'명',start:'0~12시간',refill:'30일 리필',ph:'https://open.spotify.com/artist/...',desc:'아티스트·플레이리스트 팔로워',metas:['최소 100','30일 리필','API 주문'],pop:70},
-  {p:'Facebook',k:'좋아요',name:'페이스북 페이지 좋아요',icon:'f',cls:'fb',tag:'페이지',src:'SMB Panel',price:2800,min:50,max:50000,unit:'개',start:'0~3시간',refill:'리필 여부 표시',ph:'https://facebook.com/내페이지',desc:'공개 페이지 좋아요',metas:['최소 50','리필 표시','API 주문'],pop:68},
-  {p:'Facebook',k:'팔로워',name:'페이스북 팔로워',icon:'f',cls:'fb',tag:'성장',src:'SMB Panel',price:2400,min:100,max:100000,unit:'명',start:'0~3시간',refill:'30일 리필',ph:'https://facebook.com/내프로필',desc:'프로필·페이지 팔로워',metas:['최소 100','30일 리필','API 주문'],pop:66},
-  {p:'Facebook',k:'조회수',name:'페이스북 영상 조회수',icon:'f',cls:'fb',tag:'노출',src:'SMB Panel',price:260,min:500,max:1000000,unit:'회',start:'0~3시간',refill:'리필 미포함',ph:'https://facebook.com/watch/...',desc:'동영상 조회수 · 대량',metas:['최소 500','대량 가능','API 주문'],pop:63},
-  {p:'Discord',k:'멤버',name:'디스코드 서버 멤버',icon:'◉',cls:'ds',tag:'커뮤니티',src:'SMB Panel',price:4200,min:25,max:10000,unit:'명',start:'즉시 시작',refill:'리필 미포함',ph:'https://discord.gg/초대코드',desc:'서버 초대 링크로 멤버 추가',metas:['최소 25','즉시 시작','API 주문'],pop:62},
-  {p:'Discord',k:'멤버',name:'디스코드 온라인 멤버',icon:'◉',cls:'ds',tag:'활성',src:'SMB Panel',price:5600,min:25,max:5000,unit:'명',start:'즉시 시작',refill:'30일 유지',ph:'https://discord.gg/초대코드',desc:'온라인 표시 활성 멤버',metas:['최소 25','30일 유지','API 주문'],pop:58},
-];
-let platform='all',kind='all',sortMode='reco',shown=9;
+/* ===== 상품 카탈로그(공급처 실데이터 9,134개 · services.js) ===== */
+const CAT=window.CATALOG||[], META=window.CATALOG_META||{plats:{},kinds:{},geos:{}};
+const UNIT={팔로워:'명',시청자:'명',멤버:'명',좋아요:'개',조회수:'회',재생:'회',댓글:'개',공유:'회',기타:'개'};
+const CLS={트위치:'tw',킥:'kk',유튜브:'yt',텔레그램:'tg',인스타그램:'ig',틱톡:'tt',페이스북:'fb',스포티파이:'sp',디스코드:'ds','X(트위터)':'xk',트위터:'xk',브콘탁테:'vk',라이키:'lk',레딧:'rd',스레드:'th',스냅챗:'sc',사운드클라우드:'scl',럼블:'rb',트로보:'tv',기타:'etc',글로벌:'etc'};
+const PH={인스타그램:'https://instagram.com/내아이디',틱톡:'https://tiktok.com/@내아이디',유튜브:'https://youtube.com/watch?v=...',트위치:'https://twitch.tv/내채널',킥:'https://kick.com/내채널',텔레그램:'https://t.me/내채널',스포티파이:'https://open.spotify.com/...',페이스북:'https://facebook.com/내페이지',디스코드:'https://discord.gg/초대코드'};
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function unitOf(c){return UNIT[c.group]||'개';}
+function clsOf(c){return CLS[c.plat]||'etc';}
+function phOf(c){return PH[c.plat]||'주문할 공개 링크를 입력하세요';}
+
+/* 공개 목록(관리자 토글) — localStorage. 없으면 기본 공개셋 자동 생성 */
+function defaultLive(){
+  const major=['인스타그램','틱톡','유튜브','트위치','텔레그램','스포티파이','페이스북','킥'];
+  const picked=new Set(), byPK={};
+  CAT.forEach(c=>{ if(!major.includes(c.plat))return; const k=c.plat+'|'+c.group; (byPK[k]=byPK[k]||[]).push(c); });
+  Object.values(byPK).forEach(arr=>arr.sort((a,b)=>a.price-b.price).slice(0,2).forEach(c=>picked.add(c.id)));
+  CAT.filter(c=>c.premium).sort((a,b)=>a.price-b.price).slice(0,20).forEach(c=>picked.add(c.id));
+  return picked;
+}
+function loadLive(){ try{const s=localStorage.getItem('supply_live'); if(s)return new Set(JSON.parse(s));}catch(e){} return defaultLive(); }
+function saveLive(){ try{localStorage.setItem('supply_live',JSON.stringify([...LIVE]));}catch(e){} }
+let LIVE=loadLive();
+
+let platform='all',kind='all',geo='all',sortMode='reco',shown=12;
 const cardsBox=document.getElementById('cards');
-function matched(){
+
+function matchedAll(onlyLive){
   const q=document.getElementById('search').value.trim().toLowerCase();
-  let list=PRODUCTS.filter(p=>
-    (platform==='all'||p.p===platform)&&
-    (kind==='all'||p.k===kind)&&
-    (!q||(p.name+p.p+p.k+p.desc).toLowerCase().includes(q))
+  let list=CAT.filter(c=>
+    (!onlyLive||LIVE.has(c.id))&&
+    (platform==='all'||c.plat===platform)&&
+    (kind==='all'||c.group===kind)&&
+    (geo==='all'||c.geo===geo)&&
+    (!q||(c.ko+c.plat+c.group+c.geo+c.en).toLowerCase().includes(q))
   );
-  if(sortMode==='popular')list=[...list].sort((a,b)=>b.pop-a.pop);
-  else if(sortMode==='low')list=[...list].sort((a,b)=>a.price-b.price);
-  else if(sortMode==='high')list=[...list].sort((a,b)=>b.price-a.price);
+  if(sortMode==='popular')list.sort((a,b)=>b.max-a.max);
+  else if(sortMode==='low')list.sort((a,b)=>a.price-b.price);
+  else if(sortMode==='high')list.sort((a,b)=>b.price-a.price);
   return list;
 }
-function cardHtml(p){
-  const metas=p.metas.map(m=>`<span class="meta">${m}</span>`).join('');
-  return `<article class="card" data-platform="${p.p}" data-kind="${p.k}"
-    data-name="${p.name}" data-icon="${p.icon}" data-iconcls="${p.cls}" data-source="${p.src}"
-    data-price="${p.price}" data-min="${p.min}" data-max="${p.max}" data-unit="${p.unit}" data-start="${p.start}" data-refill="${p.refill}"
-    data-ph="${p.ph}">
-    <div class="cardtop"><div class="socialicon ${p.cls}">${p.icon}</div><span class="tag">${p.tag}</span></div>
+function cardHtml(c){
+  const unit=unitOf(c),cls=clsOf(c),refillTxt=c.refill?'리필 포함':'리필 미포함';
+  const metas=[`최소 ${c.min.toLocaleString('ko-KR')}`,refillTxt,c.src];
+  const tag=c.premium?`<span class="tag krtag">🇰🇷 프리미엄</span>`:`<span class="tag">${c.flag} ${c.geo}</span>`;
+  return `<article class="card" data-platform="${esc(c.plat)}" data-kind="${esc(c.group)}"
+    data-name="${esc(c.ko)}" data-icon="${esc(c.ic)}" data-iconcls="${cls}" data-source="${esc(c.src)}"
+    data-price="${c.price}" data-min="${c.min}" data-max="${c.max}" data-unit="${unit}" data-start="0~수 시간" data-refill="${refillTxt}"
+    data-ph="${esc(phOf(c))}">
+    <div class="cardtop"><div class="socialicon ${cls}">${esc(c.ic)}</div>${tag}</div>
     <div class="cardbody">
-      <h3>${p.name}</h3>
-      <div class="carddesc">${p.desc}</div>
-      <div class="source"><i class="sourcedot"></i>공급처 <span class="sourcename">${p.src}</span></div>
-      <div class="metas">${metas}</div>
+      <h3>${esc(c.ko)}</h3>
+      <div class="carddesc">${esc(c.en)}</div>
+      <div class="source"><i class="sourcedot"></i>공급처 <span class="sourcename">${esc(c.src)}</span></div>
+      <div class="metas">${metas.map(m=>`<span class="meta">${esc(m)}</span>`).join('')}</div>
     </div>
-    <div class="cardfoot"><div class="price">₩${p.price.toLocaleString('ko-KR')} <small>/ 1,000${p.unit}</small></div><button class="order" onclick="openOrder(this)">주문하기</button></div>
+    <div class="cardfoot"><div class="price">₩${c.price.toLocaleString('ko-KR')} <small>/ 1,000${unit}</small></div><button class="order" onclick="openOrder(this)">주문하기</button></div>
   </article>`;
 }
 function renderCards(){
-  const list=matched();
-  const slice=list.slice(0,shown);
+  const noFilter=platform==='all'&&kind==='all'&&geo==='all'&&!document.getElementById('search').value.trim();
+  // 🇰🇷 한국 프리미엄 섹션(필터 없을 때만, 공개된 것)
+  const krp=document.getElementById('krPremium');
+  const kr=noFilter?CAT.filter(c=>c.premium&&LIVE.has(c.id)).slice(0,10):[];
+  if(kr.length){document.getElementById('krpRow').innerHTML=kr.map(cardHtml).join('');krp.style.display='block';}
+  else krp.style.display='none';
+  // 메인 그리드(공개된 것만)
+  const list=matchedAll(true), slice=list.slice(0,shown);
   cardsBox.innerHTML=slice.map(cardHtml).join('');
   document.getElementById('noResult').style.display=list.length?'none':'block';
   const more=document.getElementById('moreWrap'),rest=list.length-slice.length;
-  if(rest>0){more.style.display='flex';document.getElementById('moreCount').textContent=`(+${rest})`;}
+  if(rest>0){more.style.display='flex';document.getElementById('moreCount').textContent=`(+${rest.toLocaleString('ko-KR')})`;}
   else more.style.display='none';
 }
-function showMore(){shown+=9;renderCards();}
-function resetAndRender(){shown=9;renderCards();}
-document.querySelectorAll('.side button').forEach(b=>b.addEventListener('click',()=>{
-  document.querySelectorAll('.side button').forEach(x=>x.classList.toggle('selected',x===b));
+function showMore(){shown+=12;renderCards();}
+function resetAndRender(){shown=12;renderCards();}
+
+/* 사이드바(실제 공급 플랫폼) 채우기 */
+(function fillSide(){
+  const side=document.getElementById('platSide');
+  const icon={}; CAT.forEach(c=>{if(!icon[c.plat])icon[c.plat]=c.ic;});
+  const liveByPlat={}; CAT.forEach(c=>{if(LIVE.has(c.id))liveByPlat[c.plat]=(liveByPlat[c.plat]||0)+1;});
+  const order=Object.entries(liveByPlat).sort((a,b)=>b[1]-a[1]);
+  side.querySelector('.count').textContent=[...LIVE].length.toLocaleString('ko-KR');
+  order.forEach(([p,n])=>{
+    const b=document.createElement('button');
+    b.dataset.platform=p;
+    b.innerHTML=`${icon[p]||'🌐'} ${p} <span class="count">${n}</span>`;
+    side.appendChild(b);
+  });
+})();
+/* 나라 select 채우기(한국 맨 위) */
+(function fillGeo(){
+  const sel=document.getElementById('geoSel'), geos=META.geos||{};
+  const order=Object.entries(geos).sort((a,b)=>b[1]-a[1]);
+  let html='<option value="all">🌍 모든 나라</option>';
+  if(geos['한국'])html+=`<option value="한국">🇰🇷 한국 프리미엄 (${geos['한국']})</option>`;
+  order.filter(x=>x[0]!=='한국'&&x[0]!=='글로벌').forEach(([g,n])=>{html+=`<option value="${esc(g)}">${esc(g)} (${n})</option>`;});
+  if(geos['글로벌'])html+=`<option value="글로벌">🌍 글로벌 (${geos['글로벌']})</option>`;
+  sel.innerHTML=html;
+})();
+
+document.getElementById('platSide').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  document.querySelectorAll('#platSide button').forEach(x=>x.classList.toggle('selected',x===b));
   platform=b.dataset.platform;resetAndRender();
-}));
+});
 document.querySelectorAll('.pill').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('.pill').forEach(x=>x.classList.toggle('active',x===b));
   kind=b.dataset.kind;resetAndRender();
 }));
+document.getElementById('geoSel').addEventListener('change',e=>{geo=e.target.value;resetAndRender();});
 document.getElementById('sortSel').addEventListener('change',e=>{sortMode=e.target.value;resetAndRender();});
 function searchProducts(){resetAndRender();}
 document.getElementById('search').addEventListener('input',resetAndRender);
 renderCards();
+
+/* ===== 관리자: 상품 공개 관리(9,134개 토글) ===== */
+let aPlat='all',aKind='all',aGeo='all',aPage=0; const A_PER=50;
+(function fillAdminSelects(){
+  const mk=(sel,obj,label)=>{let h=`<option value="all">${label}</option>`;
+    Object.entries(obj).sort((a,b)=>b[1]-a[1]).forEach(([k,n])=>h+=`<option value="${esc(k)}">${esc(k)} (${n})</option>`);
+    document.getElementById(sel).innerHTML=h;};
+  mk('aPlat',META.plats||{},'모든 플랫폼'); mk('aKind',META.kinds||{},'모든 종류'); mk('aGeo',META.geos||{},'모든 나라');
+})();
+function adminFilter(){
+  const q=document.getElementById('aSearch').value.trim().toLowerCase();
+  return CAT.filter(c=>
+    (aPlat==='all'||c.plat===aPlat)&&(aKind==='all'||c.kind===aKind)&&(aGeo==='all'||c.geo===aGeo)&&
+    (!q||(c.ko+c.plat+c.kind+c.geo+c.en).toLowerCase().includes(q)));
+}
+function aStats(){
+  document.getElementById('aTotal').textContent=CAT.length.toLocaleString('ko-KR');
+  document.getElementById('aLiveN').textContent=LIVE.size.toLocaleString('ko-KR');
+  document.getElementById('aKrN').textContent=CAT.filter(c=>c.premium).length.toLocaleString('ko-KR');
+}
+function aCountTxt(){
+  const list=adminFilter(), liveN=list.filter(c=>LIVE.has(c.id)).length;
+  document.getElementById('aCount').textContent=`${list.length.toLocaleString('ko-KR')}개 중 ${liveN.toLocaleString('ko-KR')}개 공개`;
+  return list;
+}
+function adminRender(){
+  const list=aCountTxt();
+  const pages=Math.max(1,Math.ceil(list.length/A_PER));
+  if(aPage>=pages)aPage=0;
+  const slice=list.slice(aPage*A_PER,aPage*A_PER+A_PER);
+  document.getElementById('aRows').innerHTML=slice.map(c=>`<tr>
+    <td><strong>${esc(c.ko)}</strong><br><span style="font-size:10px;color:var(--muted)">${esc(c.en)}</span></td>
+    <td>${esc(c.ic)} ${esc(c.plat)}</td>
+    <td>${c.premium?'🇰🇷 <b>한국</b>':esc(c.flag)+' '+esc(c.geo)}</td>
+    <td>₩${c.wholesale.toLocaleString('ko-KR')}</td>
+    <td class="aprice">₩${c.price.toLocaleString('ko-KR')}</td>
+    <td><span class="toggle${LIVE.has(c.id)?' on':''}" data-id="${esc(c.id)}"></span></td>
+  </tr>`).join('');
+  document.getElementById('aPager').innerHTML=
+    `<button ${aPage<=0?'disabled':''} onclick="aGo(-1)">← 이전</button>`+
+    `<span>${aPage+1} / ${pages.toLocaleString('ko-KR')}</span>`+
+    `<button ${aPage>=pages-1?'disabled':''} onclick="aGo(1)">다음 →</button>`;
+  aStats();
+}
+function aGo(d){aPage+=d;adminRender();}
+function bulkLive(on){
+  adminFilter().forEach(c=>{on?LIVE.add(c.id):LIVE.delete(c.id);});
+  saveLive();adminRender();try{renderCards();}catch(e){}
+  toast(on?'현재 목록을 전체 공개했습니다':'현재 목록을 숨겼습니다');
+}
+document.getElementById('aRows').addEventListener('click',e=>{
+  const t=e.target.closest('.toggle'); if(!t)return;
+  const id=t.dataset.id;
+  LIVE.has(id)?LIVE.delete(id):LIVE.add(id);
+  t.classList.toggle('on'); saveLive(); aStats(); aCountTxt();
+  try{renderCards();}catch(e){}
+});
+document.getElementById('aSearch').addEventListener('input',()=>{aPage=0;adminRender();});
+['aPlat','aKind','aGeo'].forEach(id=>document.getElementById(id).addEventListener('change',e=>{
+  if(id==='aPlat')aPlat=e.target.value; else if(id==='aKind')aKind=e.target.value; else aGeo=e.target.value;
+  aPage=0;adminRender();
+}));
+adminRender();
 let timer;
 function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(timer);timer=setTimeout(()=>el.classList.remove('show'),2200);}
 
