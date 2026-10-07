@@ -845,28 +845,29 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
       </div>
     </div>
 
-    <h3 class="admin-sub">💰 공급처 잔액 <span>API 실시간 · 떨어지면 충전</span></h3>
+    <h3 class="admin-sub">💰 공급처 잔액 <span>API 실시간 · 떨어지면 충전</span>
+      <button class="admin-dash" style="margin-left:auto;padding:7px 13px" onclick="loadBalances()">⟳ 실시간 불러오기</button></h3>
     <div class="provider-row">
       <div class="provider">
         <div class="provider-head">
           <div class="providerlogo">SP</div>
-          <div class="provider-name"><h3>Stream-Promotion</h3><p>스트리밍 전문 · 마지막 동기화 12분 전</p></div>
+          <div class="provider-name"><h3>Stream-Promotion</h3><p>스트리밍 전문 · 라이브 원청</p></div>
           <span class="connected">연결됨</span>
         </div>
         <div class="bal-row">
-          <div class="bal"><label>남은 잔액 <span class="api-badge">API 실시간</span></label><strong>$128.40 <small>USD</small></strong></div>
+          <div class="bal"><label>남은 잔액 <span class="api-badge">API 실시간</span></label><strong id="balSP">— <small>USD</small></strong></div>
           <button class="recharge" onclick="toast('Stream-Promotion 충전 페이지 시안입니다')">충전하기</button>
         </div>
       </div>
-      <div class="provider low">
+      <div class="provider">
         <div class="provider-head">
           <div class="providerlogo">SMB</div>
-          <div class="provider-name"><h3>SMB Panel <span class="lowtag">충전 필요</span></h3><p>종합 SNS 상품 · 마지막 동기화 28분 전</p></div>
+          <div class="provider-name"><h3>SMB Panel</h3><p>종합 SNS 상품</p></div>
           <span class="connected">연결됨</span>
         </div>
         <div class="bal-row">
-          <div class="bal"><label>남은 잔액 <span class="api-badge">API 실시간</span></label><strong>$12.70 <small>USD</small></strong></div>
-          <button class="recharge" onclick="toast('SMB Panel 충전 페이지 시안입니다')">지금 충전</button>
+          <div class="bal"><label>남은 잔액 <span class="api-badge">API 실시간</span></label><strong id="balSMB">— <small>USD</small></strong></div>
+          <button class="recharge" onclick="toast('SMB Panel 충전 페이지 시안입니다')">충전하기</button>
         </div>
       </div>
     </div>
@@ -1326,6 +1327,26 @@ document.getElementById('aSearch').addEventListener('input',()=>{aPage=0;adminRe
   aPage=0;adminRender();
 }));
 adminRender();
+
+/* ===== 공급처 실시간 잔액(Vercel 백엔드 /api/balance, 키 숨김) ===== */
+// 사이트가 Vercel이면 상대경로, GitHub Pages면 api.온종일.com 절대경로로 폴백.
+const API_BASE = location.hostname.endsWith('github.io') ? 'https://api.xn--zk5biyyw.com' : '';
+async function loadBalances(){
+  const setV=(id,txt)=>{const el=document.getElementById(id);if(el)el.innerHTML=txt;};
+  setV('balSP','불러오는 중…'); setV('balSMB','불러오는 중…');
+  try{
+    const r=await fetch(API_BASE+'/api/balance',{cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    const fmt=(o)=>o&&o.balance!=null ? `$${Number(o.balance).toFixed(2)} <small>${o.currency||'USD'}</small>` : `<span style="color:var(--pop)">${(o&&o.error)||'오류'}</span>`;
+    setV('balSP',fmt(d['Stream-Promotion'])); setV('balSMB',fmt(d['SMB Panel']));
+    toast('공급처 잔액을 불러왔습니다');
+  }catch(e){
+    setV('balSP','<span style="color:var(--pop)">백엔드 미연결</span>');
+    setV('balSMB','<span style="color:var(--pop)">백엔드 미연결</span>');
+    toast('백엔드(/api/balance) 연결 전입니다 — Vercel 배포 후 작동');
+  }
+}
 let timer;
 function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(timer);timer=setTimeout(()=>el.classList.remove('show'),2200);}
 
