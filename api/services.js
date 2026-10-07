@@ -3,8 +3,9 @@
 import { transform, metaOf } from './_convert.js';
 
 const SOURCES = [
-  ['https://stream-promotion.com/api/v2', process.env.SP_KEY,  'Stream-Promotion'],
-  ['https://smbpanel.net/api/v2',         process.env.SMB_KEY, 'SMB Panel'],
+  ['https://stream-promotion.com/api/v2', process.env.SP_KEY,   'Stream-Promotion'],
+  ['https://smbpanel.net/api/v2',         process.env.SMB_KEY,  'SMB Panel'],
+  ['https://realsite.shop/api/v2',        process.env.REAL_KEY, 'RealSite'],
 ];
 
 export default async function handler(req, res) {
