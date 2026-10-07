@@ -175,6 +175,7 @@ header{position:sticky;top:0;z-index:30;backdrop-filter:blur(14px);background:co
 .price{font-weight:900;font-size:17px;letter-spacing:-.4px;font-family:'Space Grotesk',sans-serif}
 .price small{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:0}
 .minbuy{font-size:10.5px;color:var(--teal);font-weight:800;margin-top:3px}
+.per1k{font-size:10px;color:var(--muted);font-weight:600;margin-top:3px}
 .order{background:var(--grad-soft);color:var(--violet);padding:9px 13px;border-radius:11px;font-size:11.5px;font-weight:900;transition:.16s}
 .order:hover{background:var(--grad);color:#fff}
 .more{display:flex;justify-content:center;margin:22px 0 4px}
@@ -1217,6 +1218,8 @@ function priceOf(c){
   if(PRICEOVER[c.id]>0)return PRICEOVER[c.id];              // 개별 지정가 우선
   return Math.round(c.wholesale*(1+MARGIN/100)/10)*10;      // 없으면 전체 마진
 }
+// 1개당 단가(1,000당 가격 ÷ 1000). 비교용 — 소수점 나오면 2자리까지.
+function per1(per1000){const v=per1000/1000;return '₩'+(v>=1?Math.round(v).toLocaleString('ko-KR'):v.toFixed(2));}
 function unitOf(c){return UNIT[c.group]||'개';}
 function clsOf(c){return CLS[c.plat]||'etc';}
 function phOf(c){return PH[c.plat]||'주문할 공개 링크를 입력하세요';}
@@ -1288,8 +1291,8 @@ function cardHtml(c){
       <div class="metas">${metas.map(m=>`<span class="meta">${esc(m)}</span>`).join('')}</div>
     </div>
     <div class="cardfoot">
-      <div><div class="price">₩${pr.toLocaleString('ko-KR')} <small>/ 1,000${unit}</small></div>
-        <div class="minbuy">최소 ${c.min.toLocaleString('ko-KR')}${unit} · ₩${minBuy.toLocaleString('ko-KR')}부터</div></div>
+      <div><div class="price">${per1(pr)} <small>/ 1${unit}</small></div>
+        <div class="per1k">1,000${unit}당 ₩${pr.toLocaleString('ko-KR')} · 최소 ${c.min.toLocaleString('ko-KR')}${unit}~</div></div>
       <button class="order" onclick="openOrder(this)">주문하기</button>
     </div>
   </article>`;
@@ -1398,9 +1401,10 @@ function adminRender(){
     <td class="arange"><b>${c.min.toLocaleString('ko-KR')}</b> ~ ${c.max.toLocaleString('ko-KR')}</td>
     <td class="attrs">${attrBadges(c)}</td>
     <td><span class="sourcechip">${esc(c.src)}</span></td>
-    <td>₩${c.wholesale.toLocaleString('ko-KR')}<div class="arow-sub">1,000당</div></td>
+    <td>₩${c.wholesale.toLocaleString('ko-KR')}<div class="arow-sub">1,000당 · 1개 ${per1(c.wholesale)}</div></td>
     <td class="aprice">
       <input class="pedit" type="number" value="${pr}" data-id="${esc(c.id)}" title="개별 판매가(1,000당). 비우면 전체 마진 적용">
+      <div class="arow-sub">1개 <b>${per1(pr)}</b></div>
       <div class="aprofit${profit<0?' minus':''}">${profit>=0?'+':''}₩${profit.toLocaleString('ko-KR')}${PRICEOVER[c.id]>0?' ✏️':''}</div>
     </td>
     <td><span class="toggle${LIVE.has(c.id)?' on':''}" data-id="${esc(c.id)}"></span></td>
@@ -1643,7 +1647,7 @@ function openOrder(btn){
   document.getElementById('odUnit').textContent=d.unit;
   document.getElementById('odRange').textContent=`(최소 ${(+d.min).toLocaleString('ko-KR')} ~ 최대 ${(+d.max).toLocaleString('ko-KR')}${d.unit} · 1개 단위)`;
   // 요약
-  document.getElementById('odUnitPrice').textContent=won(d.price)+' / 1,000';
+  document.getElementById('odUnitPrice').textContent=per1(+d.price)+'/1'+d.unit+' (1,000당 '+won(d.price)+')';
   document.getElementById('odStart').textContent=d.start;
   document.getElementById('odRefill').textContent=d.refill;
   calcOrder();
