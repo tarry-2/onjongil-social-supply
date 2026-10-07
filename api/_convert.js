@@ -8,6 +8,9 @@ const PLAT = [
   ['discord','디스코드','💬'],['threads','스레드','🧵'],['snapchat','스냅챗','👻'],['reddit','레딧','🔺'],
   ['soundcloud','사운드클라우드','☁️'],['rumble','럼블','🎬'],['likee','라이키','💛'],['trovo','트로보','🎮'],
   ['vk','브콘탁테','🔵'],['twitter','트위터','🐦'],['x ','X(트위터)','✖️'],
+  ['soop','숲(아프리카)','🌲'],['afreeca','숲(아프리카)','🌲'],['naver','네이버','🟩'],['kakao','카카오','💛'],
+  ['chzzk','치지직','🟢'],['band','밴드','🟩'],['shopee','쇼피','🛒'],['lazada','라자다','🛍️'],
+  ['traffic','웹트래픽','🌐'],['website','웹트래픽','🌐'],['google','구글','🔎'],
 ];
 function platOf(t){const low=t.toLowerCase();for(const[en,ko,ic]of PLAT){if(low.includes(en.trim()))return[ko,ic];}return['기타','🌐'];}
 

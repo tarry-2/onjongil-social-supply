@@ -184,6 +184,7 @@ header{position:sticky;top:0;z-index:30;backdrop-filter:blur(14px);background:co
 .tw{background:#9146ff} .kk{background:#53fc18;color:#111} .xk{background:#111} .vk{background:#0077ff}
 .lk{background:#f9d923;color:#111} .rd{background:#ff4500} .th{background:#111} .sc{background:#ff5500}
 .scl{background:#ff7700} .rb{background:#85c742} .tv{background:#19d66b} .etc{background:linear-gradient(140deg,#13d7c4,#7b5cff)}
+.soop{background:#0046ff} .nv{background:#03c75a} .ka{background:#ffcd00;color:#111} .ch{background:#00ffa3;color:#111} .bd{background:#00c73c} .shop{background:#ee4d2d} .laz{background:#1a9cff} .web{background:#6a7cff} .gg{background:#4285f4}
 .tag{font-size:10px;font-weight:900;color:#fff;background:var(--pop);padding:6px 10px;border-radius:30px;transform:rotate(2deg)}
 .tag.krtag{background:linear-gradient(120deg,#ff4f81,#7b5cff)}
 .cardbody{padding:0 16px 14px}
@@ -305,8 +306,10 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
 .apbar .sort{padding:10px 30px 10px 12px}
 .apbulk{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px;flex-wrap:wrap;background:var(--soft);border-bottom:1px solid var(--line)}
 .apbulk #aCount{font-size:12.5px;font-weight:800;color:var(--muted)}
-.apbulk-btns{display:flex;gap:8px}
+.apbulk-btns{display:flex;gap:8px;flex-wrap:wrap}
 .apbulk-btns button{padding:9px 14px;font-size:12px}
+.apbulk-note{padding:9px 18px;font-size:11.5px;color:var(--muted);background:var(--soft);border-bottom:1px solid var(--line)}
+.apbulk-note b{color:var(--violet)}
 .apager{display:flex;align-items:center;justify-content:center;gap:12px;padding:16px;font-size:13px;font-weight:700}
 .apager button{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:8px 14px;font-weight:800;transition:.14s}
 .apager button:hover:not(:disabled){border-color:var(--violet);color:var(--violet)}
@@ -990,10 +993,15 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
       <div class="apbulk">
         <span id="aCount">—</span>
         <div class="apbulk-btns">
-          <button class="admin-dash" onclick="bulkLive(true)">현재 목록 전체 공개</button>
-          <button class="admin-out" onclick="bulkLive(false)">현재 목록 숨김</button>
+          <button class="admin-dash" onclick="bulkLive(true)">✅ 전체 공개</button>
+          <button class="admin-out" onclick="bulkLive(false)">🙈 전체 숨김</button>
+          <button class="admin-dash" onclick="bulkHot(true)">🔥 인기 지정</button>
+          <button class="admin-out" onclick="bulkHot(false)">인기 해제</button>
+          <button class="admin-dash" onclick="bulkMargin()">💵 이 목록만 마진</button>
+          <button class="admin-out" onclick="bulkClearPrice()">개별가 초기화</button>
         </div>
       </div>
+      <div class="apbulk-note">위 필터(공급처·플랫폼·종류·나라)로 걸러낸 <b id="aCount2">—</b>에만 일괄 적용됩니다.</div>
       <div class="tablewrap">
         <table>
           <thead><tr><th>상품 · 설명</th><th>종류</th><th>나라</th><th>수량 범위</th><th>속성</th><th>공급처</th><th>도매가</th><th>판매가 (이익)</th><th>🔥인기</th><th>공개</th></tr></thead>
@@ -1268,7 +1276,7 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
 /* ===== 상품 카탈로그(공급처 실데이터 9,134개 · services.js) ===== */
 let CAT=window.CATALOG||[], META=window.CATALOG_META||{plats:{},kinds:{},geos:{}};
 const UNIT={팔로워:'명',시청자:'명',멤버:'명',좋아요:'개',조회수:'회',재생:'회',댓글:'개',공유:'회',기타:'개'};
-const CLS={트위치:'tw',킥:'kk',유튜브:'yt',텔레그램:'tg',인스타그램:'ig',틱톡:'tt',페이스북:'fb',스포티파이:'sp',디스코드:'ds','X(트위터)':'xk',트위터:'xk',브콘탁테:'vk',라이키:'lk',레딧:'rd',스레드:'th',스냅챗:'sc',사운드클라우드:'scl',럼블:'rb',트로보:'tv',기타:'etc',글로벌:'etc'};
+const CLS={트위치:'tw',킥:'kk',유튜브:'yt',텔레그램:'tg',인스타그램:'ig',틱톡:'tt',페이스북:'fb',스포티파이:'sp',디스코드:'ds','X(트위터)':'xk',트위터:'xk',브콘탁테:'vk',라이키:'lk',레딧:'rd',스레드:'th',스냅챗:'sc',사운드클라우드:'scl',럼블:'rb',트로보:'tv','숲(아프리카)':'soop',네이버:'nv',카카오:'ka',치지직:'ch',밴드:'bd',쇼피:'shop',라자다:'laz',웹트래픽:'web',구글:'gg',기타:'etc',글로벌:'etc'};
 const PH={인스타그램:'https://instagram.com/내아이디',틱톡:'https://tiktok.com/@내아이디',유튜브:'https://youtube.com/watch?v=...',트위치:'https://twitch.tv/내채널',킥:'https://kick.com/내채널',텔레그램:'https://t.me/내채널',스포티파이:'https://open.spotify.com/...',페이스북:'https://facebook.com/내페이지',디스코드:'https://discord.gg/초대코드'};
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 /* 판매가 = (개별지정 있으면 그 값) / 없으면 도매가 × (1 + 마진%/100). 둘 다 localStorage. */
@@ -1473,6 +1481,7 @@ function aStats(){
 function aCountTxt(){
   const list=adminFilter(), liveN=list.filter(c=>LIVE.has(c.id)).length;
   document.getElementById('aCount').textContent=`${list.length.toLocaleString('ko-KR')}개 중 ${liveN.toLocaleString('ko-KR')}개 공개`;
+  const c2=document.getElementById('aCount2'); if(c2)c2.textContent=list.length.toLocaleString('ko-KR')+'개';
   return list;
 }
 function adminRender(){
@@ -1509,6 +1518,23 @@ function bulkLive(on){
   adminFilter().forEach(c=>{on?LIVE.add(c.id):LIVE.delete(c.id);});
   saveLive();adminRender();try{renderCards();}catch(e){}
   toast(on?'현재 목록을 전체 공개했습니다':'현재 목록을 숨겼습니다');
+}
+function bulkHot(on){
+  adminFilter().forEach(c=>{on?HOT.add(c.id):HOT.delete(c.id);});
+  saveHot();adminRender();try{renderCards();}catch(e){}
+  toast(on?'현재 목록을 인기로 지정했습니다':'현재 목록 인기 해제했습니다');
+}
+function bulkMargin(){
+  const v=prompt('이 목록에만 적용할 마진율(%)을 입력하세요. 예: 200','');
+  if(v===null)return; const m=Math.max(0,Math.round(+v||0));
+  adminFilter().forEach(c=>{PRICEOVER[c.id]=Math.round(c.wholesale*(1+m/100)/10)*10;});
+  savePrices();adminRender();try{renderCards();}catch(e){}
+  toast(`현재 목록 ${adminFilter().length.toLocaleString('ko-KR')}개에 마진 ${m}% 적용`);
+}
+function bulkClearPrice(){
+  adminFilter().forEach(c=>{delete PRICEOVER[c.id];});
+  savePrices();adminRender();try{renderCards();}catch(e){}
+  toast('현재 목록 개별가 초기화(전체 마진으로 복귀)');
 }
 document.getElementById('aRows').addEventListener('click',e=>{
   const hb=e.target.closest('.hotbtn');
