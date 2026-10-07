@@ -1,0 +1,1438 @@
+<!doctype html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#7b5cff">
+<title>온종일 소셜 서플라이 · 성장 서비스 마켓</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ======== 온종일 소셜 서플라이 · MZ 디자인 시스템 ========
+   시그니처 = 틸↔퍼플 그라데이션 + 핫핑크 팝. 라이트 기본, 다크 토글. */
+:root{
+  --teal:#13d7c4; --violet:#7b5cff; --pop:#ff4f81; --lime:#c6f84e;
+  --grad:linear-gradient(115deg,#13d7c4 0%,#4aa6ff 42%,#7b5cff 100%);
+  --grad-soft:linear-gradient(115deg,#13d7c41a,#7b5cff1a);
+  --ink:#141529; --muted:#6a6f8c; --line:#ecebf6;
+  --bg:#f3f2fb; --card:#ffffff; --soft:#f6f5fd;
+  --shadow:0 22px 50px rgba(78,60,160,.10); --shadow-sm:0 8px 24px rgba(78,60,160,.07);
+  --r:22px;
+}
+[data-theme="dark"]{
+  --ink:#edeffb; --muted:#9aa0c6; --line:#2a2e4d;
+  --bg:#0b0c18; --card:#15172b; --soft:#1a1c33;
+  --shadow:0 22px 55px rgba(0,0,0,.45); --shadow-sm:0 10px 28px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:'Pretendard','Space Grotesk',system-ui,sans-serif; font-size:15px; line-height:1.5;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+/* 배경 MZ 블롭 */
+body:before,body:after{content:"";position:fixed;z-index:0;border-radius:50%;filter:blur(90px);opacity:.5;pointer-events:none}
+body:before{width:520px;height:520px;background:radial-gradient(circle,#13d7c4,transparent 70%);top:-160px;left:-140px}
+body:after{width:560px;height:560px;background:radial-gradient(circle,#7b5cff,transparent 70%);bottom:-220px;right:-160px;opacity:.4}
+[data-theme="dark"] body:before{opacity:.22} [data-theme="dark"] body:after{opacity:.2}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+.eng{font-family:'Space Grotesk',sans-serif}
+.wrap{max-width:1280px;margin:auto;padding:0 28px;position:relative;z-index:1}
+
+/* ======== 헤더 ======== */
+.topline{height:4px;background:var(--grad)}
+header{position:sticky;top:0;z-index:30;backdrop-filter:blur(14px);background:color-mix(in srgb,var(--card) 82%,transparent);border-bottom:1px solid var(--line)}
+.headin{max-width:1280px;margin:auto;padding:13px 28px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.brandmark{width:42px;height:42px;border-radius:14px;background:var(--grad);display:grid;place-items:center;color:#fff;font-weight:900;font-size:19px;box-shadow:0 8px 20px #7b5cff55;transform:rotate(-5deg)}
+.brandname{font-weight:900;font-size:17px;letter-spacing:-.5px;line-height:1.1}
+.brandname small{display:block;font-size:9px;letter-spacing:2px;color:var(--muted);font-weight:700;margin-top:3px}
+.nav{display:flex;gap:6px;flex:1}
+.nav button{position:relative;font-size:14px;font-weight:800;color:var(--muted);padding:9px 15px;border-radius:12px;transition:.18s}
+.nav button:hover{color:var(--ink);background:var(--soft)}
+.nav button.active{color:#fff;background:var(--grad);box-shadow:0 8px 18px #7b5cff40}
+.headright{display:flex;gap:9px;align-items:center}
+.lang{font-size:12px;font-weight:800;color:var(--muted);padding:9px 12px;border:1.5px solid var(--line);border-radius:12px;white-space:nowrap}
+.theme-toggle{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;padding:9px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--card);white-space:nowrap}
+.theme-toggle .theme-icon{font-size:15px;line-height:1}
+.login{background:var(--ink);color:var(--bg);font-weight:800;font-size:13px;padding:10px 18px;border-radius:12px;transition:.18s}
+.login:hover{transform:translateY(-1px)}
+
+.view{display:none;animation:fade .3s ease} .view.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ======== 히어로 ======== */
+.hero{margin:26px 0 28px;border-radius:30px;background:var(--grad);color:#fff;padding:44px 46px;position:relative;overflow:hidden;box-shadow:0 30px 60px #7b5cff38;display:flex;align-items:center;justify-content:space-between;gap:30px}
+.hero:before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,#ffffff30,transparent 65%);top:-150px;right:6%}
+.hero:after{content:"";position:absolute;inset:0;background:radial-gradient(130% 80% at 15% 120%,#ff4f8155,transparent 55%);mix-blend-mode:overlay}
+.hero-copy{position:relative;z-index:2;max-width:600px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:800;letter-spacing:1.6px;background:#ffffff24;border:1px solid #ffffff38;padding:7px 13px;border-radius:30px;backdrop-filter:blur(4px)}
+.eyebrow b{color:var(--lime)}
+.hero h1{font-size:clamp(30px,4.6vw,47px);line-height:1.12;letter-spacing:-1.6px;font-weight:900;margin:18px 0 12px}
+.hero h1 .hl{background:linear-gradient(100deg,var(--lime),#fff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero h1 .tuksang{display:inline-block;background:linear-gradient(100deg,var(--pop),#ff8bb0);color:#fff;padding:0 .16em;border-radius:14px;transform:rotate(-2.5deg);box-shadow:0 10px 26px #ff4f8166;animation:ttup 2.4s ease-in-out infinite}
+@keyframes ttup{0%,100%{transform:rotate(-2.5deg) translateY(0)}50%{transform:rotate(-2.5deg) translateY(-6px)}}
+.hero p{margin:0;color:#eef0ff;font-size:14.5px;line-height:1.65;max-width:490px}
+.searchbox{margin-top:26px;background:#fff;border-radius:16px;padding:6px 6px 6px 16px;display:flex;align-items:center;gap:8px;max-width:540px;box-shadow:0 18px 40px #0b0c1840}
+.searchbox .glass{color:var(--violet);font-size:19px}
+.searchbox input{border:0;outline:0;flex:1;min-width:0;padding:13px 2px;font-size:14px;color:var(--ink);background:none}
+.searchbox input::placeholder{color:#9b9fb8}
+.searchbox button{background:var(--grad);color:#fff;font-weight:800;font-size:13px;border-radius:12px;padding:14px 20px;white-space:nowrap;transition:.18s}
+.searchbox button:hover{filter:brightness(1.06)}
+.hero-chips{display:flex;gap:9px;margin-top:18px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;background:#ffffff1f;border:1px solid #ffffff33;color:#fff;font-size:12px;font-weight:700;padding:8px 12px;border-radius:30px;backdrop-filter:blur(4px)}
+.chip b{color:var(--lime)}
+/* 히어로 사이드 — 떡상 성장 그래프 카드 */
+.hero-side{position:relative;z-index:2;width:306px;flex-shrink:0;display:flex;flex-direction:column;gap:13px}
+.growth{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.36);border-radius:24px;padding:17px 18px 15px;backdrop-filter:blur(10px);box-shadow:0 26px 54px #0b0c1844;transform:rotate(-1.2deg)}
+.growth-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.growth-title{font-size:12.5px;font-weight:800;color:#fff}
+.growth-up{font-size:12px;font-weight:900;color:#153c0e;background:var(--lime);padding:3px 9px;border-radius:20px;box-shadow:0 5px 14px #c6f84e55}
+.growth-chart{display:block;width:100%;height:94px;overflow:visible}
+.growth-line{stroke-dasharray:620;stroke-dashoffset:620;animation:gdraw 1.6s ease-out .2s forwards}
+@keyframes gdraw{to{stroke-dashoffset:0}}
+.growth-area{opacity:0;animation:gfade 1s ease-out .9s forwards}
+@keyframes gfade{to{opacity:1}}
+.growth-dot{fill:#eaffc0;opacity:0;filter:drop-shadow(0 0 7px #c6f84e);animation:gdot .4s ease-out 1.5s forwards}
+@keyframes gdot{from{opacity:0}to{opacity:1}}
+.growth-foot{display:flex;align-items:center;gap:8px;margin-top:11px}
+.growth-from{font:700 14px 'Space Grotesk',sans-serif;color:#d7dcff}
+.growth-arrow{color:var(--lime);font-weight:900}
+.growth-to{font:900 24px 'Space Grotesk',sans-serif;color:#fff;letter-spacing:-.5px}
+.growth-meta{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+.growth-plats{display:inline-flex;gap:5px}
+.growth-plats b{width:26px;height:26px;border-radius:9px;background:#ffffff26;border:1px solid #ffffff3a;display:grid;place-items:center;font-size:13px}
+.growth-live{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:800;color:#eaffc9}
+.growth-live:before{content:"";width:8px;height:8px;border-radius:50%;background:#aef76b;animation:lpulse 1.6s infinite}
+@keyframes lpulse{0%{box-shadow:0 0 0 0 #aef76b88}70%{box-shadow:0 0 0 7px #aef76b00}100%{box-shadow:0 0 0 0 #aef76b00}}
+.growth-badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.gb{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;color:#fff;padding:7px 12px;border-radius:30px;border:1px solid #ffffff2e;box-shadow:0 8px 18px #0b0c1826}
+.gb-1{background:linear-gradient(120deg,#ff4f81,#ff93b4)}
+.gb-2{background:linear-gradient(120deg,#13d7c4,#36a3ff)}
+.gb-3{background:linear-gradient(120deg,#7b5cff,#a07bff)}
+
+/* ======== 몰 레이아웃 ======== */
+.content{display:grid;grid-template-columns:208px minmax(0,1fr);gap:22px;padding-bottom:56px}
+.side{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 12px;height:max-content;box-shadow:var(--shadow-sm);position:sticky;top:84px}
+.side h3{margin:4px 8px 11px;font-size:10px;letter-spacing:1.4px;color:var(--muted);font-weight:800;text-transform:uppercase}
+.side button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:8px;text-align:left;color:var(--muted);padding:11px 11px;border-radius:13px;font-size:13.5px;font-weight:700;margin:2px 0;transition:.16s}
+.side button:hover{background:var(--soft);color:var(--ink)}
+.side button.selected{background:var(--grad-soft);color:var(--violet)}
+.side button.selected .count{background:var(--violet);color:#fff}
+.count{font-size:10px;font-weight:800;background:var(--soft);color:var(--muted);padding:3px 8px;border-radius:20px}
+
+.main{min-width:0}
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;margin:2px 0 16px}
+.section-head h2{font-size:23px;font-weight:900;letter-spacing:-.8px;margin:0 0 4px}
+.section-head p{margin:0;color:var(--muted);font-size:12.5px}
+.sort{border:1.5px solid var(--line);background:var(--card);padding:10px 32px 10px 14px;border-radius:12px;font-size:12px;color:var(--ink);font-weight:800;-webkit-appearance:none;appearance:none;cursor:pointer;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M3 4.5L6 7.5L9 4.5' stroke='%236a6f8c' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>");background-repeat:no-repeat;background-position:right 12px center}
+.sort:focus{outline:none;border-color:var(--violet)}
+.noresult{text-align:center;color:var(--muted);font-size:14px;padding:50px 20px;font-weight:600}
+.pills{display:flex;gap:8px;overflow:auto;margin-bottom:18px;padding-bottom:3px;scrollbar-width:none}
+.pills::-webkit-scrollbar{display:none}
+.pill{white-space:nowrap;padding:10px 16px;border:1.5px solid var(--line);border-radius:30px;background:var(--card);color:var(--muted);font-size:12.5px;font-weight:800;transition:.16s}
+.pill:hover{border-color:var(--violet);color:var(--violet)}
+.pill.active{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;transition:.2s;min-width:0;position:relative}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:transparent}
+.card:before{content:"";position:absolute;inset:0;border-radius:var(--r);padding:1.5px;background:var(--grad);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:.2s}
+.card:hover:before{opacity:1}
+.cardtop{padding:16px 16px 12px;display:flex;justify-content:space-between;align-items:center}
+.socialicon{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;font-size:17px;font-weight:900;color:#fff;box-shadow:var(--shadow-sm)}
+.ig{background:linear-gradient(140deg,#f9517d,#f4a04a)} .tt{background:#111} .tg{background:#2aabdf}
+.sp{background:#1db954} .fb{background:#2a7bf0} .ds{background:#5865f2} .yt{background:#ff2d55}
+.tag{font-size:10px;font-weight:900;color:#fff;background:var(--pop);padding:6px 10px;border-radius:30px;transform:rotate(2deg)}
+.cardbody{padding:0 16px 14px}
+.card h3{font-size:15.5px;font-weight:800;letter-spacing:-.3px;margin:0 0 6px}
+.carddesc{color:var(--muted);font-size:11.5px;line-height:1.5;min-height:34px}
+.source{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:10.5px;margin:12px 0 11px}
+.sourcedot{width:7px;height:7px;background:var(--teal);border-radius:50%;box-shadow:0 0 0 3px #13d7c426}
+.sourcename{color:var(--ink);font-weight:800}
+.metas{display:flex;gap:6px;flex-wrap:wrap}
+.meta{border:1px solid var(--line);background:var(--soft);color:var(--muted);font-size:10px;font-weight:700;padding:5px 8px;border-radius:7px}
+.cardfoot{border-top:1px solid var(--line);padding:13px 16px;display:flex;align-items:center;justify-content:space-between}
+.price{font-weight:900;font-size:17px;letter-spacing:-.4px;font-family:'Space Grotesk',sans-serif}
+.price small{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:0}
+.order{background:var(--grad-soft);color:var(--violet);padding:9px 13px;border-radius:11px;font-size:11.5px;font-weight:900;transition:.16s}
+.order:hover{background:var(--grad);color:#fff}
+.more{display:flex;justify-content:center;margin:22px 0 4px}
+.more button{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:13px 28px;font-size:12.5px;font-weight:800;color:var(--ink);transition:.16s}
+.more button:hover{border-color:var(--violet);color:var(--violet)}
+.footnote{font-size:10.5px;color:var(--muted);text-align:center;margin:16px 0 0;opacity:.8}
+
+/* ======== 파트너·API ======== */
+.api-view{padding:26px 0 60px}
+/* 파트너 히어로 밴드 */
+.phero{margin:4px 0 24px;border-radius:30px;background:var(--grad);color:#fff;padding:40px 44px;position:relative;overflow:hidden;box-shadow:0 30px 60px #7b5cff38;display:flex;align-items:center;justify-content:space-between;gap:30px}
+.phero:before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,#ffffff2b,transparent 65%);top:-160px;right:5%}
+.phero:after{content:"";position:absolute;inset:0;background:radial-gradient(130% 85% at 14% 120%,#ff4f8140,transparent 55%);mix-blend-mode:overlay}
+.phero-copy{position:relative;z-index:2;max-width:560px}
+.phero h1{font-size:clamp(26px,3.6vw,40px);line-height:1.14;letter-spacing:-1.4px;font-weight:900;margin:16px 0 12px}
+.phero h1 .hl{background:linear-gradient(100deg,var(--lime),#fff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.phero p{margin:0 0 4px;color:#eef0ff;font-size:14px;line-height:1.62;max-width:480px}
+.phero-side{position:relative;z-index:2;width:300px;flex-shrink:0}
+.profit{background:#ffffff16;border:1px solid #ffffff30;border-radius:22px;padding:22px;backdrop-filter:blur(8px);color:#fff;box-shadow:0 26px 54px #0b0c1844}
+.profit-head{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:13px;margin-bottom:8px}
+.profit-row{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;font-weight:700;margin-top:13px}
+.profit-row b{font:900 20px 'Space Grotesk',sans-serif}
+.profit-row .pg{color:var(--lime)}
+.profit-bar{height:9px;border-radius:6px;background:#ffffff22;margin-top:7px;overflow:hidden}
+.profit-bar i{display:block;height:100%;border-radius:6px;background:#ffffff66}
+.profit-bar.lg i{background:linear-gradient(90deg,var(--lime),#eaffc0)}
+.profit-foot{margin-top:16px;padding-top:14px;border-top:1px solid #ffffff26;font-size:12px;font-weight:700;color:#eef0ffd0}
+.profit-foot b{color:var(--lime)}
+.dash-title{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin:2px 0 22px}
+.dash-title h1{font-size:30px;font-weight:900;letter-spacing:-1px;margin:0 0 7px}
+.dash-title p{margin:0;color:var(--muted);font-size:13px}
+.sync{background:var(--grad);color:#fff;border-radius:13px;padding:13px 18px;font-size:12.5px;font-weight:800;box-shadow:0 10px 24px #7b5cff40;white-space:nowrap;transition:.16s}
+.sync:hover{transform:translateY(-1px)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:18px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 18px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden}
+.stat:after{content:"";position:absolute;width:70px;height:70px;border-radius:50%;background:var(--grad-soft);top:-20px;right:-16px}
+.stat label{font-size:11px;color:var(--muted);font-weight:800}
+.stat strong{display:block;font-size:27px;font-weight:900;letter-spacing:-1px;margin:9px 0 4px;font-family:'Space Grotesk',sans-serif;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;width:max-content}
+.stat em{font-size:10px;color:var(--muted);font-style:normal;font-weight:700}
+.provider-row{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:18px}
+.provider{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm)}
+.provider-head{display:flex;align-items:center;gap:13px;padding:16px 18px}
+.providerlogo{width:46px;height:46px;border-radius:14px;background:var(--grad-soft);color:var(--violet);display:grid;place-items:center;font-size:13px;font-weight:900;flex-shrink:0}
+.provider:nth-child(1) .providerlogo{background:linear-gradient(140deg,#13d7c426,#4aa6ff26);color:#1486c9}
+.provider-name{flex:1;min-width:0}
+.provider h3{font-size:14.5px;font-weight:800;margin:0 0 4px}
+.provider p{font-size:10.5px;color:var(--muted);margin:0}
+/* 공급처 잔액(API 실시간) + 충전 */
+.bal-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 18px;border-top:1px solid var(--line);background:var(--soft)}
+.bal label{font-size:10px;color:var(--muted);font-weight:800;display:flex;align-items:center;gap:6px}
+.api-badge{background:var(--grad-soft);color:var(--violet);font-size:8.5px;font-weight:900;padding:2px 7px;border-radius:20px;letter-spacing:.3px}
+.bal strong{display:block;font-size:22px;font-weight:900;letter-spacing:-.5px;margin-top:4px;font-family:'Space Grotesk',sans-serif}
+.bal small{font-size:11px;color:var(--muted);font-weight:700}
+.recharge{background:var(--ink);color:var(--bg);font-size:11.5px;font-weight:800;padding:10px 15px;border-radius:11px;white-space:nowrap;transition:.16s}
+.recharge:hover{transform:translateY(-1px)}
+.provider.low .bal strong{color:var(--pop)}
+.provider.low .recharge{background:var(--pop);color:#fff;animation:pulse2 1.4s infinite}
+@keyframes pulse2{0%,100%{box-shadow:0 0 0 0 #ff4f8155}50%{box-shadow:0 0 0 7px #ff4f8100}}
+.lowtag{font-size:9px;font-weight:900;color:#fff;background:var(--pop);padding:2px 7px;border-radius:20px;margin-left:6px}
+.connected{color:var(--teal);font-size:10.5px;font-weight:900;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.connected:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px #13d7c422;animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 3px #13d7c433}50%{box-shadow:0 0 0 6px #13d7c40d}}
+.two-col{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(280px,.8fr);gap:14px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm)}
+.panelhead{padding:16px 18px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
+.panelhead h3{font-size:14.5px;font-weight:800;margin:0}
+.panelhead span{font-size:10.5px;color:var(--muted);font-weight:700}
+.tablewrap{overflow:auto}
+table{border-collapse:collapse;width:100%;min-width:600px}
+th{text-align:left;background:var(--soft);color:var(--muted);font-size:10px;letter-spacing:.4px;padding:11px 14px;font-weight:800;text-transform:uppercase}
+td{padding:14px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted)}
+td strong{font-size:12.5px;color:var(--ink);font-weight:800}
+.sourcechip{background:var(--grad-soft);border-radius:30px;padding:5px 9px;color:var(--violet);font-size:9.5px;font-weight:800;white-space:nowrap}
+.toggle{width:34px;height:19px;background:var(--line);border-radius:12px;display:inline-flex;align-items:center;padding:2px;transition:.2s}
+.toggle:after{content:"";width:15px;height:15px;background:#fff;border-radius:50%;box-shadow:0 1px 3px #0003;transition:.2s}
+.toggle.on{background:var(--grad);justify-content:flex-end}
+.api-box{padding:18px}
+.api-box h3{font-size:14px;font-weight:800;margin:1px 0 7px}
+.api-box p{font-size:11px;color:var(--muted);line-height:1.6;margin:0 0 14px}
+.code{background:#101225;color:#d9e0ff;border-radius:13px;padding:15px;font:11.5px/1.75 'Space Grotesk',ui-monospace,Menlo,monospace;overflow:auto;border:1px solid #23264a}
+.code em{color:var(--lime);font-style:normal}
+.copy{width:100%;margin-top:11px;background:var(--grad-soft);color:var(--violet);border-radius:11px;padding:12px;font-size:11.5px;font-weight:900;transition:.16s}
+.copy:hover{background:var(--grad);color:#fff}
+.quality{display:flex;gap:9px;align-items:flex-start;padding:15px 18px;background:var(--soft);border-top:1px solid var(--line);color:var(--muted);font-size:10.5px;line-height:1.55}
+.quality b{color:var(--ink)}
+/* 파트너 혜택 리스트 */
+.rbl{padding:8px}
+.rb{display:flex;gap:13px;align-items:flex-start;padding:13px 12px;border-radius:14px;transition:.16s}
+.rb:hover{background:var(--soft)}
+.rb span{font-size:24px;flex-shrink:0;line-height:1}
+.rb b{font-size:14px;font-weight:800;display:block;margin-bottom:3px}
+.rb p{margin:0;color:var(--muted);font-size:12px;line-height:1.55}
+/* 관리자 콘솔 */
+.admin-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.admin-dash{background:var(--grad-soft);border:1px solid var(--line);color:var(--violet);border-radius:12px;padding:12px 16px;font-size:12.5px;font-weight:800;white-space:nowrap;transition:.16s}
+.admin-dash:hover{background:var(--grad);color:#fff;border-color:transparent}
+.admin-out{background:var(--soft);border:1px solid var(--line);color:var(--muted);border-radius:12px;padding:12px 16px;font-size:12.5px;font-weight:800;white-space:nowrap;transition:.16s}
+.admin-out:hover{border-color:var(--pop);color:var(--pop)}
+.admin-sub{font-size:14px;font-weight:800;margin:26px 0 12px;display:flex;align-items:center;gap:10px}
+.admin-sub span{font-size:10.5px;font-weight:700;color:var(--muted)}
+/* 관리자 로그인 모달 */
+.amodal{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(10,11,22,.55);backdrop-filter:blur(6px)}
+.amodal.show{display:flex;animation:fade .25s ease}
+.amodal-box{background:var(--card);border:1px solid var(--line);border-radius:26px;padding:34px 30px;width:100%;max-width:360px;text-align:center;box-shadow:var(--shadow);position:relative}
+.amodal-x{position:absolute;top:16px;right:18px;color:var(--muted);font-size:16px;line-height:1}
+.amodal-ic{width:64px;height:64px;margin:0 auto 14px;border-radius:20px;background:var(--grad-soft);display:grid;place-items:center;font-size:30px}
+.amodal-box h3{font-size:19px;font-weight:900;margin:0 0 6px;letter-spacing:-.5px}
+.amodal-box p{color:var(--muted);font-size:12.5px;margin:0 0 20px;line-height:1.5}
+.amodal-box input{width:100%;background:var(--soft);border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;font-size:15px;font-weight:700;text-align:center;letter-spacing:4px;transition:.16s}
+.amodal-box input:focus{outline:none;border-color:var(--violet)}
+.amodal-err{color:var(--pop);font-size:12px;font-weight:700;min-height:17px;margin:9px 0 2px}
+.amodal-go{width:100%;background:var(--grad);color:#fff;font-weight:800;font-size:15px;padding:14px;border-radius:14px;box-shadow:0 12px 28px #7b5cff44;transition:.16s}
+.amodal-go:hover{transform:translateY(-2px)}
+/* 로그인/회원가입 모달 */
+.auth-box{max-width:400px;text-align:left}
+.auth-brand{text-align:center;margin-bottom:14px}
+.auth-logo{display:inline-grid;place-items:center;width:52px;height:52px;border-radius:16px;background:var(--grad);color:#fff;font-weight:900;font-size:22px;box-shadow:0 10px 24px #7b5cff55;transform:rotate(-5deg)}
+.auth-box h3{font-size:21px;font-weight:900;margin:0 0 6px;letter-spacing:-.6px;text-align:center}
+.auth-box p{color:var(--muted);font-size:12.5px;margin:0 0 20px;text-align:center}
+.auth-tabs{display:flex;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:4px;margin-bottom:18px}
+.auth-tab{flex:1;border-radius:11px;padding:10px;font-size:13.5px;font-weight:800;color:var(--muted);transition:.16s}
+.auth-tab.active{background:var(--card);color:var(--violet);box-shadow:var(--shadow-sm)}
+.auth-field{margin-bottom:13px}
+.auth-field label{display:block;font-size:12px;font-weight:800;margin-bottom:7px}
+.auth-field input{width:100%;background:var(--soft);border:1.5px solid var(--line);border-radius:13px;padding:13px 15px;font-size:14px;font-weight:600;transition:.16s}
+.auth-field input:focus{outline:none;border-color:var(--violet)}
+.auth-agree{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin:4px 0 6px;cursor:pointer}
+.auth-agree input{width:16px;height:16px;accent-color:var(--violet);flex-shrink:0}
+.auth-only-signup{display:none}
+.auth-box.signup .auth-only-signup{display:block}
+.auth-box.signup .auth-agree{display:flex}
+.auth-social{margin-top:16px}
+.auth-divider{position:relative;text-align:center;margin:4px 0 14px}
+.auth-divider:before{content:"";position:absolute;top:50%;left:0;right:0;height:1px;background:var(--line)}
+.auth-divider span{position:relative;background:var(--card);padding:0 12px;font-size:11px;color:var(--muted);font-weight:700}
+.auth-sns{width:100%;border:1px solid var(--line);background:var(--soft);border-radius:13px;padding:13px;font-size:13.5px;font-weight:800;margin-bottom:9px;transition:.14s;display:flex;align-items:center;justify-content:center;gap:7px}
+.auth-sns:hover{border-color:var(--violet)}
+.auth-sns.kakao:hover{background:#fee50022;border-color:#f5d800}
+.auth-sns.naver:hover{background:#03c75a18;border-color:#03c75a}
+/* 주문 모달 */
+.omodal{position:fixed;inset:0;z-index:85;display:none;align-items:flex-start;justify-content:center;padding:28px 18px;background:rgba(10,11,22,.55);backdrop-filter:blur(6px);overflow:auto}
+.omodal.show{display:flex;animation:fade .25s ease}
+.omodal-box{background:var(--card);border:1px solid var(--line);border-radius:26px;padding:26px 26px 24px;width:100%;max-width:440px;box-shadow:var(--shadow);position:relative;margin:auto}
+.omodal-x{position:absolute;top:18px;right:20px;color:var(--muted);font-size:17px;line-height:1}
+.omodal-head{display:flex;gap:14px;align-items:center;margin-bottom:18px;padding-right:24px}
+.omodal-ic{width:56px;height:56px;border-radius:17px;color:#fff;display:grid;place-items:center;font-size:24px;font-weight:900;flex-shrink:0;box-shadow:0 8px 20px #0003}
+.omodal-head h3{font-size:19px;font-weight:900;margin:0 0 5px;letter-spacing:-.5px}
+.omodal-src{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:11.5px}
+.omodal-src span{color:var(--ink);font-weight:800}
+.omodal-chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px}
+.omodal-chips .meta{border:1px solid var(--line);background:var(--soft);color:var(--muted);font-size:10.5px;font-weight:700;padding:6px 10px;border-radius:8px}
+.olabel{display:block;font-size:12.5px;font-weight:800;margin:0 0 8px}
+.olabel-range{color:var(--muted);font-weight:600;font-size:11px;margin-left:4px}
+.oinput{width:100%;background:var(--soft);border:1.5px solid var(--line);border-radius:13px;padding:13px 15px;font-size:14px;font-weight:600;transition:.16s}
+.oinput:focus{outline:none;border-color:var(--violet)}
+.ohint{font-size:11px;color:var(--muted);margin:7px 0 18px;line-height:1.5}
+.orange{width:100%;-webkit-appearance:none;appearance:none;height:7px;border-radius:6px;background:var(--line);outline:none;margin:2px 0 14px}
+.orange::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--violet);border:4px solid #fff;box-shadow:0 3px 10px #7b5cff66;cursor:pointer}
+.orange::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--violet);border:4px solid #fff;box-shadow:0 3px 10px #7b5cff66;cursor:pointer}
+.oqty-row{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.oqty-num{flex:1;background:var(--soft);border:1.5px solid var(--line);border-radius:13px;padding:13px 15px;font:800 18px 'Space Grotesk',sans-serif;text-align:center;transition:.16s}
+.oqty-num:focus{outline:none;border-color:var(--violet)}
+.oqty-unit{font-size:14px;font-weight:800;color:var(--muted);min-width:24px}
+.osum{background:var(--soft);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:18px}
+.osum-row{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:var(--muted);margin-bottom:10px}
+.osum-row b{color:var(--ink);font-weight:800}
+.osum-total{display:flex;justify-content:space-between;align-items:center;border-top:1px dashed var(--line);padding-top:13px;margin-top:3px}
+.osum-total span{font-size:13px;font-weight:800}
+.osum-total b{font:900 24px 'Space Grotesk',sans-serif;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-.5px}
+.oorder-go{width:100%;background:var(--grad);color:#fff;font-weight:800;font-size:16px;padding:15px;border-radius:15px;box-shadow:0 14px 30px #7b5cff4d;transition:.16s}
+.oorder-go:hover{transform:translateY(-2px);box-shadow:0 18px 38px #7b5cff5e}
+.osafe{text-align:center;font-size:11px;color:var(--muted);margin-top:13px}
+/* 헤더 지갑 버튼 */
+.wallet-btn{display:inline-flex;align-items:center;gap:6px;background:var(--grad-soft);border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:9px 13px;font-size:12.5px;font-weight:700;transition:.16s}
+.wallet-btn b{font-family:'Space Grotesk',sans-serif;font-weight:900;color:var(--violet)}
+.wallet-btn:hover{border-color:var(--violet)}
+/* 지갑 잔액 히어로 */
+.wbal{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;background:var(--grad);border-radius:28px;padding:34px 38px;color:#fff;position:relative;overflow:hidden;box-shadow:0 30px 60px #7b5cff38}
+.wbal:before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,#ffffff2b,transparent 65%);top:-180px;right:4%}
+.wbal:after{content:"";position:absolute;inset:0;background:radial-gradient(130% 90% at 12% 120%,#ff4f8140,transparent 55%);mix-blend-mode:overlay}
+.wbal-left,.wbal-side{position:relative;z-index:2}
+.wbal-lbl{font-size:13px;font-weight:700;color:#eef0ffcc}
+.wbal-num{font:900 clamp(34px,5vw,52px)/1 'Space Grotesk',sans-serif;letter-spacing:-1.5px;margin:10px 0 12px}
+.wbal-sub{font-size:12.5px;color:#eef0ffd0;font-weight:600}
+.wbal-side{display:flex;flex-direction:column;gap:11px}
+.wbal-stat{background:#ffffff16;border:1px solid #ffffff2e;border-radius:14px;padding:12px 18px;min-width:180px;display:flex;justify-content:space-between;align-items:center;gap:16px;backdrop-filter:blur(6px)}
+.wbal-stat span{font-size:12px;color:#eef0ffcc;font-weight:600}
+.wbal-stat b{font:800 15px 'Space Grotesk',sans-serif}
+/* 충전 패널 */
+.wpad{padding:18px}
+.amt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.amt{position:relative;background:var(--soft);border:1.5px solid var(--line);border-radius:13px;padding:14px 10px;font:800 14px 'Space Grotesk',sans-serif;color:var(--ink);transition:.14s}
+.amt:hover{border-color:var(--violet)}
+.amt.sel{border-color:var(--violet);background:var(--grad-soft);box-shadow:0 6px 16px #7b5cff22}
+.amt-bonus{display:block;font-size:10px;font-weight:800;color:var(--teal);margin-top:3px;font-family:'Pretendard',sans-serif}
+.pm-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.pm{display:flex;flex-direction:column;align-items:flex-start;gap:3px;background:var(--soft);border:1.5px solid var(--line);border-radius:13px;padding:13px 15px;font-size:13.5px;font-weight:800;color:var(--ink);transition:.14s}
+.pm small{font-size:10.5px;font-weight:600;color:var(--muted)}
+.pm:hover{border-color:var(--violet)}
+.pm.sel{border-color:var(--violet);background:var(--grad-soft);box-shadow:0 6px 16px #7b5cff22}
+.pg-green{color:var(--teal)!important}
+/* 충전 상태 뱃지 */
+.wst{font-size:10.5px;font-weight:800;padding:4px 9px;border-radius:20px}
+.wst.ok{color:var(--teal);background:#13d7c418}
+.wst.wait{color:#e08a00;background:#ffb02018}
+/* 마이페이지 탭 */
+.wtabs{display:flex;gap:8px;margin:20px 0 4px}
+.wtab-btn{background:var(--card);border:1px solid var(--line);color:var(--muted);border-radius:13px;padding:11px 20px;font-size:13.5px;font-weight:800;transition:.16s}
+.wtab-btn:hover{border-color:var(--violet);color:var(--violet)}
+.wtab-btn.active{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 18px #7b5cff38}
+.wtab-panel{display:none} .wtab-panel.active{display:block;animation:fade .3s ease}
+/* 주문 내역 */
+.ofilters{display:flex;gap:7px;margin:16px 0 14px}
+.ofilter{background:var(--card);border:1px solid var(--line);color:var(--muted);border-radius:20px;padding:8px 16px;font-size:12.5px;font-weight:800;transition:.14s}
+.ofilter:hover{border-color:var(--violet);color:var(--violet)}
+.ofilter.active{background:var(--grad-soft);color:var(--violet);border-color:var(--violet)}
+.olist{display:flex;flex-direction:column;gap:11px}
+.oitem{display:flex;gap:15px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:17px 19px;box-shadow:var(--shadow-sm);transition:.16s}
+.oitem:hover{box-shadow:var(--shadow)}
+.oitem-ic{width:46px;height:46px;border-radius:14px;color:#fff;display:grid;place-items:center;font-size:19px;font-weight:900;flex-shrink:0;box-shadow:var(--shadow-sm)}
+.oitem-main{flex:1;min-width:0}
+.oitem-top{display:flex;align-items:center;gap:9px;margin-bottom:6px}
+.oitem-top b{font-size:14.5px;font-weight:800}
+.oitem-link{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:9px}
+.oprog{height:7px;border-radius:5px;background:var(--line);overflow:hidden;margin-bottom:8px}
+.oprog i{display:block;height:100%;border-radius:5px;background:var(--grad)}
+.oprog.done i{background:linear-gradient(90deg,#13d7c4,#36c98a)}
+.oitem-meta{font-size:11px;color:var(--muted)} .oitem-meta b{color:var(--ink);font-weight:800}
+.oitem-side{text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:7px}
+.oitem-amt{font:900 16px 'Space Grotesk',sans-serif;letter-spacing:-.5px}
+.oitem-date{font-size:10.5px;color:var(--muted)}
+.oreorder{background:var(--grad-soft);color:var(--violet);border:1px solid var(--line);border-radius:10px;padding:7px 13px;font-size:11.5px;font-weight:800;transition:.14s}
+.oreorder:hover{background:var(--grad);color:#fff;border-color:transparent}
+.ost{font-size:10.5px;font-weight:800;padding:4px 10px;border-radius:20px;white-space:nowrap}
+.ost.run{color:var(--violet);background:#7b5cff18}
+.ost.done{color:var(--teal);background:#13d7c418}
+.ost.refill{color:#e08a00;background:#ffb02018}
+
+/* ======== 토스트 ======== */
+.toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,24px);opacity:0;background:var(--ink);color:var(--bg);padding:13px 20px;border-radius:14px;font-size:12.5px;font-weight:700;box-shadow:var(--shadow);z-index:60;transition:.25s}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.hide{display:none!important}
+
+/* ======== 반응형 ======== */
+/* ===== 스크롤 등장 애니 ===== */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ===== 섹션 공통 ===== */
+.sec{position:relative;z-index:1;margin:76px 0}
+.sec-center{text-align:center}
+.sec-tag{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:800;letter-spacing:.4px;color:var(--violet);background:var(--grad-soft);border:1px solid var(--line);padding:7px 14px;border-radius:30px}
+.sec-h{font-size:clamp(26px,3.4vw,39px);font-weight:900;letter-spacing:-1.5px;margin:16px 0 10px;line-height:1.14}
+.sec-h .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sec-sub{color:var(--muted);font-size:15px;max-width:560px}
+.sec-center .sec-sub{margin-left:auto;margin-right:auto}
+
+/* ===== 실시간 통계 + 떡상 라이브 티커 ===== */
+.livewrap{margin:26px 0 6px;position:relative;z-index:1}
+.liveband{background:var(--grad);border-radius:28px;padding:30px 34px;color:#fff;position:relative;overflow:hidden;box-shadow:0 30px 60px #7b5cff38}
+.liveband:before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,#ffffff2b,transparent 65%);top:-170px;right:3%}
+.liveband:after{content:"";position:absolute;inset:0;background:radial-gradient(130% 90% at 12% 120%,#ff4f8140,transparent 55%);mix-blend-mode:overlay}
+.lst-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;position:relative;z-index:2}
+.lst{background:#ffffff16;border:1px solid #ffffff30;border-radius:18px;padding:17px 18px;backdrop-filter:blur(6px)}
+.lst .ic{font-size:18px}
+.lst .num{font:900 clamp(25px,2.9vw,35px)/1 'Space Grotesk',sans-serif;letter-spacing:-1px;display:flex;align-items:baseline;gap:2px;margin-top:9px}
+.lst .num .suf{font-size:18px;color:var(--lime);font-weight:800}
+.lst .lbl{font-size:12.5px;color:#eef0ffcc;margin-top:9px;font-weight:600}
+.ticker{margin-top:22px;border-top:1px solid #ffffff26;padding-top:15px;position:relative;z-index:2;overflow:hidden;-webkit-mask:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);mask:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.ticker-row{display:flex;gap:34px;width:max-content;animation:tick 30s linear infinite}
+.ticker-item{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:#fff;white-space:nowrap}
+.ticker-item b{color:var(--lime);font-weight:800}
+.ticker-item .tdot{width:7px;height:7px;border-radius:50%;background:#aef76b;box-shadow:0 0 0 3px #aef76b33;flex-shrink:0}
+.ticker-item .ago{color:#ffffff8c;font-weight:600}
+@keyframes tick{to{transform:translateX(-50%)}}
+
+/* ===== 이용방법 ===== */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px 24px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;transition:transform .2s}
+.step:before{content:"";position:absolute;inset:0;border-radius:22px;padding:1.5px;background:var(--grad);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:.25s}
+.step:hover{transform:translateY(-5px)} .step:hover:before{opacity:1}
+.step .n{font:900 42px/1 'Space Grotesk',sans-serif;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-2px}
+.step .em{font-size:30px;display:block;margin:12px 0 2px}
+.step h4{font-size:18px;font-weight:800;margin:10px 0 7px}
+.step p{color:var(--muted);font-size:13.5px;margin:0;line-height:1.65}
+
+/* ===== 왜 우리 ===== */
+.whygrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.why{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px 20px;box-shadow:var(--shadow-sm);transition:.2s}
+.why:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+.why .wic{width:52px;height:52px;border-radius:16px;background:var(--grad-soft);display:grid;place-items:center;font-size:25px;margin-bottom:14px}
+.why h4{font-size:16px;font-weight:800;margin:0 0 7px}
+.why p{color:var(--muted);font-size:13px;margin:0;line-height:1.6}
+
+/* ===== 후기 마퀴 ===== */
+.rev-mask{overflow:hidden;-webkit-mask:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+.rev-row{display:flex;gap:16px;width:max-content;animation:revscroll 46s linear infinite}
+.rev-row:hover{animation-play-state:paused}
+.rv{width:328px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:var(--shadow-sm);flex-shrink:0}
+.rv .stars{color:#ffb020;font-size:14px;letter-spacing:2px}
+.rv .txt{font-size:14px;line-height:1.62;margin:12px 0 16px;color:var(--ink)}
+.rv .who{display:flex;align-items:center;gap:11px}
+.rv .av{width:42px;height:42px;border-radius:50%;background:var(--grad);display:grid;place-items:center;color:#fff;font-weight:800;font-size:15px;flex-shrink:0}
+.rv .nm{font-weight:800;font-size:13.5px} .rv .role{color:var(--muted);font-size:12px;margin-top:1px}
+.rv .res{display:inline-block;margin-top:9px;font-size:11.5px;font-weight:800;color:var(--teal);background:#13d7c416;padding:4px 9px;border-radius:20px}
+@keyframes revscroll{to{transform:translateX(-50%)}}
+
+/* ===== FAQ ===== */
+.faq{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.fq{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm)}
+.fq summary{list-style:none;cursor:pointer;padding:18px 22px;font-weight:800;font-size:15px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.fq summary::-webkit-details-marker{display:none}
+.fq summary:after{content:"+";font-size:24px;color:var(--violet);font-weight:400;line-height:1;transition:transform .2s;flex-shrink:0}
+.fq[open] summary:after{transform:rotate(45deg)}
+.fq .ans{padding:0 22px 20px;color:var(--muted);font-size:14px;line-height:1.72}
+
+/* ===== 결제 + CTA ===== */
+.paycta{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:48px 44px;text-align:center;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.paycta:before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;background:var(--grad-soft);top:-200px;left:50%;transform:translateX(-50%);filter:blur(10px)}
+.paycta>*{position:relative;z-index:1}
+.paylist{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:24px 0 30px}
+.pay{display:inline-flex;align-items:center;gap:8px;background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:12px 18px;font-weight:700;font-size:13.5px}
+.pay .em{font-size:18px}
+.cta-btn{background:var(--grad);color:#fff;font-weight:800;font-size:16px;padding:16px 36px;border-radius:16px;box-shadow:0 16px 34px #7b5cff4d;transition:.18s}
+.cta-btn:hover{transform:translateY(-3px);box-shadow:0 20px 42px #7b5cff5e}
+
+/* ===== 푸터 ===== */
+.foot{border-top:1px solid var(--line);margin-top:72px;padding:32px 0;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;align-items:center}
+.foot a{color:var(--muted);text-decoration:none;margin-left:18px}
+.foot a:hover{color:var(--violet)}
+
+@media(max-width:1000px){
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .content{grid-template-columns:1fr}
+  .side{position:static;display:flex;flex-wrap:nowrap;overflow:auto;gap:6px;padding:10px;scrollbar-width:none}
+  .side::-webkit-scrollbar{display:none}
+  .side h3,.side .count{display:none}
+  .side button{width:auto;white-space:nowrap;padding:9px 13px}
+  .hero-side{display:none}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .provider-row{grid-template-columns:1fr}
+  .two-col{grid-template-columns:1fr}
+  .lst-grid{grid-template-columns:repeat(2,1fr)}
+  .steps{grid-template-columns:1fr}
+  .whygrid{grid-template-columns:repeat(2,1fr)}
+  .sec{margin:56px 0}
+  .phero-side{display:none}
+}
+@media(max-width:620px){
+  .wrap{padding:0 16px} .headin{padding:11px 16px;gap:10px}
+  .nav{gap:3px} .nav button{padding:8px 11px;font-size:12.5px}
+  .brandname small{display:none} .lang{display:none}
+  .hero{padding:30px 22px;border-radius:24px}
+  .cards{grid-template-columns:1fr}
+  .section-head h2{font-size:20px}
+  .dash-title h1{font-size:23px}
+  .theme-toggle{padding:9px;gap:0} .theme-toggle .theme-label{display:none}
+  .liveband{padding:22px 20px} .lst-grid{gap:10px} .lst{padding:14px 13px}
+  .whygrid{grid-template-columns:1fr}
+  .wbal{padding:26px 22px} .wbal-stat{min-width:0;flex:1}
+  .amt-grid{grid-template-columns:repeat(2,1fr)} .pm-grid{grid-template-columns:1fr}
+  .wallet-btn b{display:none}
+  .oitem{flex-wrap:wrap} .oitem-side{flex-direction:row;align-items:center;width:100%;justify-content:space-between;margin-top:4px}
+  .paycta{padding:34px 22px}
+  .foot{flex-direction:column;text-align:center} .foot a{margin:0 9px}
+  .phero{padding:30px 22px;border-radius:24px}
+}
+</style>
+</head>
+<body>
+<div class="topline"></div>
+
+<header>
+  <div class="headin">
+    <div class="brand">
+      <div class="brandmark" id="brandmark" title="온종일 소셜 서플라이">온</div>
+      <div class="brandname">온종일 소셜 서플라이<small class="eng">SOCIAL SUPPLY MARKET</small></div>
+    </div>
+    <nav class="nav">
+      <button class="active" data-view="store">🛍 서비스 몰</button>
+      <button data-view="reseller">⚡ 파트너·API</button>
+    </nav>
+    <div class="headright">
+      <div class="lang">🇰🇷 한국어 · KRW</div>
+      <button id="themeToggle" class="theme-toggle" type="button" aria-label="다크 테마로 전환" aria-pressed="false">
+        <span class="theme-icon" aria-hidden="true">◐</span>
+        <span class="theme-label">다크</span>
+      </button>
+      <button class="wallet-btn" onclick="showView('wallet')">💳 <b id="hdrBal">₩24,600</b></button>
+      <button class="login" onclick="openAuth('login')">로그인</button>
+    </div>
+  </div>
+</header>
+
+<!-- ======== 서비스 몰 ======== -->
+<main id="store" class="view active">
+  <div class="wrap">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow"><b>●</b> ONJONGIL SOCIAL SUPPLY</div>
+        <h1>당신의 계정, 오늘부터<br><span class="tuksang">떡상</span> 📈 <span class="hl">시작.</span></h1>
+        <p>전 세계 SMM 공급처를 한글로 정리 — 팔로워·조회수·좋아요를 한국 카드로 바로 충전하고 떡상을 시작하세요. 복잡한 해외 패널은 이제 그만.</p>
+        <div class="searchbox">
+          <span class="glass">⌕</span>
+          <input id="search" placeholder="상품명이나 플랫폼을 검색하세요">
+          <button onclick="searchProducts()">상품 검색</button>
+        </div>
+        <div class="hero-chips">
+          <span class="chip">🚀 <b>떡상</b> 부스터</span>
+          <span class="chip">🇰🇷 <b>한국카드</b> 결제</span>
+          <span class="chip">⚡ <b>실시간</b> 동기화</span>
+        </div>
+      </div>
+      <div class="hero-side">
+        <div class="growth" role="img" aria-label="실시간 팔로워 성장 그래프">
+          <div class="growth-head">
+            <span class="growth-title">📈 팔로워 성장</span>
+            <span class="growth-up">▲ 248%</span>
+          </div>
+          <svg class="growth-chart" viewBox="0 0 240 94" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="gfill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#c6f84e" stop-opacity=".5"/>
+                <stop offset="1" stop-color="#c6f84e" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path class="growth-area" d="M0,82 L38,70 76,75 114,48 152,53 196,24 236,9 L236,94 L0,94 Z" fill="url(#gfill)"/>
+            <polyline class="growth-line" points="0,82 38,70 76,75 114,48 152,53 196,24 236,9" fill="none" stroke="#daffa0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle class="growth-dot" cx="236" cy="9" r="5.5"/>
+          </svg>
+          <div class="growth-foot">
+            <span class="growth-from">2,480</span>
+            <span class="growth-arrow">→</span>
+            <span class="growth-to" id="growthNum">86,420</span>
+          </div>
+          <div class="growth-meta">
+            <span class="growth-plats"><b>📸</b><b>🎵</b><b>▶️</b></span>
+            <span class="growth-live">실시간 전송중</span>
+          </div>
+        </div>
+        <div class="growth-badges">
+          <span class="gb gb-1">⚡ 즉시 시작</span>
+          <span class="gb gb-2">🔒 안전 결제</span>
+          <span class="gb gb-3">🔁 리필 보장</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 실시간 통계 + 떡상 라이브 티커 -->
+    <section class="livewrap reveal">
+      <div class="liveband">
+        <div class="lst-grid">
+          <div class="lst"><div class="ic">🚀</div><div class="num"><span data-count="1284920">0</span><span class="suf">+</span></div><div class="lbl">누적 주문 수</div></div>
+          <div class="lst"><div class="ic">👥</div><div class="num"><span data-count="38400">0</span><span class="suf">+</span></div><div class="lbl">활성 회원</div></div>
+          <div class="lst"><div class="ic">🔗</div><div class="num"><span>2</span><span class="suf">곳</span></div><div class="lbl">연결 공급처</div></div>
+          <div class="lst"><div class="ic">⚡</div><div class="num"><span>2</span><span class="suf">분</span></div><div class="lbl">평균 시작 시간</div></div>
+        </div>
+        <div class="ticker"><div class="ticker-row" id="tickerRow"></div></div>
+      </div>
+    </section>
+
+    <section class="content">
+      <aside class="side">
+        <h3>플랫폼</h3>
+        <button class="selected" data-platform="all">전체 상품 <span class="count">1,284</span></button>
+        <button data-platform="Instagram">📸 Instagram <span class="count">326</span></button>
+        <button data-platform="TikTok">🎵 TikTok <span class="count">241</span></button>
+        <button data-platform="YouTube">▶️ YouTube <span class="count">198</span></button>
+        <button data-platform="Telegram">✈️ Telegram <span class="count">184</span></button>
+        <button data-platform="Spotify">🎧 Spotify <span class="count">152</span></button>
+        <button data-platform="Facebook">👍 Facebook <span class="count">203</span></button>
+        <button data-platform="Discord">💬 Discord <span class="count">178</span></button>
+      </aside>
+
+      <div class="main">
+        <div class="section-head">
+          <div>
+            <h2>🔥 지금 핫한 상품</h2>
+            <p>조건과 공급처를 확인하고 비교해 보세요.</p>
+          </div>
+          <select class="sort" id="sortSel">
+            <option value="reco">추천순</option>
+            <option value="popular">인기순</option>
+            <option value="low">가격 낮은순</option>
+            <option value="high">가격 높은순</option>
+          </select>
+        </div>
+        <div class="pills">
+          <button class="pill active" data-kind="all">전체</button>
+          <button class="pill" data-kind="팔로워">팔로워</button>
+          <button class="pill" data-kind="좋아요">좋아요</button>
+          <button class="pill" data-kind="조회수">조회수</button>
+          <button class="pill" data-kind="멤버">멤버</button>
+          <button class="pill" data-kind="재생">재생</button>
+        </div>
+
+        <div class="cards" id="cards"><!-- JS가 상품 카드를 렌더링합니다 --></div>
+        <div class="noresult" id="noResult" style="display:none">검색 결과가 없어요. 다른 키워드로 찾아보세요.</div>
+
+        <div class="more" id="moreWrap"><button id="moreBtn" onclick="showMore()">상품 더 보기 <span id="moreCount"></span></button></div>
+        <div class="footnote">표시된 가격·상품명·수량은 화면 구성을 위한 시안 데이터입니다.</div>
+      </div>
+    </section>
+
+    <!-- 이용방법 -->
+    <section class="sec sec-center reveal">
+      <span class="sec-tag">● 이용 방법</span>
+      <h2 class="sec-h">3단계면 <span class="g">떡상</span> 시작</h2>
+      <p class="sec-sub">복잡한 해외 패널은 그만. 가입하고 충전하면 바로 주문이에요.</p>
+      <div class="steps" style="margin-top:36px;text-align:left">
+        <div class="step"><div class="n">01</div><span class="em">🙋</span><h4>회원가입</h4><p>이메일로 1분이면 끝. 바로 한국어 대시보드에 입장해요.</p></div>
+        <div class="step"><div class="n">02</div><span class="em">💳</span><h4>한국 카드로 충전</h4><p>카드·무통장·간편결제로 원하는 만큼. 환전·해외결제 필요 없어요.</p></div>
+        <div class="step"><div class="n">03</div><span class="em">🚀</span><h4>주문 = 떡상</h4><p>상품 고르고 링크만 넣으면 평균 2분 안에 전송이 시작돼요.</p></div>
+      </div>
+    </section>
+
+    <!-- 왜 소셜 서플라이 -->
+    <section class="sec sec-center reveal">
+      <span class="sec-tag">● WHY 소셜 서플라이</span>
+      <h2 class="sec-h">왜 <span class="g">소셜 서플라이</span>일까</h2>
+      <div class="whygrid" style="margin-top:32px;text-align:left">
+        <div class="why"><div class="wic">🇰🇷</div><h4>완전 한국어</h4><p>해외 패널의 영어·번역 스트레스 없이 전부 한글로.</p></div>
+        <div class="why"><div class="wic">💳</div><h4>한국 카드 결제</h4><p>해외결제·암호화폐 없이 국내 카드·간편결제로 바로.</p></div>
+        <div class="why"><div class="wic">⚡</div><h4>평균 2분 시작</h4><p>주문 즉시 전송 시작. 하염없이 기다릴 필요 없어요.</p></div>
+        <div class="why"><div class="wic">🔁</div><h4>리필 보장</h4><p>이탈분 자동 리필. 숫자가 줄어도 다시 채워드려요.</p></div>
+      </div>
+    </section>
+
+    <!-- 후기 -->
+    <section class="sec reveal">
+      <div class="sec-center">
+        <span class="sec-tag">● 실사용 후기</span>
+        <h2 class="sec-h">이미 <span class="g">떡상</span>한 사람들</h2>
+        <p class="sec-sub">실제 고객들이 남긴 성장 후기예요.</p>
+      </div>
+      <div class="rev-mask" style="margin-top:32px"><div class="rev-row" id="revRow">
+        <div class="rv"><div class="stars">★★★★★</div><div class="txt">“플레이스가 1페이지까지 올라왔어요. 반신반의했는데 진짜 신기함.”</div><div class="who"><div class="av">김</div><div><div class="nm">김○○</div><div class="role">동네 카페 사장님</div></div></div><span class="res">📈 매장 방문 3배</span></div>
+        <div class="rv"><div class="stars">★★★★★</div><div class="txt">“틱톡 조회수가 안 늘어서 고민이었는데 하루 만에 터졌어요.”</div><div class="who"><div class="av">이</div><div><div class="nm">이○○</div><div class="role">뷰티 크리에이터</div></div></div><span class="res">🔥 조회수 10배</span></div>
+        <div class="rv"><div class="stars">★★★★★</div><div class="txt">“해외 패널은 영어 막혀서 포기했는데, 여긴 다 한국어라 너무 편해요.”</div><div class="who"><div class="av">박</div><div><div class="nm">박○○</div><div class="role">온라인 쇼핑몰 대표</div></div></div><span class="res">💬 문의 2배</span></div>
+        <div class="rv"><div class="stars">★★★★★</div><div class="txt">“카드로 바로 충전되는 게 제일 좋아요. 환전 안 해도 되니까.”</div><div class="who"><div class="av">최</div><div><div class="nm">최○○</div><div class="role">1인 사업자</div></div></div><span class="res">⭐ 팔로워 +8천</span></div>
+        <div class="rv"><div class="stars">★★★★★</div><div class="txt">“리필이 진짜 되네요. 숫자 줄어들면 알아서 채워줍니다.”</div><div class="who"><div class="av">정</div><div><div class="nm">정○○</div><div class="role">보습학원 원장님</div></div></div><span class="res">✅ 수강 문의 ↑</span></div>
+        <div class="rv"><div class="stars">★★★★★</div><div class="txt">“인스타 팔로워 늘리고 공구 매출이 눈에 띄게 올랐어요.”</div><div class="who"><div class="av">한</div><div><div class="nm">한○○</div><div class="role">공동구매 셀러</div></div></div><span class="res">🛒 매출 2.4배</span></div>
+      </div></div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="sec reveal">
+      <div class="sec-center"><span class="sec-tag">● 자주 묻는 질문</span><h2 class="sec-h">궁금한 거 <span class="g">다 풀어드려요</span></h2></div>
+      <div class="faq" style="margin-top:32px">
+        <details class="fq"><summary>계정이 정지되거나 위험하지 않나요?</summary><div class="ans">공개 정보 기반의 안전 속도 방식으로 전달하며 비밀번호를 요구하지 않습니다. 상품마다 안전 등급을 표시해 안심하고 고를 수 있어요.</div></details>
+        <details class="fq"><summary>얼마나 빨리 시작되나요?</summary><div class="ans">대부분 주문 후 평균 2분 안에 전송이 시작됩니다. 상품마다 예상 시작 시간과 전달 속도를 미리 안내해 드려요.</div></details>
+        <details class="fq"><summary>결제는 어떻게 하나요?</summary><div class="ans">국내 신용·체크카드, 무통장 입금, 카카오페이·네이버페이로 결제할 수 있어요. 해외결제·암호화폐 없이 원화로 충전됩니다.</div></details>
+        <details class="fq"><summary>리필(보충)은 어떻게 되나요?</summary><div class="ans">‘리필 포함’ 상품은 전송 후 이탈분이 생기면 보장 기간 내 자동으로 다시 채워드립니다. 상품 상세에서 리필 기간을 확인하세요.</div></details>
+        <details class="fq"><summary>리셀러로 재판매할 수 있나요?</summary><div class="ans">파트너·API 메뉴에서 리셀러 API를 제공합니다. 공급처 잔액이 실시간으로 연동돼 내 서비스에 그대로 붙여 팔 수 있어요.</div></details>
+        <details class="fq"><summary>환불되나요?</summary><div class="ans">전송이 시작되지 않은 주문은 취소·환불이 가능합니다. 진행 상태는 대시보드에서 실시간으로 확인할 수 있어요.</div></details>
+      </div>
+    </section>
+
+    <!-- 결제수단 + 최종 CTA -->
+    <section class="sec reveal">
+      <div class="paycta">
+        <span class="sec-tag">● 지금 시작하기</span>
+        <h2 class="sec-h" style="margin-top:16px">오늘 가입하고 <span class="g">떡상</span> 시작하세요</h2>
+        <p class="sec-sub">한국 카드·간편결제로 1분이면 충전 완료.</p>
+        <div class="paylist">
+          <span class="pay"><span class="em">💳</span>신용·체크카드</span>
+          <span class="pay"><span class="em">🏦</span>무통장 입금</span>
+          <span class="pay"><span class="em">🟡</span>카카오페이</span>
+          <span class="pay"><span class="em">🟢</span>네이버페이</span>
+        </div>
+        <button class="cta-btn" onclick="toast('회원가입 시안입니다')">🚀 무료로 시작하기</button>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <div>© 2026 온종일 소셜 서플라이 · 화면은 디자인 시안입니다.</div>
+      <div><a href="#" onclick="return false">이용약관</a><a href="#" onclick="return false">개인정보처리방침</a><a href="#" onclick="return false">고객센터</a></div>
+    </footer>
+  </div>
+</main>
+
+<!-- ======== 파트너·API ======== -->
+<main id="reseller" class="view">
+  <div class="wrap api-view">
+    <!-- 파트너 히어로 밴드 -->
+    <section class="phero reveal">
+      <div class="phero-copy">
+        <div class="eyebrow"><b>●</b> PARTNER & RESELLER API</div>
+        <h1>내 브랜드로 <span class="hl">재판매</span>하고<br>수익을 떡상시키세요</h1>
+        <p>공급처 도매가로 받아 한국어 상품으로 다시 판매. 잔액·주문·상태가 API로 실시간 연동됩니다.</p>
+        <div class="hero-chips">
+          <span class="chip">🏷️ <b>도매가</b> 공급</span>
+          <span class="chip">🔗 <b>실시간</b> 잔액 API</span>
+          <span class="chip">🇰🇷 <b>한국어</b> 자동 변환</span>
+        </div>
+      </div>
+      <div class="phero-side">
+        <div class="profit">
+          <div class="profit-head"><span>💰 리셀러 마진 예시</span><span class="growth-up">+312%</span></div>
+          <div class="profit-row"><span>도매 원가</span><b>₩1,120</b></div>
+          <div class="profit-bar"><i style="width:30%"></i></div>
+          <div class="profit-row"><span>내 판매가</span><b class="pg">₩4,620</b></div>
+          <div class="profit-bar lg"><i style="width:100%"></i></div>
+          <div class="profit-foot">1,000개 주문당 <b>₩3,500</b> 마진</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 리셀러 API (회원 공개) + 파트너 혜택 -->
+    <div class="two-col reveal" style="margin-top:22px">
+      <section class="panel">
+        <div class="panelhead"><h3>파트너가 받는 것</h3><span>리셀러 전용</span></div>
+        <div class="rbl">
+          <div class="rb"><span>🏷️</span><div><b>도매가 공급</b><p>공급처 원가 그대로 받아 마진은 직접 설정하세요.</p></div></div>
+          <div class="rb"><span>🔗</span><div><b>실시간 잔액·주문 API</b><p>잔액·주문·상태·리필을 API로 자동 연동합니다.</p></div></div>
+          <div class="rb"><span>🇰🇷</span><div><b>한국어 자동 변환</b><p>해외 상품을 한국어 상품명·설명으로 바로 제공.</p></div></div>
+          <div class="rb"><span>⚡</span><div><b>주문 자동화</b><p>내 서비스에서 주문하면 공급처로 자동 발주됩니다.</p></div></div>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <div class="panelhead"><h3>리셀러 API</h3><span>연동 상태 정상</span></div>
+        <div class="api-box">
+          <h3>우리 상품을 파트너에게 제공</h3>
+          <p>파트너는 이 API로 한국어 상품 목록을 불러오고 주문·상태를 연동할 수 있습니다.</p>
+          <div class="code">POST&nbsp; <em>api.onjongil.com/v2</em><br><br>action: <em>services</em><br>language: <em>ko</em><br>currency: <em>KRW</em></div>
+          <button class="copy" onclick="toast('API 문서 보기 시안입니다')">API 문서 보기</button>
+        </div>
+        <div class="quality"><span>🔒</span><span>공급처 API 키와 원본 서비스 ID는 비공개로 보관합니다.</span></div>
+      </aside>
+    </div>
+
+    <div class="footnote">리셀러 API 주소·연동 상태는 구조를 보여주기 위한 시안입니다.</div>
+  </div>
+</main>
+
+<!-- ======== 관리자 콘솔 (로고 7번 클릭 → 비번 123456, nav에 없음) ======== -->
+<main id="admin" class="view">
+  <div class="wrap api-view">
+    <div class="dash-title">
+      <div>
+        <h1>🔐 관리자 콘솔</h1>
+        <p>공급처 잔액·상품 공개·동기화를 관리합니다. (관리자 전용)</p>
+      </div>
+      <div class="admin-actions">
+        <button class="admin-dash" onclick="showView('store')">🏠 대시보드 가기</button>
+        <button class="sync" onclick="toast('연결된 공급처 상품 동기화를 시작합니다')">⟳　상품 동기화</button>
+        <button class="admin-out" onclick="adminLogout()">나가기</button>
+      </div>
+    </div>
+
+    <h3 class="admin-sub">💰 공급처 잔액 <span>API 실시간 · 떨어지면 충전</span></h3>
+    <div class="provider-row">
+      <div class="provider">
+        <div class="provider-head">
+          <div class="providerlogo">SP</div>
+          <div class="provider-name"><h3>Stream-Promotion</h3><p>스트리밍 전문 · 마지막 동기화 12분 전</p></div>
+          <span class="connected">연결됨</span>
+        </div>
+        <div class="bal-row">
+          <div class="bal"><label>남은 잔액 <span class="api-badge">API 실시간</span></label><strong>$128.40 <small>USD</small></strong></div>
+          <button class="recharge" onclick="toast('Stream-Promotion 충전 페이지 시안입니다')">충전하기</button>
+        </div>
+      </div>
+      <div class="provider low">
+        <div class="provider-head">
+          <div class="providerlogo">SMB</div>
+          <div class="provider-name"><h3>SMB Panel <span class="lowtag">충전 필요</span></h3><p>종합 SNS 상품 · 마지막 동기화 28분 전</p></div>
+          <span class="connected">연결됨</span>
+        </div>
+        <div class="bal-row">
+          <div class="bal"><label>남은 잔액 <span class="api-badge">API 실시간</span></label><strong>$12.70 <small>USD</small></strong></div>
+          <button class="recharge" onclick="toast('SMB Panel 충전 페이지 시안입니다')">지금 충전</button>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="admin-sub">📊 내부 지표</h3>
+    <div class="stats">
+      <div class="stat"><label>전체 수집 상품</label><strong>6,842</strong><em>공급처에서 동기화됨</em></div>
+      <div class="stat"><label>한국어 변환 완료</label><strong>6,105</strong><em>자동 분류 진행 중</em></div>
+      <div class="stat"><label>판매 중</label><strong>1,284</strong><em>검토 기준 통과</em></div>
+      <div class="stat"><label>리셀러 주문</label><strong>328</strong><em>이번 달</em></div>
+    </div>
+
+    <h3 class="admin-sub">🗂️ 상품 검토 및 공개</h3>
+    <section class="panel">
+      <div class="panelhead"><h3>공급처 상품 → 판매 공개</h3><span>전체 6,842 · 판매 공개 1,284</span></div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>상품</th><th>플랫폼</th><th>공급처</th><th>도매가</th><th>공개</th></tr></thead>
+          <tbody>
+            <tr><td><strong>인스타그램 팔로워 · 리필 30일</strong></td><td>Instagram</td><td><span class="sourcechip">SMB Panel</span></td><td>₩1,120/1K</td><td><span class="toggle on"></span></td></tr>
+            <tr><td><strong>틱톡 좋아요 · 점진 전달</strong></td><td>TikTok</td><td><span class="sourcechip">SMB Panel</span></td><td>₩410/1K</td><td><span class="toggle on"></span></td></tr>
+            <tr><td><strong>Twitch 라이브 시청자</strong></td><td>Twitch</td><td><span class="sourcechip">Stream-Promotion</span></td><td>₩2,400/1K</td><td><span class="toggle on"></span></td></tr>
+            <tr><td><strong>텔레그램 채널 멤버</strong></td><td>Telegram</td><td><span class="sourcechip">SMB Panel</span></td><td>₩2,060/1K</td><td><span class="toggle"></span></td></tr>
+            <tr><td><strong>Spotify 트랙 재생</strong></td><td>Spotify</td><td><span class="sourcechip">Stream-Promotion</span></td><td>₩1,380/1K</td><td><span class="toggle on"></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="quality"><span>✳</span><span><b>상품 공개 기준</b> 리필 조건·최소/최대 수량·가격 변동 여부를 기준으로 자동 분류합니다. 공개 전에 관리자가 일괄 검토할 수 있습니다.</span></div>
+    </section>
+
+    <div class="footnote">관리자 콘솔 · 수치·잔액은 구조를 보여주기 위한 시안 데이터입니다.</div>
+  </div>
+</main>
+
+<!-- ======== 충전 / 지갑 (회원) ======== -->
+<main id="wallet" class="view">
+  <div class="wrap api-view">
+    <div class="dash-title">
+      <div><h1>🙋 마이페이지</h1><p>잔액 충전과 주문 내역을 한곳에서 관리하세요.</p></div>
+      <button class="admin-dash" onclick="showView('store')">🏠 서비스 몰로</button>
+    </div>
+
+    <!-- 잔액 히어로 -->
+    <section class="wbal reveal">
+      <div class="wbal-left">
+        <div class="wbal-lbl">현재 잔액</div>
+        <div class="wbal-num" id="walletBal">₩24,600</div>
+        <div class="wbal-sub">💡 충전하면 바로 주문에 사용할 수 있어요</div>
+      </div>
+      <div class="wbal-side">
+        <div class="wbal-stat"><span>이번 달 충전</span><b>₩150,000</b></div>
+        <div class="wbal-stat"><span>이번 달 주문</span><b>₩125,400</b></div>
+      </div>
+    </section>
+
+    <!-- 마이페이지 탭 -->
+    <div class="wtabs">
+      <button class="wtab-btn active" data-wtab="charge">💳 충전</button>
+      <button class="wtab-btn" data-wtab="orders">📋 주문 내역</button>
+    </div>
+
+    <div id="wtab-charge" class="wtab-panel active">
+    <div class="two-col reveal" style="margin-top:16px">
+      <!-- 충전 -->
+      <section class="panel">
+        <div class="panelhead"><h3>잔액 충전</h3><span>금액 선택 후 결제</span></div>
+        <div class="wpad">
+          <label class="olabel">충전 금액</label>
+          <div class="amt-grid" id="amtGrid">
+            <button class="amt" data-amt="10000">₩10,000</button>
+            <button class="amt" data-amt="30000">₩30,000</button>
+            <button class="amt sel" data-amt="50000">₩50,000<span class="amt-bonus">+2%</span></button>
+            <button class="amt" data-amt="100000">₩100,000<span class="amt-bonus">+5%</span></button>
+            <button class="amt" data-amt="300000">₩300,000<span class="amt-bonus">+8%</span></button>
+            <button class="amt" data-amt="500000">₩500,000<span class="amt-bonus">+10%</span></button>
+          </div>
+          <label class="olabel" style="margin-top:18px">직접 입력</label>
+          <div class="oqty-row" style="margin-bottom:18px">
+            <input id="amtCustom" class="oqty-num" type="number" inputmode="numeric" placeholder="직접 입력" style="text-align:left">
+            <span class="oqty-unit">원</span>
+          </div>
+
+          <label class="olabel">결제 수단</label>
+          <div class="pm-grid" id="pmGrid">
+            <button class="pm sel" data-pm="가상계좌">🏦 가상계좌<small>무통장 자동확인</small></button>
+            <button class="pm" data-pm="카카오페이">🟡 카카오페이<small>간편결제</small></button>
+            <button class="pm" data-pm="네이버페이">🟢 네이버페이<small>간편결제</small></button>
+            <button class="pm" data-pm="신용카드">💳 신용·체크카드<small>국내 카드</small></button>
+          </div>
+
+          <div class="osum" style="margin-top:20px">
+            <div class="osum-row"><span>충전 금액</span><b id="wSumAmt">₩50,000</b></div>
+            <div class="osum-row"><span>보너스</span><b id="wSumBonus" class="pg-green">+₩1,000</b></div>
+            <div class="osum-total"><span>받는 잔액</span><b id="wSumTotal">₩51,000</b></div>
+          </div>
+          <button class="oorder-go" style="margin-top:16px" onclick="submitCharge()">⚡ 충전하기</button>
+        </div>
+      </section>
+
+      <!-- 충전 내역 -->
+      <aside class="panel">
+        <div class="panelhead"><h3>충전 내역</h3><span>최근 5건</span></div>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>일시</th><th>수단</th><th>금액</th><th>상태</th></tr></thead>
+            <tbody>
+              <tr><td>10/07 14:22</td><td><span class="sourcechip">가상계좌</span></td><td>₩50,000</td><td><span class="wst ok">완료</span></td></tr>
+              <tr><td>10/05 09:11</td><td><span class="sourcechip">카카오페이</span></td><td>₩100,000</td><td><span class="wst ok">완료</span></td></tr>
+              <tr><td>10/02 20:40</td><td><span class="sourcechip">네이버페이</span></td><td>₩30,000</td><td><span class="wst ok">완료</span></td></tr>
+              <tr><td>09/28 11:05</td><td><span class="sourcechip">가상계좌</span></td><td>₩50,000</td><td><span class="wst wait">입금대기</span></td></tr>
+              <tr><td>09/25 16:33</td><td><span class="sourcechip">신용카드</span></td><td>₩20,000</td><td><span class="wst ok">완료</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="quality"><span>🔒</span><span>가상계좌 입금은 자동 확인되며, 입금 즉시 잔액에 반영됩니다.</span></div>
+      </aside>
+    </div>
+    </div><!-- /wtab-charge -->
+
+    <!-- 주문 내역 탭 -->
+    <div id="wtab-orders" class="wtab-panel">
+      <div class="ofilters">
+        <button class="ofilter active" data-ofilter="all">전체</button>
+        <button class="ofilter" data-ofilter="running">진행중</button>
+        <button class="ofilter" data-ofilter="done">완료</button>
+      </div>
+
+      <div class="olist" id="olist">
+        <div class="oitem" data-ostatus="running">
+          <div class="oitem-ic ig">◎</div>
+          <div class="oitem-main">
+            <div class="oitem-top"><b>인스타그램 팔로워</b><span class="ost run">전송중</span></div>
+            <div class="oitem-link">🔗 instagram.com/onjongil_official</div>
+            <div class="oprog"><i style="width:64%"></i></div>
+            <div class="oitem-meta">시작 2,480 → <b>목표 5,000</b> · 남은 1,800 · 주문 #10482</div>
+          </div>
+          <div class="oitem-side"><div class="oitem-amt">₩9,500</div><div class="oitem-date">10/07 14:25</div></div>
+        </div>
+
+        <div class="oitem" data-ostatus="running">
+          <div class="oitem-ic tt">♪</div>
+          <div class="oitem-main">
+            <div class="oitem-top"><b>틱톡 좋아요</b><span class="ost run">전송중</span></div>
+            <div class="oitem-link">🔗 tiktok.com/@onjongil/video/738...</div>
+            <div class="oprog"><i style="width:28%"></i></div>
+            <div class="oitem-meta">시작 140 → <b>목표 3,000</b> · 남은 2,160 · 주문 #10477</div>
+          </div>
+          <div class="oitem-side"><div class="oitem-amt">₩2,160</div><div class="oitem-date">10/07 13:02</div></div>
+        </div>
+
+        <div class="oitem" data-ostatus="done">
+          <div class="oitem-ic sp">◖</div>
+          <div class="oitem-main">
+            <div class="oitem-top"><b>Spotify 트랙 재생</b><span class="ost done">완료</span></div>
+            <div class="oitem-link">🔗 open.spotify.com/track/4cO...</div>
+            <div class="oprog done"><i style="width:100%"></i></div>
+            <div class="oitem-meta">10,000회 전달 완료 · 주문 #10461</div>
+          </div>
+          <div class="oitem-side"><div class="oitem-amt">₩21,000</div><button class="oreorder" onclick="reorder('Spotify 트랙 재생')">재주문</button></div>
+        </div>
+
+        <div class="oitem" data-ostatus="done">
+          <div class="oitem-ic tg">➤</div>
+          <div class="oitem-main">
+            <div class="oitem-top"><b>텔레그램 채널 멤버</b><span class="ost refill">리필 진행</span></div>
+            <div class="oitem-link">🔗 t.me/onjongil_channel</div>
+            <div class="oprog done"><i style="width:100%"></i></div>
+            <div class="oitem-meta">2,000명 전달 완료 · 이탈분 리필 중 · 주문 #10433</div>
+          </div>
+          <div class="oitem-side"><div class="oitem-amt">₩6,800</div><button class="oreorder" onclick="reorder('텔레그램 채널 멤버')">재주문</button></div>
+        </div>
+
+        <div class="oitem" data-ostatus="done">
+          <div class="oitem-ic fb">f</div>
+          <div class="oitem-main">
+            <div class="oitem-top"><b>페이스북 페이지 좋아요</b><span class="ost done">완료</span></div>
+            <div class="oitem-link">🔗 facebook.com/onjongilpage</div>
+            <div class="oprog done"><i style="width:100%"></i></div>
+            <div class="oitem-meta">1,000개 전달 완료 · 주문 #10399</div>
+          </div>
+          <div class="oitem-side"><div class="oitem-amt">₩2,800</div><button class="oreorder" onclick="reorder('페이스북 페이지 좋아요')">재주문</button></div>
+        </div>
+      </div>
+
+      <div class="quality" style="border-radius:16px;border:1px solid var(--line);margin-top:14px"><span>💡</span><span>주문 상태는 공급처 API로 실시간 갱신됩니다. 전송중·완료·리필 상태를 여기서 추적하세요.</span></div>
+    </div>
+
+    <div class="footnote">잔액·충전·주문 내역은 구조를 보여주기 위한 시안 데이터입니다.</div>
+  </div>
+</main>
+
+<div id="toast" class="toast"></div>
+
+<!-- 로그인 / 회원가입 모달 -->
+<div id="authModal" class="amodal">
+  <div class="amodal-box auth-box">
+    <button class="amodal-x" onclick="closeAuth()" aria-label="닫기">✕</button>
+    <div class="auth-brand"><span class="auth-logo">온</span></div>
+    <h3 id="authTitle">다시 오셨네요 👋</h3>
+    <p id="authDesc">로그인하고 떡상을 이어가세요.</p>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-auth="login" onclick="switchAuth('login')">로그인</button>
+      <button class="auth-tab" data-auth="signup" onclick="switchAuth('signup')">회원가입</button>
+    </div>
+
+    <div class="auth-field"><label>이메일</label><input id="authEmail" type="email" placeholder="you@email.com" autocomplete="off"></div>
+    <div class="auth-field"><label>비밀번호</label><input id="authPw2" type="password" placeholder="비밀번호" autocomplete="off"></div>
+    <div class="auth-field auth-only-signup"><label>비밀번호 확인</label><input id="authPw3" type="password" placeholder="비밀번호 다시 입력" autocomplete="off"></div>
+    <label class="auth-agree auth-only-signup"><input type="checkbox" id="authAgree"> <span>이용약관 및 개인정보처리방침에 동의합니다</span></label>
+
+    <div id="authErr" class="amodal-err"></div>
+    <button class="amodal-go" id="authGo" onclick="submitAuth()">로그인</button>
+
+    <div class="auth-social">
+      <div class="auth-divider"><span>또는</span></div>
+      <button class="auth-sns kakao" onclick="toast('카카오 로그인 시안입니다')">🟡 카카오로 계속하기</button>
+      <button class="auth-sns naver" onclick="toast('네이버 로그인 시안입니다')">🟢 네이버로 계속하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 주문 모달 -->
+<div id="orderModal" class="omodal">
+  <div class="omodal-box">
+    <button class="omodal-x" onclick="closeOrder()" aria-label="닫기">✕</button>
+    <div class="omodal-head">
+      <div class="omodal-ic" id="odIcon">◎</div>
+      <div>
+        <h3 id="odName">상품명</h3>
+        <div class="omodal-src"><i class="sourcedot"></i>공급처 <span id="odSource">SMB Panel</span></div>
+      </div>
+    </div>
+
+    <div class="omodal-chips" id="odChips"></div>
+
+    <label class="olabel">🔗 링크</label>
+    <input id="odLink" class="oinput" type="text" placeholder="링크를 붙여넣으세요">
+    <div class="ohint" id="odLinkHint">주문할 게시물·프로필·채널의 공개 링크를 넣어주세요.</div>
+
+    <label class="olabel">🔢 수량 <span class="olabel-range" id="odRange"></span></label>
+    <input id="odQty" class="orange" type="range">
+    <div class="oqty-row">
+      <input id="odQtyNum" class="oqty-num" type="number" inputmode="numeric">
+      <span class="oqty-unit" id="odUnit">명</span>
+    </div>
+
+    <div class="osum">
+      <div class="osum-row"><span>단가</span><b id="odUnitPrice">₩1,900 / 1,000</b></div>
+      <div class="osum-row"><span>예상 시작</span><b id="odStart">0~1시간</b></div>
+      <div class="osum-row"><span id="odRefillLbl">리필</span><b id="odRefill">30일 리필</b></div>
+      <div class="osum-total"><span>결제 금액</span><b id="odTotal">₩190</b></div>
+    </div>
+
+    <button class="oorder-go" onclick="submitOrder()">🚀 주문하고 떡상 시작</button>
+    <div class="osafe">🔒 비밀번호를 요구하지 않는 안전 방식으로 전달됩니다.</div>
+  </div>
+</div>
+
+<!-- 관리자 로그인 모달 (로고 7번 클릭 시) -->
+<div id="adminModal" class="amodal">
+  <div class="amodal-box">
+    <button class="amodal-x" onclick="closeAdmin()" aria-label="닫기">✕</button>
+    <div class="amodal-ic">🔐</div>
+    <h3>관리자 로그인</h3>
+    <p>공급처 잔액·상품 관리를 위한 관리자 전용입니다.</p>
+    <input id="adminPw" type="password" inputmode="numeric" placeholder="비밀번호" autocomplete="off" onkeydown="if(event.key==='Enter')adminLogin()">
+    <div id="adminErr" class="amodal-err"></div>
+    <button class="amodal-go" onclick="adminLogin()">입장하기</button>
+  </div>
+</div>
+
+<script>
+/* ===== 상품 카탈로그(데이터 기반 렌더) ===== */
+// popular=인기순 가중치(높을수록 상위). 전부 SMB Panel/Stream-Promotion 2곳 공급.
+const PRODUCTS=[
+  {p:'Instagram',k:'팔로워',name:'인스타그램 팔로워 (한국인)',icon:'◎',cls:'ig',tag:'한국인',src:'SMB Panel',price:1900,min:100,max:100000,unit:'명',start:'0~1시간',refill:'30일 리필',ph:'https://instagram.com/내아이디',desc:'실제 한국 계정 · 점진 전달',metas:['최소 100','30일 리필','API 주문'],pop:98},
+  {p:'Instagram',k:'팔로워',name:'인스타그램 팔로워 (해외)',icon:'◎',cls:'ig',tag:'최저가',src:'SMB Panel',price:900,min:100,max:500000,unit:'명',start:'0~1시간',refill:'30일 리필',ph:'https://instagram.com/내아이디',desc:'가성비 해외 계정 · 대량 가능',metas:['최소 100','대량 가능','API 주문'],pop:90},
+  {p:'Instagram',k:'좋아요',name:'인스타그램 좋아요',icon:'◎',cls:'ig',tag:'인기',src:'SMB Panel',price:500,min:50,max:50000,unit:'개',start:'0~30분',refill:'7일 리필',ph:'https://instagram.com/p/게시물',desc:'게시물·릴스 좋아요 즉시형',metas:['최소 50','빠른 시작','취소 가능'],pop:95},
+  {p:'Instagram',k:'조회수',name:'인스타그램 릴스 조회수',icon:'◎',cls:'ig',tag:'릴스',src:'SMB Panel',price:300,min:100,max:1000000,unit:'회',start:'0~1시간',refill:'리필 미포함',ph:'https://instagram.com/reel/릴스',desc:'릴스·동영상 조회수',metas:['최소 100','대량 가능','API 주문'],pop:88},
+  {p:'TikTok',k:'팔로워',name:'틱톡 팔로워',icon:'♪',cls:'tt',tag:'성장',src:'SMB Panel',price:1600,min:50,max:100000,unit:'명',start:'0~1시간',refill:'30일 리필',ph:'https://tiktok.com/@내아이디',desc:'계정 성장용 팔로워',metas:['최소 50','30일 리필','API 주문'],pop:86},
+  {p:'TikTok',k:'좋아요',name:'틱톡 좋아요',icon:'♪',cls:'tt',tag:'인기',src:'SMB Panel',price:720,min:50,max:50000,unit:'개',start:'0~30분',refill:'30일 리필',ph:'https://tiktok.com/@내아이디/video/...',desc:'영상별 시작·리필 표시',metas:['최소 50','리필 30일','취소 가능'],pop:93},
+  {p:'TikTok',k:'조회수',name:'틱톡 조회수',icon:'♪',cls:'tt',tag:'최저가',src:'SMB Panel',price:120,min:100,max:10000000,unit:'회',start:'0~30분',refill:'리필 미포함',ph:'https://tiktok.com/@내아이디/video/...',desc:'초대량 조회수 · 바이럴용',metas:['최소 100','초대량','빠른 시작'],pop:91},
+  {p:'YouTube',k:'팔로워',name:'유튜브 구독자',icon:'▶',cls:'yt',tag:'프리미엄',src:'Stream-Promotion',price:8900,min:100,max:50000,unit:'명',start:'0~6시간',refill:'30일 리필',ph:'https://youtube.com/@내채널',desc:'채널 구독자 · 안전 속도',metas:['최소 100','30일 리필','안전 속도'],pop:84},
+  {p:'YouTube',k:'조회수',name:'유튜브 조회수',icon:'▶',cls:'yt',tag:'인기',src:'Stream-Promotion',price:1200,min:1000,max:10000000,unit:'회',start:'0~12시간',refill:'리필 미포함',ph:'https://youtube.com/watch?v=...',desc:'동영상 조회수 · 리텐션 양호',metas:['최소 1,000','대량 가능','API 주문'],pop:89},
+  {p:'YouTube',k:'좋아요',name:'유튜브 좋아요',icon:'▶',cls:'yt',tag:'참여',src:'Stream-Promotion',price:1100,min:50,max:50000,unit:'개',start:'0~3시간',refill:'30일 리필',ph:'https://youtube.com/watch?v=...',desc:'영상 좋아요 · 참여 지표',metas:['최소 50','30일 리필','취소 가능'],pop:80},
+  {p:'Telegram',k:'멤버',name:'텔레그램 채널 멤버',icon:'➤',cls:'tg',tag:'채널 성장',src:'SMB Panel',price:3400,min:100,max:50000,unit:'명',start:'0~2시간',refill:'리필 미포함',ph:'https://t.me/내채널',desc:'공개 채널 멤버 추가',metas:['최소 100','설명 확인','API 주문'],pop:78},
+  {p:'Telegram',k:'조회수',name:'텔레그램 포스트 조회수',icon:'➤',cls:'tg',tag:'노출',src:'SMB Panel',price:90,min:100,max:1000000,unit:'회',start:'0~1시간',refill:'리필 미포함',ph:'https://t.me/내채널/123',desc:'최근 게시물 조회수',metas:['최소 100','초대량','빠른 시작'],pop:72},
+  {p:'Spotify',k:'재생',name:'Spotify 트랙 재생',icon:'◖',cls:'sp',tag:'음악',src:'SMB Panel',price:2100,min:500,max:1000000,unit:'회',start:'0~6시간',refill:'리필 미포함',ph:'https://open.spotify.com/track/...',desc:'트랙 재생수 · 로열티 집계형',metas:['최소 500','트랙 링크','API 주문'],pop:76},
+  {p:'Spotify',k:'팔로워',name:'Spotify 팔로워',icon:'◖',cls:'sp',tag:'아티스트',src:'SMB Panel',price:2600,min:100,max:100000,unit:'명',start:'0~12시간',refill:'30일 리필',ph:'https://open.spotify.com/artist/...',desc:'아티스트·플레이리스트 팔로워',metas:['최소 100','30일 리필','API 주문'],pop:70},
+  {p:'Facebook',k:'좋아요',name:'페이스북 페이지 좋아요',icon:'f',cls:'fb',tag:'페이지',src:'SMB Panel',price:2800,min:50,max:50000,unit:'개',start:'0~3시간',refill:'리필 여부 표시',ph:'https://facebook.com/내페이지',desc:'공개 페이지 좋아요',metas:['최소 50','리필 표시','API 주문'],pop:68},
+  {p:'Facebook',k:'팔로워',name:'페이스북 팔로워',icon:'f',cls:'fb',tag:'성장',src:'SMB Panel',price:2400,min:100,max:100000,unit:'명',start:'0~3시간',refill:'30일 리필',ph:'https://facebook.com/내프로필',desc:'프로필·페이지 팔로워',metas:['최소 100','30일 리필','API 주문'],pop:66},
+  {p:'Facebook',k:'조회수',name:'페이스북 영상 조회수',icon:'f',cls:'fb',tag:'노출',src:'SMB Panel',price:260,min:500,max:1000000,unit:'회',start:'0~3시간',refill:'리필 미포함',ph:'https://facebook.com/watch/...',desc:'동영상 조회수 · 대량',metas:['최소 500','대량 가능','API 주문'],pop:63},
+  {p:'Discord',k:'멤버',name:'디스코드 서버 멤버',icon:'◉',cls:'ds',tag:'커뮤니티',src:'SMB Panel',price:4200,min:25,max:10000,unit:'명',start:'즉시 시작',refill:'리필 미포함',ph:'https://discord.gg/초대코드',desc:'서버 초대 링크로 멤버 추가',metas:['최소 25','즉시 시작','API 주문'],pop:62},
+  {p:'Discord',k:'멤버',name:'디스코드 온라인 멤버',icon:'◉',cls:'ds',tag:'활성',src:'SMB Panel',price:5600,min:25,max:5000,unit:'명',start:'즉시 시작',refill:'30일 유지',ph:'https://discord.gg/초대코드',desc:'온라인 표시 활성 멤버',metas:['최소 25','30일 유지','API 주문'],pop:58},
+];
+let platform='all',kind='all',sortMode='reco',shown=9;
+const cardsBox=document.getElementById('cards');
+function matched(){
+  const q=document.getElementById('search').value.trim().toLowerCase();
+  let list=PRODUCTS.filter(p=>
+    (platform==='all'||p.p===platform)&&
+    (kind==='all'||p.k===kind)&&
+    (!q||(p.name+p.p+p.k+p.desc).toLowerCase().includes(q))
+  );
+  if(sortMode==='popular')list=[...list].sort((a,b)=>b.pop-a.pop);
+  else if(sortMode==='low')list=[...list].sort((a,b)=>a.price-b.price);
+  else if(sortMode==='high')list=[...list].sort((a,b)=>b.price-a.price);
+  return list;
+}
+function cardHtml(p){
+  const metas=p.metas.map(m=>`<span class="meta">${m}</span>`).join('');
+  return `<article class="card" data-platform="${p.p}" data-kind="${p.k}"
+    data-name="${p.name}" data-icon="${p.icon}" data-iconcls="${p.cls}" data-source="${p.src}"
+    data-price="${p.price}" data-min="${p.min}" data-max="${p.max}" data-unit="${p.unit}" data-start="${p.start}" data-refill="${p.refill}"
+    data-ph="${p.ph}">
+    <div class="cardtop"><div class="socialicon ${p.cls}">${p.icon}</div><span class="tag">${p.tag}</span></div>
+    <div class="cardbody">
+      <h3>${p.name}</h3>
+      <div class="carddesc">${p.desc}</div>
+      <div class="source"><i class="sourcedot"></i>공급처 <span class="sourcename">${p.src}</span></div>
+      <div class="metas">${metas}</div>
+    </div>
+    <div class="cardfoot"><div class="price">₩${p.price.toLocaleString('ko-KR')} <small>/ 1,000${p.unit}</small></div><button class="order" onclick="openOrder(this)">주문하기</button></div>
+  </article>`;
+}
+function renderCards(){
+  const list=matched();
+  const slice=list.slice(0,shown);
+  cardsBox.innerHTML=slice.map(cardHtml).join('');
+  document.getElementById('noResult').style.display=list.length?'none':'block';
+  const more=document.getElementById('moreWrap'),rest=list.length-slice.length;
+  if(rest>0){more.style.display='flex';document.getElementById('moreCount').textContent=`(+${rest})`;}
+  else more.style.display='none';
+}
+function showMore(){shown+=9;renderCards();}
+function resetAndRender(){shown=9;renderCards();}
+document.querySelectorAll('.side button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.side button').forEach(x=>x.classList.toggle('selected',x===b));
+  platform=b.dataset.platform;resetAndRender();
+}));
+document.querySelectorAll('.pill').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.pill').forEach(x=>x.classList.toggle('active',x===b));
+  kind=b.dataset.kind;resetAndRender();
+}));
+document.getElementById('sortSel').addEventListener('change',e=>{sortMode=e.target.value;resetAndRender();});
+function searchProducts(){resetAndRender();}
+document.getElementById('search').addEventListener('input',resetAndRender);
+renderCards();
+let timer;
+function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(timer);timer=setTimeout(()=>el.classList.remove('show'),2200);}
+
+/* 뷰 전환 */
+const nav=[...document.querySelectorAll('.nav button')];
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
+  nav.forEach(x=>x.classList.toggle('active',x.dataset.view===id));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+nav.forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
+
+/* 관리자: 로고 7번 클릭 → 로그인(비번 123456) → #admin 뷰 */
+const ADMIN_PW='123456';
+let logoClicks=0,logoTimer;
+document.getElementById('brandmark').addEventListener('click',()=>{
+  if(document.getElementById('admin').classList.contains('active')) return; /* 이미 관리자면 무시 */
+  logoClicks++;
+  clearTimeout(logoTimer);
+  logoTimer=setTimeout(()=>{logoClicks=0;},1200); /* 1.2초 안에 연속 7번 */
+  if(logoClicks>=7){logoClicks=0;openAdmin();}
+});
+function openAdmin(){
+  const m=document.getElementById('adminModal');
+  m.classList.add('show');
+  document.getElementById('adminErr').textContent='';
+  const pw=document.getElementById('adminPw');pw.value='';setTimeout(()=>pw.focus(),50);
+}
+function closeAdmin(){document.getElementById('adminModal').classList.remove('show');}
+function adminLogin(){
+  const pw=document.getElementById('adminPw').value.trim();
+  if(pw===ADMIN_PW){
+    closeAdmin();
+    showView('admin');
+    toast('관리자 콘솔에 입장했습니다');
+  }else{
+    document.getElementById('adminErr').textContent='비밀번호가 올바르지 않습니다';
+    const pwi=document.getElementById('adminPw');pwi.value='';pwi.focus();
+  }
+}
+function adminLogout(){showView('store');toast('관리자 콘솔에서 나왔습니다');}
+/* 모달 바깥 클릭 닫기 */
+document.getElementById('adminModal').addEventListener('click',e=>{if(e.target.id==='adminModal')closeAdmin();});
+
+/* ===== 로그인 / 회원가입 모달 ===== */
+function openAuth(mode){
+  document.getElementById('authModal').classList.add('show');
+  switchAuth(mode||'login');
+  const em=document.getElementById('authEmail');setTimeout(()=>em.focus(),50);
+}
+function closeAuth(){document.getElementById('authModal').classList.remove('show');}
+function switchAuth(mode){
+  const box=document.querySelector('#authModal .auth-box');
+  box.classList.toggle('signup',mode==='signup');
+  document.querySelectorAll('.auth-tab').forEach(t=>t.classList.toggle('active',t.dataset.auth===mode));
+  document.getElementById('authTitle').textContent=mode==='signup'?'떡상 시작하기 🚀':'다시 오셨네요 👋';
+  document.getElementById('authDesc').textContent=mode==='signup'?'1분이면 가입 끝, 바로 충전하고 주문하세요.':'로그인하고 떡상을 이어가세요.';
+  document.getElementById('authGo').textContent=mode==='signup'?'회원가입':'로그인';
+  document.getElementById('authErr').textContent='';
+}
+function submitAuth(){
+  const signup=document.querySelector('#authModal .auth-box').classList.contains('signup');
+  const email=document.getElementById('authEmail').value.trim();
+  const pw=document.getElementById('authPw2').value;
+  const err=document.getElementById('authErr');
+  if(!email||!/.+@.+\..+/.test(email)){err.textContent='올바른 이메일을 입력해 주세요';return;}
+  if(pw.length<6){err.textContent='비밀번호는 6자 이상이어야 합니다';return;}
+  if(signup){
+    if(pw!==document.getElementById('authPw3').value){err.textContent='비밀번호가 일치하지 않습니다';return;}
+    if(!document.getElementById('authAgree').checked){err.textContent='약관에 동의해 주세요';return;}
+    closeAuth();showView('wallet');toast('회원가입 완료(시안)! 충전하고 떡상 시작하세요');
+  }else{
+    closeAuth();showView('wallet');toast('로그인 완료(시안)!');
+  }
+}
+document.getElementById('authModal').addEventListener('click',e=>{if(e.target.id==='authModal')closeAuth();});
+
+/* ===== 주문 모달 ===== */
+const won=n=>'₩'+Math.round(n).toLocaleString('ko-KR');
+let odData=null;
+function openOrder(btn){
+  const c=btn.closest('.card');const d=c.dataset;
+  odData={price:+d.price,min:+d.min,max:+d.max,unit:d.unit};
+  // 헤더
+  const ic=document.getElementById('odIcon');
+  ic.textContent=d.icon;ic.className='omodal-ic '+d.iconcls;
+  document.getElementById('odName').textContent=d.name;
+  document.getElementById('odSource').textContent=d.source;
+  // 칩(메타)
+  document.getElementById('odChips').innerHTML=
+    `<span class="meta">최소 ${(+d.min).toLocaleString('ko-KR')}</span>`+
+    `<span class="meta">최대 ${(+d.max).toLocaleString('ko-KR')}</span>`+
+    `<span class="meta">${d.refill}</span>`+
+    `<span class="meta">${d.platform}</span>`;
+  // 링크
+  const link=document.getElementById('odLink');link.value='';link.placeholder=d.ph;
+  // 수량 슬라이더/입력
+  const range=document.getElementById('odQty'),num=document.getElementById('odQtyNum');
+  range.min=d.min;range.max=d.max;range.step=Math.max(1,Math.round(+d.min/2));
+  const start=Math.min(+d.max,Math.max(+d.min,+d.min*10)); // 기본값=최소×10
+  range.value=start;num.value=start;num.min=d.min;num.max=d.max;
+  document.getElementById('odUnit').textContent=d.unit;
+  document.getElementById('odRange').textContent=`(${(+d.min).toLocaleString('ko-KR')} ~ ${(+d.max).toLocaleString('ko-KR')}${d.unit})`;
+  // 요약
+  document.getElementById('odUnitPrice').textContent=won(d.price)+' / 1,000';
+  document.getElementById('odStart').textContent=d.start;
+  document.getElementById('odRefill').textContent=d.refill;
+  calcOrder();
+  document.getElementById('orderModal').classList.add('show');
+}
+function closeOrder(){document.getElementById('orderModal').classList.remove('show');}
+function clampQty(v){if(!odData)return 0;v=Math.round(v||0);return Math.max(odData.min,Math.min(odData.max,v));}
+function calcOrder(){
+  if(!odData)return;
+  const q=clampQty(+document.getElementById('odQtyNum').value);
+  document.getElementById('odTotal').textContent=won(odData.price*q/1000);
+}
+// 슬라이더 ↔ 숫자 동기화
+document.getElementById('odQty').addEventListener('input',e=>{
+  document.getElementById('odQtyNum').value=e.target.value;calcOrder();
+});
+document.getElementById('odQtyNum').addEventListener('input',e=>{
+  const q=clampQty(+e.target.value);document.getElementById('odQty').value=q;calcOrder();
+});
+document.getElementById('odQtyNum').addEventListener('blur',e=>{
+  const q=clampQty(+e.target.value);e.target.value=q;document.getElementById('odQty').value=q;calcOrder();
+});
+function submitOrder(){
+  const link=document.getElementById('odLink').value.trim();
+  if(!link){toast('링크를 입력해 주세요');document.getElementById('odLink').focus();return;}
+  const q=clampQty(+document.getElementById('odQtyNum').value);
+  closeOrder();
+  toast(`주문 접수(시안): ${odData.unit} ${q.toLocaleString('ko-KR')} · ${won(odData.price*q/1000)}`);
+}
+document.getElementById('orderModal').addEventListener('click',e=>{if(e.target.id==='orderModal')closeOrder();});
+
+/* ===== 충전 / 지갑 ===== */
+let chargeAmt=50000,chargePm='가상계좌';
+function bonusRate(a){ // 충전 금액별 보너스율
+  if(a>=500000)return .10; if(a>=300000)return .08; if(a>=100000)return .05; if(a>=50000)return .02; return 0;
+}
+function calcCharge(){
+  const b=Math.round(chargeAmt*bonusRate(chargeAmt));
+  document.getElementById('wSumAmt').textContent=won(chargeAmt);
+  document.getElementById('wSumBonus').textContent=(b>0?'+':'')+won(b);
+  document.getElementById('wSumTotal').textContent=won(chargeAmt+b);
+}
+document.querySelectorAll('#amtGrid .amt').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#amtGrid .amt').forEach(x=>x.classList.toggle('sel',x===b));
+  chargeAmt=+b.dataset.amt;document.getElementById('amtCustom').value='';calcCharge();
+}));
+document.getElementById('amtCustom').addEventListener('input',e=>{
+  const v=Math.max(0,Math.round(+e.target.value||0));
+  if(v>0){document.querySelectorAll('#amtGrid .amt').forEach(x=>x.classList.remove('sel'));chargeAmt=v;calcCharge();}
+});
+document.querySelectorAll('#pmGrid .pm').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#pmGrid .pm').forEach(x=>x.classList.toggle('sel',x===b));
+  chargePm=b.dataset.pm;
+}));
+function submitCharge(){
+  if(chargeAmt<1000){toast('최소 충전 금액은 ₩1,000입니다');return;}
+  const b=Math.round(chargeAmt*bonusRate(chargeAmt));
+  if(chargePm==='가상계좌'){
+    toast(`가상계좌 발급(시안): ${won(chargeAmt)} 입금하면 ${won(chargeAmt+b)} 적립`);
+  }else{
+    toast(`${chargePm} 결제(시안): ${won(chargeAmt)} 충전 → ${won(chargeAmt+b)} 적립`);
+  }
+}
+calcCharge();
+
+/* ===== 마이페이지 탭 + 주문 내역 ===== */
+document.querySelectorAll('.wtab-btn').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.wtab-btn').forEach(x=>x.classList.toggle('active',x===b));
+  document.querySelectorAll('.wtab-panel').forEach(p=>p.classList.toggle('active',p.id==='wtab-'+b.dataset.wtab));
+}));
+document.querySelectorAll('.ofilter').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.ofilter').forEach(x=>x.classList.toggle('active',x===b));
+  const f=b.dataset.ofilter;
+  document.querySelectorAll('#olist .oitem').forEach(it=>{
+    it.style.display=(f==='all'||it.dataset.ostatus===f)?'':'none';
+  });
+}));
+function reorder(name){
+  // 같은 상품 카드를 찾아 주문 모달 열기(없으면 토스트)
+  const card=[...document.querySelectorAll('.card')].find(c=>c.dataset.name===name);
+  if(card){showView('store');openOrder(card.querySelector('.order'));}
+  else toast('재주문(시안): '+name);
+}
+
+/* 테마(라이트 기본) */
+const themeToggle=document.getElementById('themeToggle');
+function applyTheme(theme){
+  document.documentElement.dataset.theme=theme;
+  const dark=theme==='dark';
+  themeToggle.setAttribute('aria-pressed',String(dark));
+  themeToggle.setAttribute('aria-label',dark?'라이트 테마로 전환':'다크 테마로 전환');
+  themeToggle.querySelector('.theme-icon').textContent=dark?'☼':'◐';
+  themeToggle.querySelector('.theme-label').textContent=dark?'라이트':'다크';
+  try{localStorage.setItem('onjongil-theme',theme)}catch(e){}
+}
+let savedTheme='light';try{savedTheme=localStorage.getItem('onjongil-theme')||'light'}catch(e){}
+applyTheme(savedTheme);
+themeToggle.addEventListener('click',()=>applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
+
+/* 떡상 성장 카드 — 숫자 0→목표 카운트업(라인 드로우 애니와 맞춤) */
+(function(){
+  const el=document.getElementById('growthNum');if(!el)return;
+  const target=86420,dur=1700,t0=performance.now();
+  function step(now){
+    const p=Math.min(1,(now-t0)/dur);
+    const v=Math.round(target*(1-Math.pow(1-p,3)));
+    el.textContent=v.toLocaleString('ko-KR');
+    if(p<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+})();
+
+/* 떡상 라이브 티커 + 후기 루프 + 스크롤 등장 + 통계 카운트업 */
+(function(){
+  const tk=[["📸","@minje_official","인스타 팔로워 1,000","3초 전"],["🎵","@dani_vlog","틱톡 조회수 10,000","11초 전"],["▶️","@sodam_tv","유튜브 구독자 300","24초 전"],["📸","@cafe.onul","인스타 좋아요 500","38초 전"],["✈️","@signal_kr","텔레그램 멤버 1,000","52초 전"],["🎧","@indie.sound","스포티파이 재생 5,000","1분 전"],["📸","@beauty_log","인스타 팔로워 2,000","1분 전"],["🎵","@daily_eat","틱톡 좋아요 3,000","2분 전"]];
+  const row=document.getElementById('tickerRow');
+  if(row){
+    const mk=()=>tk.map(t=>`<span class="ticker-item"><span class="tdot"></span>${t[0]} <b>${t[1]}</b> ${t[2]} 떡상 완료 ✅ <span class="ago">${t[3]}</span></span>`).join('');
+    row.innerHTML=mk()+mk();
+  }
+  const rev=document.getElementById('revRow');
+  if(rev) rev.innerHTML+=rev.innerHTML; /* ×2 복제 = 끊김없는 마퀴 */
+
+  function countUp(el){
+    const target=+el.dataset.count,dur=1600,t0=performance.now();
+    (function step(now){
+      const p=Math.min(1,(now-t0)/dur);
+      el.textContent=Math.round(target*(1-Math.pow(1-p,3))).toLocaleString('ko-KR');
+      if(p<1)requestAnimationFrame(step);
+    })(performance.now());
+  }
+  const reveals=document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    const io=new IntersectionObserver((ents)=>{
+      ents.forEach(e=>{
+        if(!e.isIntersecting)return;
+        e.target.classList.add('in');
+        e.target.querySelectorAll('[data-count]').forEach(countUp);
+        io.unobserve(e.target);
+      });
+    },{threshold:.18});
+    reveals.forEach(el=>io.observe(el));
+  }else{
+    reveals.forEach(el=>{el.classList.add('in');el.querySelectorAll('[data-count]').forEach(countUp);});
+  }
+})();
+</script>
+</body>
+</html>
