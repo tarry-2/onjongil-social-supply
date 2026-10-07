@@ -174,6 +174,7 @@ header{position:sticky;top:0;z-index:30;backdrop-filter:blur(14px);background:co
 .cardfoot{border-top:1px solid var(--line);padding:13px 16px;display:flex;align-items:center;justify-content:space-between}
 .price{font-weight:900;font-size:17px;letter-spacing:-.4px;font-family:'Space Grotesk',sans-serif}
 .price small{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:0}
+.minbuy{font-size:10.5px;color:var(--teal);font-weight:800;margin-top:3px}
 .order{background:var(--grad-soft);color:var(--violet);padding:9px 13px;border-radius:11px;font-size:11.5px;font-weight:900;transition:.16s}
 .order:hover{background:var(--grad);color:#fff}
 .more{display:flex;justify-content:center;margin:22px 0 4px}
@@ -289,6 +290,21 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
 #aRows .toggle{cursor:pointer}
 #aRows td strong{font-weight:700}
 .aprice{font-family:'Space Grotesk',sans-serif;font-weight:800;color:var(--violet)}
+.marginbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.marginbar label{font-size:13px;font-weight:800}
+.mquick{display:flex;gap:6px;flex-wrap:wrap;margin-left:4px}
+.mquick button{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:9px 13px;font-size:12px;font-weight:800;transition:.14s}
+.mquick button:hover{border-color:var(--violet);color:var(--violet)}
+.margin-ex{margin:14px 0 0;font-size:12.5px;color:var(--muted)}
+.margin-ex b{color:var(--ink)}
+.arow-desc{font-size:10.5px;color:var(--muted);margin-top:3px;max-width:300px;line-height:1.45}
+.arow-sub{font-size:9px;color:var(--muted)}
+.arange b{color:var(--ink)}
+.aprofit{font-size:10px;color:var(--teal);font-weight:800;margin-top:2px}
+.attrs{white-space:nowrap}
+.attr{display:inline-block;font-size:9.5px;font-weight:800;padding:3px 7px;border-radius:7px;margin:1px}
+.attr.y{background:#13d7c41a;color:var(--teal)}
+.attr.n{background:var(--soft);color:var(--muted);opacity:.45;text-decoration:line-through}
 /* 관리자 로그인 모달 */
 .amodal{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(10,11,22,.55);backdrop-filter:blur(6px)}
 .amodal.show{display:flex;animation:fade .25s ease}
@@ -880,10 +896,31 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
       <div class="stat"><label>연결 공급처</label><strong>2</strong><em>Stream·SMB</em></div>
     </div>
 
-    <h3 class="admin-sub">🗂️ 상품 공개 관리 <span>토글 켠 것만 고객에게 보입니다</span></h3>
+    <h3 class="admin-sub">💵 판매가 마진 <span>도매가 대비 몇 % 붙일지 — 자유 설정</span></h3>
+    <section class="panel" style="padding:18px">
+      <div class="marginbar">
+        <label>마진율</label>
+        <input id="marginIn" class="oqty-num" type="number" min="0" step="10" style="max-width:120px;text-align:center">
+        <span style="font-weight:800">%</span>
+        <button class="amodal-go" style="width:auto;padding:12px 22px" onclick="applyMargin()">적용</button>
+        <div class="mquick">
+          <button onclick="setMarginQuick(10)">10%</button>
+          <button onclick="setMarginQuick(50)">50%</button>
+          <button onclick="setMarginQuick(100)">100%</button>
+          <button onclick="setMarginQuick(150)">150%</button>
+          <button onclick="setMarginQuick(200)">200%</button>
+          <button onclick="setMarginQuick(300)">300%</button>
+        </div>
+      </div>
+      <p class="margin-ex">예: 도매 <b>1,000원</b> × 마진 <b id="mPct">150</b>% = 판매 <b id="marginEx" style="color:var(--violet)">2,500원</b> · 전체 <b id="mCount">9,134</b>개 상품에 일괄 적용</p>
+    </section>
+
+    <h3 class="admin-sub">🗂️ 상품 공개 관리 <span>토글 켠 것만 고객에게 보입니다</span>
+      <button class="admin-dash" style="margin-left:auto;padding:7px 13px" onclick="resetLive()">⟳ 추천 기본셋 적용</button></h3>
     <section class="panel">
       <div class="apbar">
         <input id="aSearch" class="oinput" placeholder="🔍 상품·플랫폼 검색">
+        <select id="aSrc" class="sort"><option value="all">🏢 모든 공급처</option></select>
         <select id="aPlat" class="sort"><option value="all">모든 플랫폼</option></select>
         <select id="aKind" class="sort"><option value="all">모든 종류</option></select>
         <select id="aGeo" class="sort"><option value="all">모든 나라</option></select>
@@ -897,7 +934,7 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
       </div>
       <div class="tablewrap">
         <table>
-          <thead><tr><th>상품</th><th>플랫폼</th><th>나라</th><th>도매가</th><th>판매가</th><th>공개</th></tr></thead>
+          <thead><tr><th>상품 · 설명</th><th>종류</th><th>나라</th><th>수량 범위</th><th>속성</th><th>공급처</th><th>도매가</th><th>판매가 (이익)</th><th>공개</th></tr></thead>
           <tbody id="aRows"></tbody>
         </table>
       </div>
@@ -1105,7 +1142,7 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
       <div class="omodal-ic" id="odIcon">◎</div>
       <div>
         <h3 id="odName">상품명</h3>
-        <div class="omodal-src"><i class="sourcedot"></i>공급처 <span id="odSource">SMB Panel</span></div>
+        <div class="omodal-src"><i class="sourcedot"></i>플랫폼 <span id="odSource">Instagram</span></div>
       </div>
     </div>
 
@@ -1155,17 +1192,23 @@ const UNIT={팔로워:'명',시청자:'명',멤버:'명',좋아요:'개',조회�
 const CLS={트위치:'tw',킥:'kk',유튜브:'yt',텔레그램:'tg',인스타그램:'ig',틱톡:'tt',페이스북:'fb',스포티파이:'sp',디스코드:'ds','X(트위터)':'xk',트위터:'xk',브콘탁테:'vk',라이키:'lk',레딧:'rd',스레드:'th',스냅챗:'sc',사운드클라우드:'scl',럼블:'rb',트로보:'tv',기타:'etc',글로벌:'etc'};
 const PH={인스타그램:'https://instagram.com/내아이디',틱톡:'https://tiktok.com/@내아이디',유튜브:'https://youtube.com/watch?v=...',트위치:'https://twitch.tv/내채널',킥:'https://kick.com/내채널',텔레그램:'https://t.me/내채널',스포티파이:'https://open.spotify.com/...',페이스북:'https://facebook.com/내페이지',디스코드:'https://discord.gg/초대코드'};
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+/* 판매가 = 도매가 × (1 + 마진%/100). 관리자가 자유 설정, localStorage 저장. */
+let MARGIN=(()=>{try{const v=+localStorage.getItem('supply_margin');return v>0?v:150;}catch(e){return 150;}})();
+function priceOf(c){return Math.round(c.wholesale*(1+MARGIN/100)/10)*10;}
 function unitOf(c){return UNIT[c.group]||'개';}
 function clsOf(c){return CLS[c.plat]||'etc';}
 function phOf(c){return PH[c.plat]||'주문할 공개 링크를 입력하세요';}
 
 /* 공개 목록(관리자 토글) — localStorage. 없으면 기본 공개셋 자동 생성 */
 function defaultLive(){
-  const major=['인스타그램','틱톡','유튜브','트위치','텔레그램','스포티파이','페이스북','킥'];
-  const picked=new Set(), byPK={};
-  CAT.forEach(c=>{ if(!major.includes(c.plat))return; const k=c.plat+'|'+c.group; (byPK[k]=byPK[k]||[]).push(c); });
-  Object.values(byPK).forEach(arr=>arr.sort((a,b)=>a.price-b.price).slice(0,2).forEach(c=>picked.add(c.id)));
-  CAT.filter(c=>c.premium).sort((a,b)=>a.price-b.price).slice(0,20).forEach(c=>picked.add(c.id));
+  // 기본 공개 = 인스타/틱톡/유튜브/페북 등 '기본템'(팔로워·좋아요·조회수·멤버) 위주로 플랫폼마다 넉넉히.
+  const picked=new Set();
+  const majors=['인스타그램','틱톡','유튜브','페이스북','텔레그램','스포티파이','트위치','킥','트위터','X(트위터)'];
+  const basics=['팔로워','좋아요','조회수','멤버','재생','시청자','댓글'];
+  majors.forEach(p=>basics.forEach(g=>{
+    CAT.filter(c=>c.plat===p&&c.group===g).sort((a,b)=>priceOf(a)-priceOf(b)).slice(0,3).forEach(c=>picked.add(c.id));
+  }));
+  CAT.filter(c=>c.premium).slice(0,40).forEach(c=>picked.add(c.id)); // 한국 프리미엄
   return picked;
 }
 function loadLive(){ try{const s=localStorage.getItem('supply_live'); if(s)return new Set(JSON.parse(s));}catch(e){} return defaultLive(); }
@@ -1185,26 +1228,30 @@ function matchedAll(onlyLive){
     (!q||(c.ko+c.plat+c.group+c.geo+c.en).toLowerCase().includes(q))
   );
   if(sortMode==='popular')list.sort((a,b)=>b.max-a.max);
-  else if(sortMode==='low')list.sort((a,b)=>a.price-b.price);
-  else if(sortMode==='high')list.sort((a,b)=>b.price-a.price);
+  else if(sortMode==='low')list.sort((a,b)=>priceOf(a)-priceOf(b));
+  else if(sortMode==='high')list.sort((a,b)=>priceOf(b)-priceOf(a));
   return list;
 }
 function cardHtml(c){
-  const unit=unitOf(c),cls=clsOf(c),refillTxt=c.refill?'리필 포함':'리필 미포함';
-  const metas=[`최소 ${c.min.toLocaleString('ko-KR')}`,refillTxt,c.src];
+  const unit=unitOf(c),cls=clsOf(c),refillTxt=c.refill?'리필 포함':'리필 미포함',pr=priceOf(c);
+  const minBuy=Math.round(pr*c.min/1000);
+  const metas=[`최소 ${c.min.toLocaleString('ko-KR')}${unit}`,`최대 ${c.max.toLocaleString('ko-KR')}${unit}`,refillTxt];
   const tag=c.premium?`<span class="tag krtag">🇰🇷 프리미엄</span>`:`<span class="tag">${c.flag} ${c.geo}</span>`;
   return `<article class="card" data-platform="${esc(c.plat)}" data-kind="${esc(c.group)}"
-    data-name="${esc(c.ko)}" data-icon="${esc(c.ic)}" data-iconcls="${cls}" data-source="${esc(c.src)}"
-    data-price="${c.price}" data-min="${c.min}" data-max="${c.max}" data-unit="${unit}" data-start="0~수 시간" data-refill="${refillTxt}"
+    data-name="${esc(c.ko)}" data-icon="${esc(c.ic)}" data-iconcls="${cls}"
+    data-price="${pr}" data-min="${c.min}" data-max="${c.max}" data-unit="${unit}" data-start="0~수 시간" data-refill="${refillTxt}"
     data-ph="${esc(phOf(c))}">
     <div class="cardtop"><div class="socialicon ${cls}">${esc(c.ic)}</div>${tag}</div>
     <div class="cardbody">
       <h3>${esc(c.ko)}</h3>
-      <div class="carddesc">${esc(c.en)}</div>
-      <div class="source"><i class="sourcedot"></i>공급처 <span class="sourcename">${esc(c.src)}</span></div>
+      <div class="carddesc">${esc(c.desc||'')}</div>
       <div class="metas">${metas.map(m=>`<span class="meta">${esc(m)}</span>`).join('')}</div>
     </div>
-    <div class="cardfoot"><div class="price">₩${c.price.toLocaleString('ko-KR')} <small>/ 1,000${unit}</small></div><button class="order" onclick="openOrder(this)">주문하기</button></div>
+    <div class="cardfoot">
+      <div><div class="price">₩${pr.toLocaleString('ko-KR')} <small>/ 1,000${unit}</small></div>
+        <div class="minbuy">최소 ${c.min.toLocaleString('ko-KR')}${unit} · ₩${minBuy.toLocaleString('ko-KR')}부터</div></div>
+      <button class="order" onclick="openOrder(this)">주문하기</button>
+    </div>
   </article>`;
 }
 function renderCards(){
@@ -1266,17 +1313,24 @@ document.getElementById('search').addEventListener('input',resetAndRender);
 renderCards();
 
 /* ===== 관리자: 상품 공개 관리(9,134개 토글) ===== */
-let aPlat='all',aKind='all',aGeo='all',aPage=0; const A_PER=50;
+let aPlat='all',aKind='all',aGeo='all',aSrc='all',aPage=0; const A_PER=50;
+function attrBadges(c){
+  const b=(ok,t)=>`<span class="attr ${ok?'y':'n'}">${t}</span>`;
+  return b(c.refill,'리필')+b(c.cancel,'취소')+b(c.dripfeed,'드립피드');
+}
 (function fillAdminSelects(){
   const mk=(sel,obj,label)=>{let h=`<option value="all">${label}</option>`;
     Object.entries(obj).sort((a,b)=>b[1]-a[1]).forEach(([k,n])=>h+=`<option value="${esc(k)}">${esc(k)} (${n})</option>`);
     document.getElementById(sel).innerHTML=h;};
-  mk('aPlat',META.plats||{},'모든 플랫폼'); mk('aKind',META.kinds||{},'모든 종류'); mk('aGeo',META.geos||{},'모든 나라');
+  const SRCS={}; CAT.forEach(c=>SRCS[c.src]=(SRCS[c.src]||0)+1);   // 공급처(회사)별 집계
+  mk('aPlat',META.plats||{},'모든 플랫폼'); mk('aKind',META.kinds||{},'모든 종류');
+  mk('aGeo',META.geos||{},'모든 나라'); mk('aSrc',SRCS,'🏢 모든 공급처');
 })();
 function adminFilter(){
   const q=document.getElementById('aSearch').value.trim().toLowerCase();
   return CAT.filter(c=>
     (aPlat==='all'||c.plat===aPlat)&&(aKind==='all'||c.kind===aKind)&&(aGeo==='all'||c.geo===aGeo)&&
+    (aSrc==='all'||c.src===aSrc)&&
     (!q||(c.ko+c.plat+c.kind+c.geo+c.en).toLowerCase().includes(q)));
 }
 function aStats(){
@@ -1294,14 +1348,19 @@ function adminRender(){
   const pages=Math.max(1,Math.ceil(list.length/A_PER));
   if(aPage>=pages)aPage=0;
   const slice=list.slice(aPage*A_PER,aPage*A_PER+A_PER);
-  document.getElementById('aRows').innerHTML=slice.map(c=>`<tr>
-    <td><strong>${esc(c.ko)}</strong><br><span style="font-size:10px;color:var(--muted)">${esc(c.en)}</span></td>
-    <td>${esc(c.ic)} ${esc(c.plat)}</td>
+  document.getElementById('aRows').innerHTML=slice.map(c=>{
+    const pr=priceOf(c), profit=pr-c.wholesale;
+    return `<tr>
+    <td><strong>${esc(c.ic)} ${esc(c.ko)}</strong><div class="arow-desc">${esc(c.desc||c.en)}</div></td>
+    <td>${esc(c.kind)}</td>
     <td>${c.premium?'🇰🇷 <b>한국</b>':esc(c.flag)+' '+esc(c.geo)}</td>
-    <td>₩${c.wholesale.toLocaleString('ko-KR')}</td>
-    <td class="aprice">₩${c.price.toLocaleString('ko-KR')}</td>
+    <td class="arange"><b>${c.min.toLocaleString('ko-KR')}</b> ~ ${c.max.toLocaleString('ko-KR')}</td>
+    <td class="attrs">${attrBadges(c)}</td>
+    <td><span class="sourcechip">${esc(c.src)}</span></td>
+    <td>₩${c.wholesale.toLocaleString('ko-KR')}<div class="arow-sub">1,000당</div></td>
+    <td class="aprice">₩${pr.toLocaleString('ko-KR')}<div class="aprofit">+₩${profit.toLocaleString('ko-KR')}</div></td>
     <td><span class="toggle${LIVE.has(c.id)?' on':''}" data-id="${esc(c.id)}"></span></td>
-  </tr>`).join('');
+  </tr>`;}).join('');
   document.getElementById('aPager').innerHTML=
     `<button ${aPage<=0?'disabled':''} onclick="aGo(-1)">← 이전</button>`+
     `<span>${aPage+1} / ${pages.toLocaleString('ko-KR')}</span>`+
@@ -1322,11 +1381,34 @@ document.getElementById('aRows').addEventListener('click',e=>{
   try{renderCards();}catch(e){}
 });
 document.getElementById('aSearch').addEventListener('input',()=>{aPage=0;adminRender();});
-['aPlat','aKind','aGeo'].forEach(id=>document.getElementById(id).addEventListener('change',e=>{
-  if(id==='aPlat')aPlat=e.target.value; else if(id==='aKind')aKind=e.target.value; else aGeo=e.target.value;
+['aPlat','aKind','aGeo','aSrc'].forEach(id=>document.getElementById(id).addEventListener('change',e=>{
+  if(id==='aPlat')aPlat=e.target.value; else if(id==='aKind')aKind=e.target.value;
+  else if(id==='aGeo')aGeo=e.target.value; else aSrc=e.target.value;
   aPage=0;adminRender();
 }));
 adminRender();
+
+/* ===== 판매가 마진(자유 설정) ===== */
+function updateMarginUI(){
+  const mi=document.getElementById('marginIn'); if(mi)mi.value=MARGIN;
+  const ex=Math.round(1000*(1+MARGIN/100)/10)*10;
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('mPct',MARGIN); set('marginEx',ex.toLocaleString('ko-KR')+'원'); set('mCount',CAT.length.toLocaleString('ko-KR'));
+}
+function applyMargin(){
+  const v=Math.max(0,Math.round(+document.getElementById('marginIn').value||0));
+  MARGIN=v; try{localStorage.setItem('supply_margin',MARGIN);}catch(e){}
+  updateMarginUI(); adminRender(); try{renderCards();}catch(e){}
+  toast('판매가 마진 '+v+'% 적용 — 전체 '+CAT.length.toLocaleString('ko-KR')+'개 재계산');
+}
+function setMarginQuick(v){document.getElementById('marginIn').value=v;applyMargin();}
+updateMarginUI();
+
+/* ===== 공개 기본셋 재설정(추천 기본템 위주) ===== */
+function resetLive(){
+  LIVE=defaultLive(); saveLive(); adminRender(); try{renderCards();}catch(e){}
+  toast('추천 기본셋 적용 — '+LIVE.size.toLocaleString('ko-KR')+'개 공개');
+}
 
 /* ===== 공급처 실시간 잔액(Vercel 백엔드 /api/balance, 키 숨김) ===== */
 // 사이트가 Vercel이면 상대경로, GitHub Pages면 api.온종일.com 절대경로로 폴백.
@@ -1434,22 +1516,22 @@ function openOrder(btn){
   const ic=document.getElementById('odIcon');
   ic.textContent=d.icon;ic.className='omodal-ic '+d.iconcls;
   document.getElementById('odName').textContent=d.name;
-  document.getElementById('odSource').textContent=d.source;
+  document.getElementById('odSource').textContent=d.platform;   // 공급처 대신 플랫폼(고객에겐 공급처 숨김)
   // 칩(메타)
   document.getElementById('odChips').innerHTML=
-    `<span class="meta">최소 ${(+d.min).toLocaleString('ko-KR')}</span>`+
-    `<span class="meta">최대 ${(+d.max).toLocaleString('ko-KR')}</span>`+
+    `<span class="meta">최소 ${(+d.min).toLocaleString('ko-KR')}${d.unit}</span>`+
+    `<span class="meta">최대 ${(+d.max).toLocaleString('ko-KR')}${d.unit}</span>`+
     `<span class="meta">${d.refill}</span>`+
-    `<span class="meta">${d.platform}</span>`;
+    `<span class="meta">1개 단위 주문</span>`;
   // 링크
   const link=document.getElementById('odLink');link.value='';link.placeholder=d.ph;
-  // 수량 슬라이더/입력
+  // 수량 슬라이더/입력 — 1개 단위, 기본값=최소수량(상품마다 min/max 다름)
   const range=document.getElementById('odQty'),num=document.getElementById('odQtyNum');
-  range.min=d.min;range.max=d.max;range.step=Math.max(1,Math.round(+d.min/2));
-  const start=Math.min(+d.max,Math.max(+d.min,+d.min*10)); // 기본값=최소×10
-  range.value=start;num.value=start;num.min=d.min;num.max=d.max;
+  range.min=d.min;range.max=d.max;range.step=1;
+  const start=+d.min;
+  range.value=start;num.value=start;num.min=d.min;num.max=d.max;num.step=1;
   document.getElementById('odUnit').textContent=d.unit;
-  document.getElementById('odRange').textContent=`(${(+d.min).toLocaleString('ko-KR')} ~ ${(+d.max).toLocaleString('ko-KR')}${d.unit})`;
+  document.getElementById('odRange').textContent=`(최소 ${(+d.min).toLocaleString('ko-KR')} ~ 최대 ${(+d.max).toLocaleString('ko-KR')}${d.unit} · 1개 단위)`;
   // 요약
   document.getElementById('odUnitPrice').textContent=won(d.price)+' / 1,000';
   document.getElementById('odStart').textContent=d.start;
