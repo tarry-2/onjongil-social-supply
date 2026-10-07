@@ -1,0 +1,17 @@
+{
+  "name": "온종일 소셜 서플라이",
+  "short_name": "소셜 서플라이",
+  "description": "SMM 성장 서비스 — 팔로워·좋아요·조회수를 한국어로, 한국 결제로. 떡상 시작.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f2fb",
+  "theme_color": "#7b5cff",
+  "lang": "ko",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
