@@ -68,6 +68,7 @@ header{position:sticky;top:0;z-index:30;backdrop-filter:blur(14px);background:co
 .nav button{position:relative;font-size:14px;font-weight:800;color:var(--muted);padding:9px 15px;border-radius:12px;transition:.18s}
 .nav button:hover{color:var(--ink);background:var(--soft)}
 .nav button.active{color:#fff;background:var(--grad);box-shadow:0 8px 18px #7b5cff40}
+.mobnav{display:none}
 .headright{display:flex;gap:9px;align-items:center}
 .lang{font-size:12px;font-weight:800;color:var(--muted);padding:9px 12px;border:1.5px solid var(--line);border-radius:12px;white-space:nowrap}
 .theme-toggle{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;padding:9px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--card);white-space:nowrap}
@@ -629,9 +630,27 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
   .sec{margin:56px 0}
   .phero-side{display:none}
 }
+@media(max-width:760px){
+  /* 모바일: 상단 네비 → 하단 탭바(엄지존). 제목 세로쌓임의 근본원인 = 헤더에 네비까지 다 욱여넣던 것. */
+  header .nav{display:none}
+  .brandname{white-space:nowrap;font-size:15px;letter-spacing:-.6px}
+  .mobnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:60;
+    background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(16px) saturate(1.3);
+    border-top:1px solid var(--line);box-shadow:0 -6px 24px #0000000f;
+    padding:7px 6px calc(7px + env(safe-area-inset-bottom));justify-content:space-around}
+  .mobnav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+    font-size:10px;font-weight:800;color:var(--muted);padding:6px 2px;border-radius:14px;transition:.15s;background:none}
+  .mobnav button .mi{font-size:20px;line-height:1}
+  .mobnav button.active{color:var(--violet);background:var(--grad-soft)}
+  body{padding-bottom:78px}
+  /* 상품 가로행: [아이콘] [제목/가격] [주문] — 제목이 전체폭을 써서 한 글자씩 세로쌓이던 문제 해결 */
+  .prow{display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:'ic main buy' 'ic price buy';column-gap:12px;row-gap:3px}
+  .prow-ic{grid-area:ic;align-self:center} .prow-main{grid-area:main}
+  .prow-name{flex-wrap:wrap} .prow-sub{white-space:normal}
+  .prow-price{grid-area:price;text-align:left} .prow-buy{grid-area:buy;align-self:center}
+}
 @media(max-width:620px){
   .wrap{padding:0 16px} .headin{padding:11px 16px;gap:10px}
-  .nav{gap:3px} .nav button{padding:8px 11px;font-size:12.5px}
   .brandname small{display:none} .lang{display:none}
   .hero{padding:30px 22px;border-radius:24px}
   .cards{grid-template-columns:1fr}
@@ -1195,6 +1214,14 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
   </div>
 </main>
 
+<!-- 모바일 하단 탭바(엄지존) — 데스크탑엔 숨김. 버튼 data-view는 상단 .nav와 동일해 showView가 그대로 처리 -->
+<nav class="mobnav" aria-label="모바일 내비게이션">
+  <button data-view="store" class="active"><span class="mi">🛍</span>서비스몰</button>
+  <button data-view="reseller"><span class="mi">⚡</span>파트너</button>
+  <button data-view="wallet"><span class="mi">💳</span>지갑</button>
+  <button type="button" onclick="openAuth('login')"><span class="mi">👤</span>로그인</button>
+</nav>
+
 <div id="toast" class="toast"></div>
 
 <!-- PWA 설치 배너(이쁜 하단 슬라이드업) -->
@@ -1694,7 +1721,7 @@ let timer;
 function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(timer);timer=setTimeout(()=>el.classList.remove('show'),2200);}
 
 /* 뷰 전환 */
-const nav=[...document.querySelectorAll('.nav button')];
+const nav=[...document.querySelectorAll('.nav button, .mobnav button[data-view]')];
 function showView(id){
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
   nav.forEach(x=>x.classList.toggle('active',x.dataset.view===id));
