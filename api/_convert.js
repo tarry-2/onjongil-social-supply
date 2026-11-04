@@ -99,9 +99,36 @@ function badgesOf(blob){const s=blob.toLowerCase();const out=[];
 const MODS=[['cheap','실속'],['real','실제'],['hq','고품질'],['high quality','고품질'],['premium','프리미엄'],
   ['fast','빠른'],['instant','즉시'],['lifetime','평생'],['guaranteed','보장'],['best','최고급'],
   ['stable','안정'],['slow','천천히'],['geo','지역타겟'],['refill','리필']];
-function korName(plat,kind,name){const low=name.toLowerCase();const tags=[];
+// 서브플랫폼(대분류 안의 소분류). 네이버=국내 핵심 → 쇼핑/블로그/검색/플레이스/스마트스토어/카페 구분.
+function subOf(plat, blob){const s=blob.toLowerCase();
+  if(plat==='네이버'){
+    if(/smartstore|smart ?store|스마트스토어/.test(s))return'스마트스토어';
+    if(/shopping|쇼핑/.test(s))return'쇼핑';
+    if(/blog|블로그|matome/.test(s))return'블로그';
+    if(/place|\bmap\b|지도|플레이스/.test(s))return'플레이스';
+    if(/cafe|카페/.test(s))return'카페';
+    if(/\btv\b/.test(s))return'TV';
+    if(/search|organic|검색/.test(s))return'검색';
+    return'';
+  }
+  if(plat==='인스타그램'){
+    if(/\breel/.test(s))return'릴스';
+    if(/story|스토리/.test(s))return'스토리';
+    if(/\bigtv\b/.test(s))return'IGTV';
+    return'';
+  }
+  if(plat==='유튜브'){ if(/\bshorts?\b|쇼츠/.test(s))return'쇼츠'; return''; }
+  return'';
+}
+// 세분 한글명: 플랫폼(+서브) + 종류 + 변별자(품질·성별) + 나라(비한국·비글로벌만). 중복 최소화.
+function korName(plat,sub,kind,geo,name){const low=name.toLowerCase();const tags=[];
   for(const[en,ko]of MODS){if(low.includes(en)&&!tags.includes(ko))tags.push(ko);}
-  const t=tags.slice(0,2);return plat+' '+kind+(t.length?` (${t.join('·')})`:'');}
+  if(/\bfemale\b|여성/.test(low)&&!tags.includes('여성'))tags.push('여성');
+  else if(/\bmale\b|남성/.test(low)&&!tags.includes('남성'))tags.push('남성');
+  const t=tags.slice(0,2);
+  const base=plat+(sub?' '+sub:'')+' '+kind;
+  const geoTag=(geo!=='글로벌'&&geo!=='한국')?' ['+geo+']':'';
+  return base+(t.length?` (${t.join('·')})`:'')+geoTag;}
 
 function durHint(name){const m=name.toLowerCase().match(/(\d+)\s*(minute|min|hour|hr)/);
   if(m)return m[1]+(m[2].includes('min')?'분':'시간')+' 유지';return'';}
@@ -147,22 +174,23 @@ export function transform(raw, srcname){
     const wholesale=Math.round(rate*USD);
     // 🔴 가격 이상치: 원청이 품절표시로 넣는 sentinel(7777777 등) → 도매 1억원 초과는 깨진 rate로 보고 숨김 플래그
     const broken = !isFinite(wholesale) || wholesale<=0 || wholesale>100000000;
-    const hint=durHint(name),det=detailKo(name);
-    return {id:pref+s.service, sid:s.service, src:srcname, plat,ic,kind,group,geo,flag,premium:geo==='한국',
+    const hint=durHint(name),det=detailKo(name),sub=subOf(plat,blob);
+    return {id:pref+s.service, sid:s.service, src:srcname, plat,ic,kind,group,sub,geo,flag,premium:geo==='한국',
       source:sourceOf(blob), badges:badgesOf(blob), broken,
-      ko:korName(plat,kind,name)+(hint?' · '+hint:''),
-      desc:(plat+' '+kind+' 늘리기'+(det?' · '+det:'')), en:(name||'').slice(0,90),
+      ko:korName(plat,sub,kind,geo,name)+(hint?' · '+hint:''),
+      desc:((plat+(sub?' '+sub:'')+' '+kind+' 늘리기')+(det?' · '+det:'')), en:(name||'').slice(0,90),
       wholesale, price:Math.round(rate*USD*2.5/10)*10,
       min:parseInt(s.min)||0, max:parseInt(s.max)||0,
       refill:!!s.refill, cancel:!!s.cancel, dripfeed:!!s.dripfeed};
   });
 }
 export function metaOf(out){
-  const plats={},kinds={},geos={};
+  const plats={},kinds={},geos={},subs={};
   let broken=0;
   for(const x of out){
     if(x.broken){broken++;continue;} // 깨진 상품은 집계/노출 제외
     plats[x.plat]=(plats[x.plat]||0)+1;kinds[x.kind]=(kinds[x.kind]||0)+1;geos[x.geo]=(geos[x.geo]||0)+1;
+    if(x.sub)subs[x.plat+'>'+x.sub]=(subs[x.plat+'>'+x.sub]||0)+1; // 소분류(대>소) 집계
   }
-  return {total:out.length-broken,broken,plats,kinds,geos,usd:USD,margin:2.5};
+  return {total:out.length-broken,broken,plats,kinds,geos,subs,usd:USD,margin:2.5};
 }

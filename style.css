@@ -912,3 +912,8 @@ header{height:82px;border-bottom:1px solid var(--line);display:flex;align-items:
 .side-cat.on em{color:var(--accent)}
 body.theme-dark .side-cat{color:var(--muted)}
 body.theme-dark .side-cat:hover,body.theme-dark .side-cat.on{background:color-mix(in srgb,var(--accent) 20%,var(--surface))}
+
+/* ON 서플라이: 파트너 혜택 박스 .rb 네임충돌(럼블 #85c742) 해소 — 평소 바탕색, hover 주황 */
+.rbl .rb{background:transparent;border:1px solid transparent}
+.rbl .rb:hover{background:color-mix(in srgb,var(--accent) 8%,#fff);border-color:color-mix(in srgb,var(--accent) 22%,#fff)}
+body.theme-dark .rbl .rb:hover{background:color-mix(in srgb,var(--accent) 16%,var(--surface));border-color:color-mix(in srgb,var(--accent) 30%,var(--surface))}
