@@ -1,12 +1,12 @@
 {
-  "name": "온종일 소셜 서플라이",
-  "short_name": "소셜 서플라이",
+  "name": "ON 서플라이",
+  "short_name": "ON 서플라이",
   "description": "SMM 성장 서비스 — 팔로워·좋아요·조회수를 한국어로, 한국 결제로. 떡상 시작.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#fbfaf9",
-  "theme_color": "#ff4d5e",
+  "background_color": "#f7f8fa",
+  "theme_color": "#f56524",
   "lang": "ko",
   "orientation": "portrait",
   "icons": [
