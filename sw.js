@@ -1,5 +1,5 @@
 // 온종일 소셜 서플라이 — 서비스워커(PWA 설치 + 오프라인 기본 캐시)
-const CACHE = 'supply-v8';
+const CACHE = 'supply-v9';
 const ASSETS = ['./', './index.html', './services.js', './manifest.json',
   './icon-192.png', './icon-512.png', './apple-touch-icon.png', './favicon.png', './assets/intro-bgm.mp3'];
 
