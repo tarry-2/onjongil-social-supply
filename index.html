@@ -789,6 +789,8 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
     <p>가망있는 소셜을 발굴·연결해 폭발시키는 광고 네트워크 — 온종일 소셜 서플라이</p>
   </div>
   <div class="intro-bar"><i></i></div>
+  <button class="intro-sound" type="button" id="introSound" title="소리 켜기/끄기" aria-label="소리">🔊</button>
+  <div class="intro-credit">♪ Elektronomia - Sky High [NCS]</div>
   <button class="intro-skip" type="button">건너뛰기 →</button>
 </div>
 <style>
@@ -851,6 +853,10 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
 .intro-bar i{display:block;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,#ff8a2b,#ff4d5e);animation:ibar 8.5s .2s cubic-bezier(.5,0,.1,1) forwards}
 @keyframes ibar{to{width:100%}}
 .intro-skip{position:absolute;right:22px;bottom:20px;z-index:4;color:#9a9298;font-size:12px;font-weight:700;padding:9px 15px;border-radius:999px;background:#fff;border:1px solid #efe9e9;box-shadow:0 4px 14px -6px rgba(20,10,20,.15);opacity:0;animation:cup .6s 1.9s ease forwards;transition:.16s}
+.intro-sound{position:absolute;left:22px;bottom:20px;z-index:4;width:40px;height:40px;border-radius:999px;background:#fff;border:1px solid #efe9e9;box-shadow:0 4px 14px -6px rgba(20,10,20,.15);font-size:17px;line-height:1;display:grid;place-items:center;opacity:0;animation:cup .6s 1.9s ease forwards;transition:.16s}
+.intro-sound:hover{border-color:#ff4d5e;transform:scale(1.06)}
+.intro-sound.muted{filter:grayscale(1);opacity:.6}
+.intro-credit{position:absolute;left:50%;bottom:7px;transform:translateX(-50%);z-index:4;font-size:9.5px;font-weight:600;color:#b7b0bd;letter-spacing:.2px;opacity:0;animation:cup .6s 2.1s ease forwards;white-space:nowrap}
 .intro-skip:hover{color:#1a1420;border-color:#ff4d5e}
 /* 배경 상승 곡선 */
 .intro-bg-gr{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
@@ -900,8 +906,25 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
   var vEl=document.getElementById('cntView'),pEl=document.getElementById('cntPct'),rEl=document.getElementById('cntRev');
   setTimeout(function(){cu(vEl,2400000,2800,kview);cu(pEl,312,2800,function(v){return Math.round(v)});},1500);
   setTimeout(function(){cu(rEl,48200000,3000,kwon);},1900);
+
+  /* ===== 인트로 BGM — Elektronomia - Sky High [NCS] (저작권 프리, 크레딧 표기) ===== */
+  var muted=false;
+  var bgm=new Audio('assets/intro-bgm.mp3'); bgm.volume=0.6; bgm.preload='auto';
+  function startMusic(){ if(muted)return; try{ var p=bgm.play(); if(p&&p.catch)p.catch(function(){}); }catch(e){} }
+  startMusic(); // 제스처로 들어온 경우(🎬 다시보기 등) 즉시 재생
+  // 자동재생 차단 대비 → 첫 제스처에 재생
+  var gkick=function(){ startMusic(); ['pointerdown','keydown','touchstart'].forEach(function(ev){window.removeEventListener(ev,gkick);}); };
+  ['pointerdown','keydown','touchstart'].forEach(function(ev){window.addEventListener(ev,gkick,{once:true});});
+  // 소리 토글 버튼
+  var sbtn=ov.querySelector('#introSound');
+  if(sbtn) sbtn.addEventListener('click',function(e){ e.stopPropagation();
+    muted=!muted; sbtn.textContent=muted?'🔇':'🔊'; sbtn.classList.toggle('muted',muted);
+    if(muted){ try{bgm.pause();}catch(e2){} } else { try{bgm.currentTime=0;}catch(e2){} startMusic(); }
+  });
+
   // 종료
   function end(){try{sessionStorage.setItem('ss_intro','1')}catch(e){}
+    try{ bgm.pause(); }catch(e){} // 음악 정지
     ov.classList.add('intro-out'); document.body.style.overflow='';
     setTimeout(function(){ov.remove();},820);}
   var timer=setTimeout(end,8500);
