@@ -1279,7 +1279,8 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
     </section>
 
     <h3 class="admin-sub">🗂️ 상품 공개 관리 <span>토글 켠 것만 고객에게 보입니다</span>
-      <button class="admin-dash" style="margin-left:auto;padding:7px 13px" onclick="resetLive()">⟳ 추천 기본셋 적용</button></h3>
+      <button class="admin-dash" style="margin-left:auto;padding:7px 13px" onclick="openAllLive()">✅ 전체 공개</button>
+      <button class="admin-dash" style="padding:7px 13px" onclick="resetLive()">⟳ 추천 기본셋만</button></h3>
     <section class="panel">
       <div class="apbar">
         <input id="aSearch" class="oinput" placeholder="🔍 상품·플랫폼 검색">
@@ -1617,18 +1618,25 @@ function phOf(c){return PH[c.plat]||'주문할 공개 링크를 입력하세요'
 
 /* 공개 목록(관리자 토글) — localStorage. 없으면 기본 공개셋 자동 생성 */
 function defaultLive(){
-  // 기본 공개 = 인스타/틱톡/유튜브/페북 등 '기본템'(팔로워·좋아요·조회수·멤버) 위주로 플랫폼마다 넉넉히.
+  // 기본 공개 = 깨지지 않은 전체 상품(9천여개 다 노출). 관리자가 숨기고 싶은 것만 끄면 됨.
+  return new Set(CAT.filter(c=>!c.broken).map(c=>c.id));
+}
+/* 추천 셋(관리자 '추천 기본셋 적용'용) — 기본템 위주 선별 */
+function curatedLive(){
   const picked=new Set();
   const majors=['인스타그램','틱톡','유튜브','페이스북','텔레그램','스포티파이','트위치','킥','트위터','X(트위터)'];
   const basics=['팔로워','좋아요','조회수','멤버','재생','시청자','댓글'];
   majors.forEach(p=>basics.forEach(g=>{
-    CAT.filter(c=>c.plat===p&&c.group===g).sort((a,b)=>priceOf(a)-priceOf(b)).slice(0,3).forEach(c=>picked.add(c.id));
+    CAT.filter(c=>c.plat===p&&c.group===g&&!c.broken).sort((a,b)=>priceOf(a)-priceOf(b)).slice(0,3).forEach(c=>picked.add(c.id));
   }));
-  CAT.filter(c=>c.premium).slice(0,40).forEach(c=>picked.add(c.id)); // 한국 프리미엄
+  CAT.filter(c=>c.premium&&!c.broken).slice(0,40).forEach(c=>picked.add(c.id));
   return picked;
 }
-function loadLive(){ try{const s=localStorage.getItem('supply_live'); if(s)return new Set(JSON.parse(s));}catch(e){} return defaultLive(); }
-function saveLive(){ try{localStorage.setItem('supply_live',JSON.stringify([...LIVE]));}catch(e){} }
+const LIVE_VER='2'; // 기본 공개셋 의미 변경(전체공개) → 옛 저장분 1회 무효화
+function loadLive(){ try{
+  if(localStorage.getItem('supply_live_v')===LIVE_VER){const s=localStorage.getItem('supply_live'); if(s)return new Set(JSON.parse(s));}
+}catch(e){} return defaultLive(); }
+function saveLive(){ try{localStorage.setItem('supply_live',JSON.stringify([...LIVE]));localStorage.setItem('supply_live_v',LIVE_VER);}catch(e){} }
 let LIVE=loadLive();
 /* 인기상품(박스로 크게 노출) — 관리자가 지정. 나머지는 리스트형. */
 function loadHot(){ try{const s=localStorage.getItem('supply_hot'); if(s)return new Set(JSON.parse(s));}catch(e){} return new Set(); }
@@ -2002,8 +2010,12 @@ renderCatAdmin();
 
 /* ===== 공개 기본셋 재설정(추천 기본템 위주) ===== */
 function resetLive(){
-  LIVE=defaultLive(); saveLive(); adminRender(); try{renderCards();}catch(e){}
+  LIVE=curatedLive(); saveLive(); adminRender(); try{renderShowcase();renderCards();}catch(e){}
   toast('추천 기본셋 적용 — '+LIVE.size.toLocaleString('ko-KR')+'개 공개');
+}
+function openAllLive(){
+  LIVE=defaultLive(); saveLive(); adminRender(); try{renderShowcase();renderCards();}catch(e){}
+  toast('전체 공개 — '+LIVE.size.toLocaleString('ko-KR')+'개');
 }
 
 /* ===== 원청 상품 실시간 동기화(Vercel /api/services) ===== */
