@@ -115,8 +115,24 @@ function renderPills(){
   box.innerHTML=h;
   box.querySelectorAll('.pill').forEach(b=>b.addEventListener('click',()=>{kind=b.dataset.kind;renderPills();resetAndRender();}));
 }
+/* 유입·세부(소분류) pills — 현재 플랫폼에 sub(네이버 쇼핑/블로그/검색 등)가 있으면 노출 */
+function renderSubPills(){
+  const box=document.getElementById('subpills'); if(!box)return;
+  if(platform==='all'){box.innerHTML='';box.style.display='none';return;}
+  const cnt={};
+  CAT.forEach(c=>{if(c.broken||!LIVE.has(c.id)||c.plat!==platform)return;
+    if(origin!=='all'&&(origin==='kr'?!c.premium:c.premium))return;
+    if(c.sub)cnt[c.sub]=(cnt[c.sub]||0)+1;});
+  const subs=Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
+  if(!subs.length){box.innerHTML='';box.style.display='none';return;}
+  box.style.display='flex';
+  let h=`<button class="subpill${subf==='all'?' active':''}" data-sub="all">세부 전체</button>`;
+  subs.forEach(([s,n])=>{h+=`<button class="subpill${subf===s?' active':''}" data-sub="${esc(s)}">${esc(s)} <em>${n.toLocaleString('ko-KR')}</em></button>`;});
+  box.innerHTML=h;
+  box.querySelectorAll('.subpill').forEach(b=>b.addEventListener('click',()=>{subf=b.dataset.sub;renderSubPills();resetAndRender();}));
+}
 
-let platform='all',kind='all',geo='all',sortMode='reco',shown=20,origin='kr';
+let platform='all',kind='all',geo='all',sortMode='reco',shown=20,origin='kr',subf='all';
 const cardsBox=document.getElementById('cards');
 
 function matchedAll(onlyLive){
@@ -126,6 +142,7 @@ function matchedAll(onlyLive){
     (!onlyLive||LIVE.has(c.id))&&
     (origin==='all'||(origin==='kr'?c.premium:!c.premium))&&   // 🇰🇷한국인 / 🌍외국인 분리
     (platform==='all'||c.plat===platform)&&
+    (subf==='all'||c.sub===subf)&&
     (kind==='all'||c.group===kind)&&
     (geo==='all'||c.geo===geo)&&
     (!q||(c.ko+c.plat+c.group+c.geo+c.en).toLowerCase().includes(q))
@@ -231,11 +248,11 @@ function renderShowcase(){
 }
 /* 전체보기 → 카테고리 페이지 */
 function openCat(plat){
-  platform=plat; kind='all'; geo='all'; catPage=0;
+  platform=plat; kind='all'; geo='all'; subf='all'; catPage=0;
   document.querySelectorAll('#platSide button').forEach(x=>x.classList.toggle('selected',x.dataset.platform===plat));
   const gs=document.getElementById('geoSel'); if(gs)gs.value='all';
   setCatTitle();
-  renderPills();
+  renderPills(); renderSubPills();
   showView('catpage');
   renderCards();
 }
@@ -254,7 +271,7 @@ function rerenderCurrent(){
 document.querySelectorAll('.geotab').forEach(b=>b.addEventListener('click',()=>{
   origin=b.dataset.origin;
   document.querySelectorAll('.geotab').forEach(x=>x.classList.toggle('active',x.dataset.origin===origin));
-  rerenderCurrent();
+  renderSubPills(); rerenderCurrent();
 }));
 
 /* 사이드바(실제 공급 플랫폼) 채우기 — 재호출 가능(동기화 후 갱신) */
@@ -288,13 +305,13 @@ fillGeo();
 document.getElementById('platSide').addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b)return;
   document.querySelectorAll('#platSide button').forEach(x=>x.classList.toggle('selected',x===b));
-  platform=b.dataset.platform;setCatTitle();resetAndRender();
+  platform=b.dataset.platform;subf='all';setCatTitle();renderSubPills();resetAndRender();
 });
 renderPills();
 document.getElementById('geoSel').addEventListener('change',e=>{geo=e.target.value;resetAndRender();});
 document.getElementById('sortSel').addEventListener('change',e=>{sortMode=e.target.value;resetAndRender();});
 /* 검색: 상품이 있으면 카테고리 전체보기로 이동해 결과를 보여줌 */
-function searchProducts(){const q=document.getElementById('search').value.trim();if(!q){showView('store');renderShowcase();return;}platform='all';kind='all';geo='all';catPage=0;setCatTitle();renderPills();showView('catpage');renderCards();}
+function searchProducts(){const q=document.getElementById('search').value.trim();if(!q){showView('store');renderShowcase();return;}platform='all';kind='all';geo='all';subf='all';catPage=0;setCatTitle();renderPills();renderSubPills();showView('catpage');renderCards();}
 document.getElementById('search').addEventListener('input',()=>{if(document.getElementById('catpage').classList.contains('active'))resetAndRender();});
 renderShowcase();
 

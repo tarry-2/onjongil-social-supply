@@ -917,3 +917,16 @@ body.theme-dark .side-cat:hover,body.theme-dark .side-cat.on{background:color-mi
 .rbl .rb{background:transparent;border:1px solid transparent}
 .rbl .rb:hover{background:color-mix(in srgb,var(--accent) 8%,#fff);border-color:color-mix(in srgb,var(--accent) 22%,#fff)}
 body.theme-dark .rbl .rb:hover{background:color-mix(in srgb,var(--accent) 16%,var(--surface));border-color:color-mix(in srgb,var(--accent) 30%,var(--surface))}
+
+/* ON 서플라이: 유입·세부 소분류 pills (네이버 쇼핑/블로그/검색 등) */
+.subpills{display:none;flex-wrap:wrap;gap:6px;margin:4px 0 2px}
+.subpill{border:1px solid var(--line);background:var(--surface,#fff);color:var(--muted);border-radius:8px;padding:6px 11px;font-size:12px;font-weight:600;display:inline-flex;align-items:center;gap:5px;cursor:pointer}
+.subpill em{font-style:normal;font-size:10.5px;color:#b3b9c0;font-weight:700}
+.subpill:hover{border-color:color-mix(in srgb,var(--accent) 30%,var(--line));color:var(--ink)}
+.subpill.active{background:color-mix(in srgb,var(--accent) 10%,#fff);border-color:var(--accent);color:var(--accent)}
+.subpill.active em{color:var(--accent)}
+body.theme-dark .subpill{background:var(--surface);color:var(--muted)}
+body.theme-dark .subpill.active{background:color-mix(in srgb,var(--accent) 22%,var(--surface));color:#fff}
+
+/* ON 서플라이: catpage 내부 플랫폼 사이드바 PC에서 숨김(FlowDesk 좌측 사이드바로 통합). 모바일은 가로스크롤바 유지 */
+@media(min-width:651px){#catpage .content{grid-template-columns:1fr}#catpage .content>.side{display:none}}
