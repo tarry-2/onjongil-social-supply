@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#ff2d55">
+<meta name="theme-color" content="#ff4d5e">
 <title>온종일 소셜 서플라이 · 성장 서비스 마켓</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="favicon.png">
@@ -12,10 +12,17 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="소셜 서플라이">
 <meta name="mobile-web-app-capable" content="yes">
-<meta property="og:title" content="온종일 소셜 서플라이">
-<meta property="og:description" content="팔로워·좋아요·조회수를 한국어로, 한국 결제로. 떡상 시작.">
-<meta property="og:image" content="icon-512.png">
+<meta property="og:title" content="온종일 소셜 서플라이 — 오늘부터 떡상 📈">
+<meta property="og:description" content="전 세계 SMM을 한글로, 한국 카드로. 팔로워·조회수·좋아요를 바로 충전하고 떡상 시작.">
+<meta property="og:image" content="https://tarry-2.github.io/onjongil-social-supply/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://tarry-2.github.io/onjongil-social-supply/">
 <meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="온종일 소셜 서플라이 — 오늘부터 떡상 📈">
+<meta name="twitter:description" content="전 세계 SMM을 한글로, 한국 카드로. 떡상 시작.">
+<meta name="twitter:image" content="https://tarry-2.github.io/onjongil-social-supply/og-image.png">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
@@ -286,7 +293,26 @@ header{position:sticky;top:0;z-index:30;backdrop-filter:blur(14px);background:co
 .stat label{font-size:11px;color:var(--muted);font-weight:800}
 .stat strong{display:block;font-size:27px;font-weight:900;letter-spacing:-1px;margin:9px 0 4px;font-family:'Space Grotesk',sans-serif;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;width:max-content}
 .stat em{font-size:10px;color:var(--muted);font-style:normal;font-weight:700}
-.provider-row{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:18px}
+.provider-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:13px;margin-bottom:18px}
+.provider:nth-child(2) .providerlogo{background:linear-gradient(140deg,#ff8a2b26,#ff473326);color:#c94e14}
+.provider:nth-child(3) .providerlogo{background:linear-gradient(140deg,#13b36b26,#43d58b26);color:#0e8f57}
+/* 충전 모달 */
+.omodal-sub{font-size:12px;color:var(--muted);font-weight:600;margin:0}
+.rc-cur{display:flex;justify-content:space-between;align-items:center;background:var(--soft);border:1px solid var(--line);border-radius:13px;padding:12px 15px;font-size:12.5px;font-weight:700;color:var(--muted);margin-bottom:16px}
+.rc-cur b{font:900 17px 'Space Grotesk',sans-serif;color:var(--ink)}
+.rc-amts{display:grid;grid-template-columns:repeat(auto-fit,minmax(56px,1fr));gap:7px;margin-bottom:10px}
+.rc-pays{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:7px}
+.rc-amts button,.rc-pays button{background:var(--card);border:1.5px solid var(--line);border-radius:11px;padding:11px 6px;font-size:12.5px;font-weight:800;color:var(--ink);transition:.14s;white-space:nowrap}
+.rc-amts button:hover,.rc-pays button:hover{border-color:var(--pop)}
+.rc-amts button.on,.rc-pays button.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 18px #ff2d5533}
+#rcCustom{width:100%;border:1.5px solid var(--line);background:var(--card);border-radius:12px;padding:12px 14px;font-size:14px;font-weight:700;color:var(--ink);margin-top:4px}
+#rcCustom:focus{outline:none;border-color:var(--pop)}
+.rc-hist{margin-top:16px}
+.rc-hist-h{font-size:11px;font-weight:800;color:var(--muted);margin-bottom:8px}
+.rc-hist-row{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:700;padding:8px 0;border-top:1px solid var(--line)}
+.rc-hist-row b{font-family:'Space Grotesk',sans-serif;margin-left:auto}
+.rc-tag{background:var(--soft);border-radius:7px;padding:2px 8px;font-size:11px;color:var(--muted)}
+.rc-st{color:#e08a00;font-size:11px;font-weight:800}
 .provider{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm)}
 .provider-head{display:flex;align-items:center;gap:13px;padding:16px 18px}
 .providerlogo{width:46px;height:46px;border-radius:14px;background:var(--grad-soft);color:var(--violet);display:grid;place-items:center;font-size:13px;font-weight:900;flex-shrink:0}
@@ -1224,7 +1250,7 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
         </div>
         <div class="bal-row">
           <div class="bal"><label>남은 잔액 <span class="api-badge">API 실시간</span></label><strong id="balSP">— <small>USD</small></strong></div>
-          <button class="recharge" onclick="toast('Stream-Promotion 충전 페이지 시안입니다')">충전하기</button>
+          <button class="recharge" onclick="openRecharge('Stream-Promotion')">충전하기</button>
         </div>
       </div>
       <div class="provider">
@@ -1235,14 +1261,25 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
         </div>
         <div class="bal-row">
           <div class="bal"><label>남은 잔액 <span class="api-badge">API 실시간</span></label><strong id="balSMB">— <small>USD</small></strong></div>
-          <button class="recharge" onclick="toast('SMB Panel 충전 페이지 시안입니다')">충전하기</button>
+          <button class="recharge" onclick="openRecharge('SMB Panel')">충전하기</button>
+        </div>
+      </div>
+      <div class="provider">
+        <div class="provider-head">
+          <div class="providerlogo">RS</div>
+          <div class="provider-name"><h3>RealSite</h3><p>한국 특화 · 인스타·좋아요</p></div>
+          <span class="connected">연결됨</span>
+        </div>
+        <div class="bal-row">
+          <div class="bal"><label>남은 잔액 <span class="api-badge">API 실시간</span></label><strong id="balREAL">— <small>USD</small></strong></div>
+          <button class="recharge" onclick="openRecharge('RealSite')">충전하기</button>
         </div>
       </div>
     </div>
 
     <h3 class="admin-sub">📊 내부 지표</h3>
     <div class="stats">
-      <div class="stat"><label>전체 상품</label><strong id="aTotal">0</strong><em>2개 공급처 수집·한국어화</em></div>
+      <div class="stat"><label>전체 상품</label><strong id="aTotal">0</strong><em>3개 공급처 수집·한국어화</em></div>
       <div class="stat"><label>판매 공개 중</label><strong id="aLiveN">0</strong><em>고객에게 노출</em></div>
       <div class="stat"><label>🇰🇷 한국 프리미엄</label><strong id="aKrN">0</strong><em>보유 상품</em></div>
       <div class="stat"><label>연결 공급처</label><strong>2</strong><em>Stream·SMB</em></div>
@@ -1311,7 +1348,7 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
       <div class="quality"><span>✳</span><span><b>판매가</b>는 도매가 × 마진(기본 2.5배)으로 자동 계산됩니다. <b>공개 토글</b>을 켠 상품만 서비스 몰에 노출됩니다.</span></div>
     </section>
 
-    <div class="footnote">관리자 콘솔 · 공급처 실데이터 9,134개(Stream-Promotion·SMB Panel) · 잔액은 시안입니다.</div>
+    <div class="footnote">관리자 콘솔 · 공급처 실데이터(Stream-Promotion·SMB Panel·RealSite) · 잔액 API 실시간, 충전은 요청 기록 방식입니다.</div>
   </div>
 </main>
 
@@ -1583,6 +1620,41 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
     <input id="adminPw" type="password" inputmode="numeric" placeholder="비밀번호" autocomplete="off" onkeydown="if(event.key==='Enter')adminLogin()">
     <div id="adminErr" class="amodal-err"></div>
     <button class="amodal-go" onclick="adminLogin()">입장하기</button>
+  </div>
+</div>
+
+<!-- 공급처 충전 모달 (관리자) -->
+<div id="rechargeModal" class="omodal">
+  <div class="omodal-box">
+    <button class="omodal-x" onclick="closeRecharge()" aria-label="닫기">✕</button>
+    <div class="omodal-head">
+      <div class="providerlogo" id="rcLogo">SP</div>
+      <div><h3 id="rcName">공급처</h3><p class="omodal-sub">공급처 잔액 충전 · 떨어지면 주문이 멈춰요</p></div>
+    </div>
+    <div class="rc-cur">현재 잔액 <b id="rcCur">—</b></div>
+    <label class="olabel">충전 금액 (USD)</label>
+    <div class="rc-amts" id="rcAmts">
+      <button type="button" data-usd="50">$50</button>
+      <button type="button" data-usd="100" class="on">$100</button>
+      <button type="button" data-usd="300">$300</button>
+      <button type="button" data-usd="500">$500</button>
+      <button type="button" data-usd="1000">$1,000</button>
+    </div>
+    <input id="rcCustom" type="number" min="1" placeholder="직접 입력 (USD)" inputmode="numeric">
+    <label class="olabel" style="margin-top:14px">결제 수단</label>
+    <div class="rc-pays" id="rcPays">
+      <button type="button" data-pay="card" class="on">💳 해외결제 카드</button>
+      <button type="button" data-pay="usdt">🪙 USDT</button>
+      <button type="button" data-pay="wire">🏦 해외송금</button>
+    </div>
+    <div class="osum">
+      <div class="osum-row"><span>충전 금액</span><b id="rcSumUsd">$100.00</b></div>
+      <div class="osum-row"><span>원화 환산 <small>(환율 ₩1,400)</small></span><b id="rcSumKrw">₩140,000</b></div>
+      <div class="osum-total"><span>충전 후 잔액</span><b id="rcSumAfter">—</b></div>
+    </div>
+    <button class="oorder-go" onclick="submitRecharge()">⚡ 충전 요청</button>
+    <div class="osafe">🔒 충전 요청은 관리자 기록에 남고, 공급처 입금 확인 후 잔액에 반영됩니다.</div>
+    <div class="rc-hist" id="rcHist"></div>
   </div>
 </div>
 
@@ -2040,22 +2112,83 @@ async function loadCatalog(){
 /* ===== 공급처 실시간 잔액(Vercel 백엔드 /api/balance, 키 숨김) ===== */
 // 사이트가 Vercel이면 상대경로, GitHub Pages면 api.온종일.com 절대경로로 폴백.
 const API_BASE = location.hostname.endsWith('github.io') ? 'https://api.xn--zk5biyyw.com' : '';
+/* 공급처 키 → {잔액칸 id, 로고} 매핑 */
+const PROVIDERS={'Stream-Promotion':{el:'balSP',logo:'SP'},'SMB Panel':{el:'balSMB',logo:'SMB'},'RealSite':{el:'balREAL',logo:'RS'}};
+let BAL={}; // 공급처별 현재 잔액(USD) — 충전 낙관적 반영용
+function paintBal(name){
+  const el=document.getElementById(PROVIDERS[name].el); if(!el)return;
+  const v=BAL[name];
+  el.innerHTML = (v!=null&&isFinite(v)) ? `$${Number(v).toFixed(2)} <small>USD</small>` : '<span style="color:var(--pop)">백엔드 미연결</span>';
+  const card=el.closest('.provider'); if(card)card.classList.toggle('low', v!=null&&v<10); // 10달러 미만 경고
+}
 async function loadBalances(){
-  const setV=(id,txt)=>{const el=document.getElementById(id);if(el)el.innerHTML=txt;};
-  setV('balSP','불러오는 중…'); setV('balSMB','불러오는 중…');
+  Object.keys(PROVIDERS).forEach(n=>{const el=document.getElementById(PROVIDERS[n].el);if(el)el.innerHTML='불러오는 중…';});
   try{
     const r=await fetch(API_BASE+'/api/balance',{cache:'no-store'});
     if(!r.ok) throw new Error('HTTP '+r.status);
     const d=await r.json();
-    const fmt=(o)=>o&&o.balance!=null ? `$${Number(o.balance).toFixed(2)} <small>${o.currency||'USD'}</small>` : `<span style="color:var(--pop)">${(o&&o.error)||'오류'}</span>`;
-    setV('balSP',fmt(d['Stream-Promotion'])); setV('balSMB',fmt(d['SMB Panel']));
+    Object.keys(PROVIDERS).forEach(n=>{ const o=d[n]; BAL[n]=(o&&o.balance!=null)?Number(o.balance):null; paintBal(n); });
     toast('공급처 잔액을 불러왔습니다');
   }catch(e){
-    setV('balSP','<span style="color:var(--pop)">백엔드 미연결</span>');
-    setV('balSMB','<span style="color:var(--pop)">백엔드 미연결</span>');
+    Object.keys(PROVIDERS).forEach(n=>{ BAL[n]=null; paintBal(n); });
     toast('백엔드(/api/balance) 연결 전입니다 — Vercel 배포 후 작동');
   }
 }
+
+/* ===== 공급처 충전(관리자) ===== */
+const RC_RATE=1400;
+let rcProvider='Stream-Promotion', rcUsd=100, rcPay='card';
+function rcHistKey(){return 'supply_recharge';}
+function rcLoadHist(){try{return JSON.parse(localStorage.getItem(rcHistKey())||'[]');}catch(e){return[];}}
+function rcSaveHist(h){try{localStorage.setItem(rcHistKey(),JSON.stringify(h.slice(0,30)));}catch(e){}}
+function openRecharge(name){
+  rcProvider=name; rcUsd=100; rcPay='card';
+  document.getElementById('rcName').textContent=name;
+  document.getElementById('rcLogo').textContent=(PROVIDERS[name]||{}).logo||'SP';
+  const cur=BAL[name];
+  document.getElementById('rcCur').textContent=(cur!=null&&isFinite(cur))?`$${cur.toFixed(2)}`:'— (불러오기 필요)';
+  // 금액/결제 기본 선택 리셋
+  document.querySelectorAll('#rcAmts button').forEach(b=>b.classList.toggle('on',+b.dataset.usd===100));
+  document.querySelectorAll('#rcPays button').forEach(b=>b.classList.toggle('on',b.dataset.pay==='card'));
+  document.getElementById('rcCustom').value='';
+  rcCalc(); rcRenderHist();
+  document.getElementById('rechargeModal').classList.add('show');
+}
+function closeRecharge(){document.getElementById('rechargeModal').classList.remove('show');}
+function rcCalc(){
+  const cur=BAL[rcProvider];
+  document.getElementById('rcSumUsd').textContent=`$${rcUsd.toFixed(2)}`;
+  document.getElementById('rcSumKrw').textContent='₩'+Math.round(rcUsd*RC_RATE).toLocaleString('ko-KR');
+  document.getElementById('rcSumAfter').textContent=(cur!=null&&isFinite(cur))?`$${(cur+rcUsd).toFixed(2)}`:`+$${rcUsd.toFixed(2)}`;
+}
+function rcRenderHist(){
+  const box=document.getElementById('rcHist'); if(!box)return;
+  const h=rcLoadHist().filter(x=>x.name===rcProvider).slice(0,4);
+  if(!h.length){box.innerHTML='';return;}
+  box.innerHTML='<div class="rc-hist-h">최근 충전 요청</div>'+h.map(x=>
+    `<div class="rc-hist-row"><span>${x.date}</span><b>$${Number(x.usd).toFixed(0)}</b><span class="rc-tag">${x.pay}</span><span class="rc-st">요청됨</span></div>`).join('');
+}
+function submitRecharge(){
+  if(!(rcUsd>0)){toast('충전 금액을 입력하세요');return;}
+  const now=new Date(); const date=`${(now.getMonth()+1)}/${now.getDate()} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  const payLbl={card:'카드',usdt:'USDT',wire:'송금'}[rcPay]||rcPay;
+  const h=rcLoadHist(); h.unshift({name:rcProvider,usd:rcUsd,pay:payLbl,date}); rcSaveHist(h);
+  // 낙관적 반영(입금 확인 전 데모) — 잔액 즉시 더해 보여줌
+  if(BAL[rcProvider]!=null&&isFinite(BAL[rcProvider])){ BAL[rcProvider]+=rcUsd; paintBal(rcProvider); }
+  rcRenderHist();
+  const cur=BAL[rcProvider];
+  document.getElementById('rcCur').textContent=(cur!=null&&isFinite(cur))?`$${cur.toFixed(2)}`:'—';
+  toast(`${rcProvider} $${rcUsd.toLocaleString('en-US')} 충전 요청 완료`);
+}
+// 금액/결제 버튼 + 직접입력
+document.getElementById('rcAmts').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  rcUsd=+b.dataset.usd; document.getElementById('rcCustom').value='';
+  document.querySelectorAll('#rcAmts button').forEach(x=>x.classList.toggle('on',x===b)); rcCalc();});
+document.getElementById('rcCustom').addEventListener('input',e=>{const v=+e.target.value;
+  if(v>0){rcUsd=v; document.querySelectorAll('#rcAmts button').forEach(x=>x.classList.remove('on')); rcCalc();}});
+document.getElementById('rcPays').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  rcPay=b.dataset.pay; document.querySelectorAll('#rcPays button').forEach(x=>x.classList.toggle('on',x===b));});
+document.getElementById('rechargeModal').addEventListener('click',e=>{if(e.target.id==='rechargeModal')closeRecharge();});
 let timer;
 function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');clearTimeout(timer);timer=setTimeout(()=>el.classList.remove('show'),2200);}
 
@@ -2093,6 +2226,7 @@ function adminLogin(){
   if(pw===ADMIN_PW){
     closeAdmin();
     showView('admin');
+    try{loadBalances();}catch(e){}  // 진입 시 공급처 잔액 자동 로드
     toast('관리자 콘솔에 입장했습니다');
   }else{
     document.getElementById('adminErr').textContent='비밀번호가 올바르지 않습니다';
