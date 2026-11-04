@@ -350,6 +350,7 @@ function aCountTxt(){
 }
 function adminRender(){
   const list=aCountTxt();
+  if(list.length===0&&CAT.length>0){console.warn('[관리자 진단] 필터 결과 0개 — 상태:',{CATlen:CAT.length,aPlat,aKind,aGeo,aSrc,search:(document.getElementById('aSearch')||{}).value,LIVEsize:LIVE.size});}
   const pages=Math.max(1,Math.ceil(list.length/A_PER));
   if(aPage>=pages)aPage=0;
   const slice=list.slice(aPage*A_PER,aPage*A_PER+A_PER);
@@ -600,6 +601,7 @@ function showView(id){
   const bc=document.getElementById('breadcrumb');
   if(bc)bc.textContent={store:'서비스몰',reseller:'파트너·API',wallet:'지갑',admin:'관리자'}[navId]||'서비스몰';
   if(id==='store'&&typeof renderShowcase==='function')renderShowcase();
+  if(id==='admin'&&typeof adminRender==='function'){try{fillAdminSelects();adminRender();}catch(e){console.warn('[관리자] 렌더 오류',e.message);}}
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
