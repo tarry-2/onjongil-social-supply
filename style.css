@@ -928,8 +928,9 @@ body.theme-dark .rbl .rb:hover{background:color-mix(in srgb,var(--accent) 16%,va
 body.theme-dark .subpill{background:var(--surface);color:var(--muted)}
 body.theme-dark .subpill.active{background:color-mix(in srgb,var(--accent) 22%,var(--surface));color:#fff}
 
-/* ON 서플라이: catpage 내부 플랫폼 사이드바 PC에서 숨김(FlowDesk 좌측 사이드바로 통합). 모바일은 가로스크롤바 유지 */
-@media(min-width:651px){#catpage .content{grid-template-columns:1fr}#catpage .content>.side{display:none}}
+/* ON 서플라이: catpage 플랫폼 박스는 PC·모바일 전부 숨김(플랫폼은 왼쪽 사이드바/햄버거 드로어로). 상품이 바로 보이게 */
+#catpage .content{display:block}
+#catpage .content>.side{display:none}
 
 /* ON 서플라이: 모바일(≤650) — 인스타몬스터식 스크롤 리스트(PC/태블릿 불변) */
 @media(max-width:650px){
@@ -959,10 +960,10 @@ body.dense-list .prow-name{font-size:13.5px}
   .shopbar-sel select{margin:0;width:100%}
 }
 
-/* ON 서플라이: 모바일 catpage 플랫폼바 — 가로스크롤(글자 짤림) 대신 줄바꿈으로 다 보이게 */
+/* ON 서플라이: 종류 pills 모바일 — 가로스크롤(짤림) 대신 줄바꿈으로 다 보이게 */
 @media(max-width:650px){
-  #catpage .content>.side{flex-wrap:wrap;overflow:visible}
-  #catpage .content>.side button{flex:0 0 auto;white-space:nowrap}
+  #pills{flex-wrap:wrap;overflow:visible;padding-bottom:0}
+  .subpills{flex-wrap:wrap}
 }
 
 /* ON 서플라이: 모바일 햄버거 → 왼쪽 사이드바 드로어(데스크 기본틀 사이드바를 모바일서 슬라이드) */
