@@ -941,3 +941,20 @@ body.theme-dark .subpill.active{background:color-mix(in srgb,var(--accent) 22%,v
   .sc-cards.sc-rows{display:flex;flex-direction:column;gap:8px}
   .sc-cards.sc-rows .prow{width:100%}
 }
+
+/* ON 서플라이: "작게 모아보기" 토글 — 행 압축(세로로 긴 리스트 한눈에) */
+.viewtoggle{border:1px solid var(--line);background:var(--surface,#fff);color:var(--muted);border-radius:9px;padding:9px 12px;font-size:12.5px;font-weight:700;white-space:nowrap;cursor:pointer}
+.viewtoggle:hover{border-color:var(--accent);color:var(--accent)}
+body.dense-list .viewtoggle{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,#fff)}
+body.dense-list .rows .prow,body.dense-list .sc-rows .prow{padding:8px 12px;gap:9px}
+body.dense-list .prow-sub,body.dense-list .prow .bdgs{display:none}
+body.dense-list .prow-ic{width:32px;height:32px;font-size:15px}
+body.dense-list .prow-price .per{display:none}
+body.dense-list .prow-name{font-size:13.5px}
+
+/* ON 서플라이: 모바일 catpage 필터 압축(나라+정렬 가로 2열, 작게보기 전체폭) — 상품 빨리 보이게 */
+@media(max-width:650px){
+  .shopbar-sel{display:grid;grid-template-columns:1fr 1fr;gap:6px;align-items:stretch}
+  .shopbar-sel .viewtoggle{grid-column:1/-1}
+  .shopbar-sel select{margin:0;width:100%}
+}
