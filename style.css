@@ -952,6 +952,8 @@ body.dense-list .prow-sub,body.dense-list .prow .bdgs{display:none}
 body.dense-list .prow-ic{width:32px;height:32px;font-size:15px}
 body.dense-list .prow-price .per{display:none}
 body.dense-list .prow-name{font-size:13.5px}
+.sc-toolbar{display:none}
+@media(max-width:650px){.sc-toolbar{display:flex;justify-content:flex-end;margin:0 0 10px}}
 
 /* ON 서플라이: 모바일 catpage 필터 압축(나라+정렬 가로 2열, 작게보기 전체폭) — 상품 빨리 보이게 */
 @media(max-width:650px){

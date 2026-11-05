@@ -1168,9 +1168,10 @@ function pwaDismiss(){pwaBanner.classList.remove('show');try{localStorage.setIte
 })();
 
 /* 작게 모아보기 토글 — 행 리스트를 압축(설명·뱃지 접고 제목+가격만), 한눈에 많이 */
-function updateDenseBtn(){var b=document.getElementById('denseBtn');if(b)b.textContent=document.body.classList.contains('dense-list')?'▦ 크게 보기':'☰ 작게 보기';}
-function toggleDense(){var d=document.body.classList.toggle('dense-list');try{localStorage.setItem('supply_dense',d?'1':'0')}catch(e){}updateDenseBtn();}
-try{if(localStorage.getItem('supply_dense')==='1')document.body.classList.add('dense-list');}catch(e){}
+function updateDenseBtn(){var on=document.body.classList.contains('dense-list');['denseBtn','denseBtn2'].forEach(function(id){var b=document.getElementById(id);if(b)b.textContent=on?'▦ 크게 보기':'☰ 작게 보기';});}
+function toggleDense(){var d=document.body.classList.toggle('dense-list');try{localStorage.setItem('supply_dense',d?'1':'0')}catch(e){}updateDenseBtn();if(typeof renderShowcase==='function'&&document.getElementById('store').classList.contains('active'))renderShowcase();if(typeof renderCards==='function'&&document.getElementById('catpage').classList.contains('active'))renderCards();}
+try{var _ds=localStorage.getItem('supply_dense');if(_ds==='1'||(_ds===null&&window.innerWidth<=650))document.body.classList.add('dense-list');}catch(e){}
+updateDenseBtn();
 updateDenseBtn();
 
 /* ===== Supabase (ON Social Panel) — 주문·로그 기기 통합·영구 저장 ===== */
