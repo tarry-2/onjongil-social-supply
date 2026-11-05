@@ -1168,6 +1168,13 @@ logLine('sys','접속 — '+new Date().toLocaleString('ko-KR'));
 var ORDERS=(function(){try{return JSON.parse(localStorage.getItem('supply_orders')||'[]');}catch(e){return[];}})();
 function saveOrders(){try{localStorage.setItem('supply_orders',JSON.stringify(ORDERS.slice(-200)));}catch(e){}}
 var curOrderFilter='all';
+var STAT_CLS={'대기':'wait','진행중':'run','완료':'done','부분완료':'partial','취소':'cancel'};
+function orderProgress(o){
+  var st=o.status||'대기', qty=+o.qty||0, rem=(o.remains!=null)?+o.remains:null;
+  if(st==='완료')return 100; if(st==='취소'||st==='대기')return 0;
+  if(rem!=null&&qty)return Math.max(2,Math.min(100,Math.round((qty-rem)/qty*100)));
+  return st==='진행중'?12:(st==='부분완료'?50:0);
+}
 function renderOrders(filter){
   if(filter)curOrderFilter=filter;
   var box=document.getElementById('olist'); if(!box)return;
@@ -1176,15 +1183,25 @@ function renderOrders(filter){
   else if(curOrderFilter==='running')list=list.filter(function(o){return o.status!=='완료'&&o.status!=='취소';});
   if(!list.length){box.innerHTML='<div class="empty">아직 주문 내역이 없어요.<br>상품을 주문하면 여기에 쌓입니다.</div>';return;}
   box.innerHTML=list.map(function(o){
-    var st=o.status||'대기', cls=st==='완료'?'done':(st==='취소'?'cancel':'run');
+    var st=o.status||'대기', cls=STAT_CLS[st]||'wait', pct=orderProgress(o);
+    var qty=+o.qty||0, rem=(o.remains!=null)?+o.remains:null, done=(rem!=null)?qty-rem:null, unit=o.unit||'개';
+    var acts='';
+    var nm=esc(o.name||'').replace(/'/g,"\\'");
+    if(st==='대기'||st==='진행중')acts='<button type="button" onclick="cancelOrder(\''+o.id+'\')">주문 취소</button><button type="button" onclick="inquireOrder(\''+o.id+'\')">문의</button>';
+    else if(st==='완료')acts='<button type="button" onclick="reorder(\''+nm+'\')">재주문</button><button type="button" onclick="requestRefill(\''+o.id+'\')">🔄 리필 요청</button>';
+    else if(st==='부분완료')acts='<button type="button" onclick="reorder(\''+nm+'\')">재주문</button><button type="button" onclick="inquireOrder(\''+o.id+'\')">문의</button>';
+    else if(st==='취소')acts='<button type="button" onclick="reorder(\''+nm+'\')">재주문</button>';
+    var info=(done!=null)?('처리 '+done.toLocaleString('ko-KR')+' / '+qty.toLocaleString('ko-KR')+unit+(rem?' · 남은 '+rem.toLocaleString('ko-KR'):'')):(unit+' '+qty.toLocaleString('ko-KR'));
     return '<div class="oitem"><div class="oitem-ic">◎</div><div class="oitem-main">'
       +'<div class="oitem-top"><b>'+esc(o.name||'')+'</b><span class="ost '+cls+'">'+esc(st)+'</span></div>'
       +'<div class="oitem-link">🔗 '+esc((o.link||'').slice(0,44))+'</div>'
-      +'<div class="oitem-meta">'+esc(o.unit||'개')+' '+(o.qty||0).toLocaleString('ko-KR')+' · 주문 '+esc(o.id)+(o.kw?' · 🔑'+esc(o.kw):'')+'</div>'
-      +(st==='대기'||st==='진행중'?'<div class="oitem-acts"><button type="button" onclick="cancelOrder(\''+o.id+'\')">주문 취소</button><button type="button" onclick="inquireOrder(\''+o.id+'\')">문의</button></div>':'')
+      +'<div class="oprog"><i class="oprog-bar '+cls+'" style="width:'+pct+'%"></i></div>'
+      +'<div class="oitem-meta">'+info+' · 주문 '+esc(o.id)+(o.kw?' · 🔑'+esc(o.kw):'')+'</div>'
+      +(acts?'<div class="oitem-acts">'+acts+'</div>':'')
       +'</div><div class="oitem-side"><div class="oitem-amt">'+won(o.total||0)+'</div><div class="oitem-date">'+esc(o.date||'')+'</div></div></div>';
   }).join('');
 }
+function requestRefill(id){var o=ORDERS.filter(function(x){return x.id===id;})[0];if(!o)return;if(typeof logLine==='function')logLine('info','리필 요청: '+o.name+' / '+id);toast('🔄 리필 요청이 접수되었습니다');}
 function addOrder(o){ORDERS.push(o);saveOrders();renderOrders();try{if(window._supa)window._supa.from('orders').insert({id:o.id,name:o.name,unit:o.unit,qty:o.qty,total:o.total,link:o.link,kw:o.kw,status:o.status}).then(function(r){if(r&&r.error)logLine('warn','내역 저장 경고: '+r.error.message);},function(){});}catch(e){}}
 function cancelOrder(id){var o=ORDERS.filter(function(x){return x.id===id;})[0];if(!o)return;if(!confirm('이 주문을 취소할까요? (환불 처리됩니다)'))return;o.status='취소';saveOrders();renderOrders();try{if(window._supa)window._supa.from('orders').update({status:'취소'}).eq('id',id).then(function(){},function(){});}catch(e){}if(typeof logLine==='function')logLine('warn','주문 취소: '+o.name+' / '+o.id);toast('주문을 취소했습니다');}
 function inquireOrder(id){if(typeof logLine==='function')logLine('info','문의 접수: 주문 '+id);toast('문의가 접수되었습니다');}

@@ -1089,3 +1089,12 @@ body.theme-dark .mass-sum.ok{color:#5fd39a}body.theme-dark .mass-sum.bad,body.th
 .oitem-acts button{background:var(--soft,#f1f2f4);border:1px solid var(--line);color:var(--muted);border-radius:7px;padding:5px 11px;font-size:11px;cursor:pointer}
 .oitem-acts button:first-child:hover{border-color:var(--accent);color:var(--accent)}
 .ost.cancel{background:#edeef0;color:#9aa0a8}
+.ost.wait{color:#8a8f98;background:#8a8f9818}
+.ost.partial{color:#e08a00;background:#ffb02018}
+.oprog i.wait{background:#c7ccd3}
+.oprog i.run{background:var(--grad)}
+.oprog i.done{background:linear-gradient(90deg,#ff8a2b,#36c98a)}
+.oprog i.partial{background:linear-gradient(90deg,#f5a623,#ffce00)}
+.oprog i.cancel{background:#c7ccd3}
+body.theme-dark .ost.cancel{background:#3a3f48;color:#aab4c2}
+body.theme-dark .oprog i.wait,body.theme-dark .oprog i.cancel{background:#4a525e}
