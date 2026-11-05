@@ -1021,7 +1021,20 @@ body.theme-dark .oguide{background:var(--surface);border-color:var(--line)}
 .oguide .og-sec:last-child{margin-bottom:0}
 .oguide .og-sec>b{font-size:12.5px;font-weight:800;color:var(--ink);display:block;margin-bottom:4px}
 .oguide .og-sec p{font-size:12.5px;color:var(--muted);line-height:1.6;margin:0}
-.og-ex{font-size:11px;color:var(--accent);margin-top:5px;word-break:break-all}
+.oguide .og-sec p b,.oguide .og-li b{color:var(--ink);font-weight:800}
+.og-ex{font-size:11px;color:var(--accent);margin-top:7px;word-break:break-all}
+.og-ex code{background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent);font-weight:800;padding:3px 8px;border-radius:7px;font-family:inherit}
+/* 💗 상품설명을 인스타몬스터식 — 왼쪽 핑크바 카드 + STEP 뱃지 */
+.oguide{border-left:4px solid var(--accent);position:relative}
+.og-step{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:900;color:var(--ink);margin:0 0 11px;padding-bottom:9px;border-bottom:1px dashed var(--line)}
+.og-step em{font-style:normal;color:var(--accent);font-weight:800;font-size:11.5px}
+.og-badge{background:var(--accent);color:#fff;font-size:10px;font-weight:900;padding:3px 9px;border-radius:999px;letter-spacing:.3px;box-shadow:0 2px 6px color-mix(in srgb,var(--accent) 40%,transparent)}
+.oguide .og-li{display:flex;gap:6px;align-items:flex-start;padding:1px 0}
+.og-n{flex:none;width:17px;height:17px;border-radius:50%;background:var(--accent);color:#fff;font-size:10px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;margin-top:1px}
+.og-howto{background:color-mix(in srgb,var(--accent) 7%,transparent);border-radius:10px;padding:11px 12px;margin-top:4px}
+.warn-t{color:#d84a6b;font-weight:800}
+body.theme-dark .warn-t{color:#ff9fb4}
+body.theme-dark .og-howto{background:color-mix(in srgb,var(--accent) 16%,transparent)}
 
 /* ON 서플라이: 링크 입력 가이드 */
 .olabel-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px}

@@ -270,7 +270,7 @@ function matchedAll(onlyLive){
 /* 리스트형 한 줄 */
 function rowHtml(c){
   const unit=unitOf(c),cls=clsOf(c),pr=priceOf(c),refillTxt=c.refill?'리필 포함':'리필 미포함';
-  return `<div class="prow" data-platform="${esc(c.plat)}" data-kind="${esc(c.group)}"
+  return `<div class="prow" data-id="${esc(c.id)}" data-platform="${esc(c.plat)}" data-kind="${esc(c.group)}"
     data-name="${esc(c.ko)}" data-icon="${esc(c.ic)}" data-iconcls="${cls}"
     data-price="${pr}" data-min="${c.min}" data-max="${c.max}" data-unit="${unit}" data-start="0~수 시간" data-refill="${refillTxt}"
     data-ph="${esc(phOf(c))}" onclick="openDetail(this)">
@@ -289,7 +289,7 @@ function cardHtml(c){
   const minBuy=Math.round(pr*c.min/1000);
   const metas=[`최소 ${c.min.toLocaleString('ko-KR')}${unit}`,`최대 ${c.max.toLocaleString('ko-KR')}${unit}`,refillTxt];
   const tag=c.premium?`<span class="tag krtag">🇰🇷 프리미엄</span>`:`<span class="tag">${c.flag} ${c.geo}</span>`;
-  return `<article class="card" data-platform="${esc(c.plat)}" data-kind="${esc(c.group)}"
+  return `<article class="card" data-id="${esc(c.id)}" data-platform="${esc(c.plat)}" data-kind="${esc(c.group)}"
     data-name="${esc(c.ko)}" data-icon="${esc(c.ic)}" data-iconcls="${cls}"
     data-price="${pr}" data-min="${c.min}" data-max="${c.max}" data-unit="${unit}" data-start="0~수 시간" data-refill="${refillTxt}"
     data-ph="${esc(phOf(c))}">
@@ -930,6 +930,45 @@ const LINK_STEP={
   트래픽:['유입시킬 페이지(https://…) 주소를 복사합니다.','아래 링크 칸에 붙여넣습니다.','🔑 검색 키워드 칸도 함께 채웁니다.'],
   기타:['상품 설명을 확인합니다.','작업 대상의 공개 주소(https://…)를 복사합니다.','아래 칸에 붙여넣습니다.'],
 };
+/* 특징/유입경로 → 귀여운 문장 */
+const FEAT_WORD={초고품질:'💎 초고품질 계정',고품질:'✨ 고품질로 자연스러움',실제계정:'🙋 실제 활동 중인 계정',이탈없음:'🛡️ 한 번 들어오면 잘 안 빠져요',즉시시작:'⚡ 주문하면 바로 시작',빠른속도:'🚀 유입 속도가 빨라요',리필보장:'🔄 이탈 시 리필(A/S) 보장'};
+const SRC_WORD={외부유입:'🔗 외부에서 자연스럽게 유입',광고:'📣 광고를 통해 유입',실유저:'🙋 실제 유저가 직접 반응','검색/탐색':'🔎 검색·탐색 탭에서 유입',프로필:'👤 프로필 방문으로 유입'};
+/* 💬 상품별 상세설명 — 인스타몬스터식(개요·특징·안내·링크기입법+예시). 상품 메타로 상품마다 다르게. */
+function buildGuide(c){
+  if(!c)return '';
+  const g=ORDER_GUIDE[c.group]||ORDER_GUIDE.기타, unit=unitOf(c);
+  const geoTxt=c.premium?'🇰🇷 한국':((c.flag||'🌍')+' '+esc(c.geo));
+  const tierWord={프리미엄:'· 최상급 프리미엄 🏆',고품질:'· 고품질 ⭐',저가:'· 가성비 저가형 💨'}[c._tier]||'';
+  // 🔆 개요
+  let o=`${geoTxt} <b>${esc(c.plat)} ${esc(c.kind)}</b> ${tierWord} 상품이에요.`;
+  if(c._tier==='프리미엄')o+=' 실제 유저 기반이라 자연스럽고 안정적이에요 💗';
+  else if(c._tier==='저가')o+=' 가볍게 숫자를 채우고 싶을 때 딱인 가성비 상품이에요 👍';
+  else o+=' 안정적으로 꾸준히 올라가요 😊';
+  if(c._drop==='이탈없음')o+=' 한 번 들어오면 <b>잘 빠지지 않아요</b> 🛡️';
+  else if(c._drop==='이탈가능')o+=' <b class="warn-t">단, 유입 후 일부는 자연 이탈될 수 있어요 🪂</b> (숫자 채우기용으로 좋아요)';
+  // ⏩ 특징
+  const feats=[];
+  (c.badges||[]).forEach(b=>{if(b==='리필보장'&&!c.refill)return;if(FEAT_WORD[b])feats.push(FEAT_WORD[b]);}); // 리필플래그 꺼진건 리필특징 숨겨 메타칩과 일관
+  if(c.source&&SRC_WORD[c.source])feats.push(SRC_WORD[c.source]);
+  if(c.refill&&!feats.some(f=>f.includes('리필')))feats.push('🔄 이탈 시 리필(A/S) 지원');
+  if(!feats.length)(g.f||[]).forEach(f=>feats.push('· '+f));
+  // ⚙️ 안내
+  const warns=[];
+  warns.push('🕒 주문 후 보통 빠르게 자동으로 시작돼요');
+  warns.push(`🔢 수량은 최소 <b>${c.min.toLocaleString('ko-KR')}</b> ~ 최대 <b>${c.max.toLocaleString('ko-KR')}</b>${unit}`);
+  if(c._drop==='이탈가능')warns.push('🪂 이탈 가능 상품이라 리필·보장은 없어요 (감안해 주세요)');
+  (g.w||[]).forEach(w=>warns.push('· '+esc(w)));
+  warns.push('💳 주문 정보 오류로 인한 취소·환불은 어려우니 신중히 입력해 주세요');
+  // 🔤 링크 기입법 + 예시
+  const steps=LINK_STEP[c.group]||LINK_STEP.기타, ex=PH[c.plat]||phOf(c);
+  const idNote=ID_KINDS.includes(c.kind)?`<div class="og-li">💡 전체 주소 대신 <b>@아이디</b>만 넣어도 돼요!</div>`:'';
+  return ''+
+    `<div class="og-step"><span class="og-badge">STEP 2</span>📖 상품 설명 <em>꼭 읽어주세요</em></div>`+
+    `<div class="og-sec"><b>🔆 서비스 개요</b><p>${o}</p></div>`+
+    `<div class="og-sec"><b>⏩ 주요 특징</b>${feats.map(t=>`<div class="og-li">${t}</div>`).join('')}</div>`+
+    `<div class="og-sec"><b>⚙️ 주문 전 안내</b>${warns.map(t=>`<div class="og-li">${t}</div>`).join('')}</div>`+
+    `<div class="og-sec og-howto"><b>🔤 주문 링크 기입 방법</b>${steps.map((s,i)=>`<div class="og-li"><span class="og-n">${i+1}</span>${esc(s)}</div>`).join('')}${idNote}<div class="og-ex">📎 예시 : <code>${esc(ex)}</code></div></div>`;
+}
 /* 링크 형식 검증: URL 호스트 일치 또는 (ID 종류일 때) @아이디 형식이면 통과 */
 function linkValid(link){
   if(!odData)return true;
@@ -967,19 +1006,13 @@ function openOrder(btn){
     `<span class="meta">최대 ${(+d.max).toLocaleString('ko-KR')}${d.unit}</span>`+
     `<span class="meta">${d.refill}</span>`+
     `<span class="meta">1개 단위 주문</span>`;
-  // 상품 상세설명(종류별 개요·특징·주문전안내·주문방법)
-  const g=ORDER_GUIDE[d.kind]||ORDER_GUIDE.기타;
+  // 💬 상품별 상세설명 — 원본 상품객체로 buildGuide(개요·특징·안내·기입법+예시)
   const spec=ORDER_INPUT[d.kind]||ORDER_INPUT.기타;
+  const cObj=(typeof CAT!=='undefined')?CAT.find(x=>x.id===d.id):null;
   const og=document.getElementById('odGuide');
-  if(og){
-    let h=`<div class="og-sec"><b>🔆 서비스 개요</b><p>${esc(g.o)}</p></div>`;
-    if(g.f&&g.f.length)h+=`<div class="og-sec"><b>⏩ 주요 특징</b>${g.f.map(t=>`<div class="og-li">· ${esc(t)}</div>`).join('')}</div>`;
-    if(g.w&&g.w.length)h+=`<div class="og-sec"><b>⚙️ 주문 전 안내</b>${g.w.map(t=>`<div class="og-li">※ ${esc(t)}</div>`).join('')}</div>`;
-    h+=`<div class="og-sec"><b>🔤 주문 방법</b><div class="og-li">1. <b>${esc(spec.label)}</b>${d.kind==='트래픽'?' + 🔑검색 키워드':''} 입력</div><div class="og-li">2. 수량 선택 후 주문</div>${d.ph?`<div class="og-ex">예시: ${esc(d.ph)}</div>`:''}</div>`;
-    og.innerHTML=h;
-  }
+  if(og)og.innerHTML=cObj?buildGuide(cObj):'';
   // 링크 — 종류(group)별 맞춤 라벨/안내
-  const ll=document.getElementById('odLinkLabel'); if(ll)ll.textContent='🔗 '+spec.label;
+  const ll=document.getElementById('odLinkLabel'); if(ll)ll.textContent=spec.label;
   const lh=document.getElementById('odLinkHint'); if(lh)lh.textContent=spec.hint;
   const link=document.getElementById('odLink');link.value='';link.placeholder=d.ph;
   // 트래픽(검색 유입)만 키워드칸 표시
