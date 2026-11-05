@@ -892,12 +892,12 @@ header{height:82px;border-bottom:1px solid var(--line);display:flex;align-items:
 /* ON 서플라이: 모바일 헤더 정리(breadcrumb 세로쌓임 방지) */
 @media(max-width:650px){
   header{padding:0 14px}
-  #breadcrumb{white-space:nowrap;font-size:15px;font-weight:700;flex-shrink:0;color:var(--ink)}
+  #breadcrumb{white-space:nowrap;font-size:14px;font-weight:700;flex-shrink:0;color:var(--ink)}
   .hdr-logo{flex-shrink:0}
-  .hdr-logo .brand-icon{width:30px;height:30px;font-size:12px}
-  .header-right{gap:8px;flex-shrink:0;margin-left:auto}
-  .wallet-hdr{padding:7px 9px;font-size:12px}
-  header [data-action="replay-intro"]{display:none}
+  .hdr-logo .brand-icon{width:28px;height:28px;font-size:11px}
+  .header-right{gap:4px;flex-shrink:0;margin-left:auto}
+  .header-right .theme-toggle{font-size:16px;padding:2px 3px}
+  .wallet-hdr{padding:6px 8px;font-size:11px}
 }
 
 /* ON 서플라이: 사이드바 플랫폼 카테고리 */
@@ -930,3 +930,14 @@ body.theme-dark .subpill.active{background:color-mix(in srgb,var(--accent) 22%,v
 
 /* ON 서플라이: catpage 내부 플랫폼 사이드바 PC에서 숨김(FlowDesk 좌측 사이드바로 통합). 모바일은 가로스크롤바 유지 */
 @media(min-width:651px){#catpage .content{grid-template-columns:1fr}#catpage .content>.side{display:none}}
+
+/* ON 서플라이: 모바일(≤650) — 인스타몬스터식 스크롤 리스트(PC/태블릿 불변) */
+@media(max-width:650px){
+  /* 히어로 검색바 짤림 해결: 돋보기+입력 한 줄, 버튼 전체폭 아래 */
+  .searchbox{flex-wrap:wrap;gap:6px;padding:8px 8px 8px 14px}
+  .searchbox input{flex:1 1 60%;min-width:0;padding:11px 2px}
+  .searchbox button{flex:1 1 100%;order:3;padding:13px;border-radius:12px}
+  /* 쇼윈도=카드 대신 행 리스트(1열, 세로로 안 길게) */
+  .sc-cards.sc-rows{display:flex;flex-direction:column;gap:8px}
+  .sc-cards.sc-rows .prow{width:100%}
+}

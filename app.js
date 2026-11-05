@@ -234,15 +234,17 @@ function renderShowcase(){
   const empty=document.getElementById('scEmpty');
   if(!order.length){box.innerHTML='';if(empty)empty.style.display='block';return;}
   if(empty)empty.style.display='none';
+  // 📱 모바일(≤650)=행 리스트(rowHtml, 인스타몬스터식 스크롤) / 💻 PC·태블릿=카드(cardHtml)
+  const mobile=window.innerWidth<=650, scRender=mobile?rowHtml:cardHtml, nCard=mobile?4:SC_CARDS;
   box.innerHTML=order.map(([p,arr])=>{
     const ic=arr[0].ic;
-    const top=arr.slice().sort((a,b)=>(HOT.has(b.id)-HOT.has(a.id))||(b.max-a.max)).slice(0,SC_CARDS);
+    const top=arr.slice().sort((a,b)=>(HOT.has(b.id)-HOT.has(a.id))||(b.max-a.max)).slice(0,nCard);
     return `<section class="sc-sec">
       <div class="sc-sec-head">
         <h3><span class="sc-ic">${esc(ic)}</span> ${esc(p)} <span class="sc-n">${arr.length.toLocaleString('ko-KR')}</span></h3>
         <button class="sc-all" onclick="openCat('${esc(p).replace(/'/g,"\\'")}')">전체보기 →</button>
       </div>
-      <div class="cards sc-cards">${top.map(cardHtml).join('')}</div>
+      <div class="cards sc-cards${mobile?' sc-rows':''}">${top.map(scRender).join('')}</div>
     </section>`;
   }).join('');
 }
