@@ -395,6 +395,16 @@
       </div>
       <label class="olabel">🔢 수량 <span class="olabel-range" id="noRange"></span></label>
       <input id="noQty" class="oinput noqty" type="number" inputmode="numeric" oninput="noCalc()">
+      <div class="no-adv" id="noDripRow" style="display:none">
+        <label class="adv-chk"><input type="checkbox" id="noDrip" onchange="noDripToggle()"> 📨 분할 발송 (Drip-feed)</label>
+        <div id="noDripOpts" style="display:none">
+          <div class="drip-grid">
+            <div><span class="adv-lbl">횟수(회)</span><input id="noDripRuns" class="oinput advin" type="number" value="10" min="2" max="100" oninput="noDripHint()"></div>
+            <div><span class="adv-lbl">간격(분)</span><input id="noDripInterval" class="oinput advin" type="number" value="30" min="5" max="1440"></div>
+          </div>
+          <div class="ohint" id="noDripHintTxt"></div>
+        </div>
+      </div>
       <div class="osum">
         <div class="osum-row"><span>단가</span><b id="noUnitPrice">—</b></div>
         <div class="osum-row"><span>예상 시작</span><b id="noStart">—</b></div>
@@ -412,6 +422,17 @@ smb1234│@내아이디│1000"></textarea>
           <button type="button" class="oorder-go massbtn" onclick="submitMassOrder()">🚀 대량 주문</button>
         </div>
         <div id="massResult" class="mass-result"></div>
+      </details>
+      <details class="mass-wrap">
+        <summary>🔁 자동 구독 주문 (새 게시물마다)</summary>
+        <p class="mass-hint">계정에 새 게시물이 올라올 때마다 자동으로 주문돼요 (좋아요·조회수·댓글 등). 인플루언서·브랜드 계정을 꾸준히 키울 때 좋아요.</p>
+        <label class="olabel">계정 주소</label>
+        <input id="subAccount" class="oinput" type="text" placeholder="https://instagram.com/내아이디">
+        <div class="drip-grid">
+          <div><span class="adv-lbl">게시물당 수량</span><input id="subQty" class="oinput advin" type="number" value="100" min="1"></div>
+          <div><span class="adv-lbl">기간(일)</span><input id="subDays" class="oinput advin" type="number" value="30" min="1" max="365"></div>
+        </div>
+        <button type="button" class="oorder-go" onclick="submitSubscription()" style="margin-top:12px">🔁 구독 시작</button>
       </details>
     </div>
     <aside class="no-detail panel" id="noDetail"><div class="no-empty">상품을 선택하면 상세 설명이 여기 나와요.</div></aside>

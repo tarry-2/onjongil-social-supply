@@ -952,10 +952,28 @@ function noServiceChange(){
   if(g.f&&g.f.length)h+=`<div class="og-sec"><b>⏩ 주요 특징</b>${g.f.map(t=>`<div class="og-li">· ${esc(t)}</div>`).join('')}</div>`;
   if(g.w&&g.w.length)h+=`<div class="og-sec"><b>⚙️ 주문 전 안내</b>${g.w.map(t=>`<div class="og-li">※ ${esc(t)}</div>`).join('')}</div>`;
   document.getElementById('noDetail').innerHTML=h;
+  var _dr=document.getElementById('noDripRow');
+  if(_dr){var _sup=!!c.dripfeed;_dr.style.display=_sup?'block':'none';if(!_sup){var _dc=document.getElementById('noDrip');if(_dc)_dc.checked=false;var _do=document.getElementById('noDripOpts');if(_do)_do.style.display='none';}}
   noCalc();
 }
 function noClamp(){const q=document.getElementById('noQty');let v=Math.round(+q.value||0);if(odData)v=Math.max(odData.min,Math.min(odData.max,v));return v;}
-function noCalc(){if(!odData)return;const q=noClamp();document.getElementById('noTotal').textContent=won(odData.price*q/1000);}
+function noCalc(){if(!odData)return;const q=noClamp();document.getElementById('noTotal').textContent=won(odData.price*q/1000);if(typeof noDripHint==='function')noDripHint();}
+function noDripToggle(){var on=document.getElementById('noDrip').checked;document.getElementById('noDripOpts').style.display=on?'block':'none';noDripHint();}
+function noDripHint(){var t=document.getElementById('noDripHintTxt');if(!t||!odData)return;var q=noClamp();var runs=Math.max(2,+document.getElementById('noDripRuns').value||10);var per=Math.floor(q/runs);var iv=+document.getElementById('noDripInterval').value||30;t.textContent='총 '+q.toLocaleString('ko-KR')+odData.unit+'을 '+runs+'회 × 약 '+per.toLocaleString('ko-KR')+odData.unit+'씩, '+iv+'분 간격으로 나눠 발송합니다.';}
+function submitSubscription(){
+  var acc=document.getElementById('subAccount').value.trim();
+  if(!acc){toast('계정 주소를 입력해 주세요');document.getElementById('subAccount').focus();return;}
+  if(!/^https?:\/\//i.test(acc)&&!/^@?[\w.가-힣-]{2,}$/.test(acc)){toast('계정 주소 형식을 확인해 주세요 (URL 또는 @아이디)');return;}
+  var sq=Math.round(+document.getElementById('subQty').value||0), sd=Math.round(+document.getElementById('subDays').value||30);
+  if(!sq){toast('게시물당 수량을 입력해 주세요');return;}
+  var plat=odData?odData.plat:'';
+  if(typeof addOrder==='function')addOrder({id:'SUB'+Date.now(),name:'🔁 구독 — '+(plat?plat+' ':'')+'게시물당 '+sq.toLocaleString('ko-KR'),unit:'회/글',qty:sq,total:0,link:acc,kw:'',status:'진행중',sub:{days:sd,qty:sq},date:new Date().toLocaleString('ko-KR',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})});
+  if(typeof logLine==='function')logLine('ok','구독 시작: '+acc+' / 게시물당 '+sq+' / '+sd+'일');
+  toast('🔁 구독이 시작됐어요 — 새 게시물마다 자동 주문됩니다');
+  document.getElementById('subAccount').value='';
+  if(typeof showView==='function')showView('wallet');
+  setTimeout(function(){var ob=document.querySelector('.wtab-btn[data-wtab="orders"]');if(ob)ob.click();},120);
+}
 function submitNewOrder(){
   if(!odData){toast('상품을 먼저 선택해 주세요');return;}
   const link=document.getElementById('noLink').value.trim();
@@ -968,9 +986,11 @@ function submitNewOrder(){
   const q=noClamp();
   const opt=document.getElementById('noService').selectedOptions[0];
   const onm=opt?opt.textContent.split(' — ')[0]:'상품';
+  var drip=null,_dc=document.getElementById('noDrip'),_dr=document.getElementById('noDripRow');
+  if(_dc&&_dc.checked&&_dr&&_dr.style.display!=='none')drip={runs:Math.max(2,+document.getElementById('noDripRuns').value||10),interval:+document.getElementById('noDripInterval').value||30};
   toast(`✅ 주문 완료 — ${onm} ${odData.unit} ${q.toLocaleString('ko-KR')} · ${won(odData.price*q/1000)}`);
-  if(typeof logLine==='function')logLine('ok','빠른주문 접수: '+onm+' / '+odData.unit+' '+q.toLocaleString('ko-KR')+' / '+won(odData.price*q/1000)+' / 링크 '+link.slice(0,40));
-  if(typeof addOrder==='function')addOrder({id:'ORD'+Date.now(),name:onm,unit:odData.unit,qty:q,total:odData.price*q/1000,link:link,kw:kw,status:'대기',date:new Date().toLocaleString('ko-KR',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})});
+  if(typeof logLine==='function')logLine('ok','빠른주문 접수: '+onm+' / '+odData.unit+' '+q.toLocaleString('ko-KR')+' / '+won(odData.price*q/1000)+(drip?' / 분할 '+drip.runs+'회':'')+' / 링크 '+link.slice(0,40));
+  if(typeof addOrder==='function')addOrder({id:'ORD'+Date.now(),name:onm,unit:odData.unit,qty:q,total:odData.price*q/1000,link:link,kw:kw,status:'대기',drip:drip,date:new Date().toLocaleString('ko-KR',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})});
   document.getElementById('noLink').value='';
   if(typeof showView==='function')showView('wallet');
   setTimeout(function(){var ob=document.querySelector('.wtab-btn[data-wtab="orders"]');if(ob)ob.click();},120);
@@ -1192,6 +1212,8 @@ function renderOrders(filter){
     else if(st==='부분완료')acts='<button type="button" onclick="reorder(\''+nm+'\')">재주문</button><button type="button" onclick="inquireOrder(\''+o.id+'\')">문의</button>';
     else if(st==='취소')acts='<button type="button" onclick="reorder(\''+nm+'\')">재주문</button>';
     var info=(done!=null)?('처리 '+done.toLocaleString('ko-KR')+' / '+qty.toLocaleString('ko-KR')+unit+(rem?' · 남은 '+rem.toLocaleString('ko-KR'):'')):(unit+' '+qty.toLocaleString('ko-KR'));
+    if(o.drip)info+=' · 📨'+o.drip.runs+'회 분할';
+    if(o.sub)info+=' · 🔁'+(o.sub.days||'')+'일 구독';
     return '<div class="oitem"><div class="oitem-ic">◎</div><div class="oitem-main">'
       +'<div class="oitem-top"><b>'+esc(o.name||'')+'</b><span class="ost '+cls+'">'+esc(st)+'</span></div>'
       +'<div class="oitem-link">🔗 '+esc((o.link||'').slice(0,44))+'</div>'
