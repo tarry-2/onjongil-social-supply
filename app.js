@@ -35,11 +35,21 @@
     if(e.target.closest('[data-action="profile"]')){if(typeof openAuth==='function')openAuth('login');}
     if(e.target.closest('[data-action="install"]')){if(typeof pwaInstall==='function')pwaInstall();}
   });
+  // 로고: 5번 연속 클릭=관리자 비번 / 평소=홈 이동. a href 기본동작(새로고침 느낌) 차단
   var lc=0,lt; document.addEventListener('click',function(e){
     if(!e.target.closest('.logo'))return;
-    var adm=document.getElementById('admin'); if(adm&&adm.classList.contains('active'))return;
+    if(e.preventDefault)e.preventDefault();
+    var adm=document.getElementById('admin'); if(adm&&adm.classList.contains('active')){lc=0;return;}
     lc++; clearTimeout(lt); lt=setTimeout(function(){lc=0},1300);
-    if(lc>=7){lc=0; if(e.preventDefault)e.preventDefault(); if(typeof openAdmin==='function')openAdmin();}
+    if(lc>=5){lc=0; if(typeof openAdmin==='function')openAdmin(); return;}
+    if(typeof showView==='function')showView('store');
+  });
+  // 모바일 햄버거 드로어(데스크 왼쪽 사이드바를 모바일서 슬라이드)
+  function toggleDrawer(open){var o=(open===undefined)?!document.body.classList.contains('drawer-open'):open;document.body.classList.toggle('drawer-open',o);}
+  document.addEventListener('click',function(e){
+    if(e.target.closest('[data-action="drawer"]')){toggleDrawer();return;}
+    if(e.target.closest('.drawer-scrim')){toggleDrawer(false);return;}
+    if(e.target.closest('#desktop-nav a,.side-cat,.profile')){toggleDrawer(false);}
   });
 })();
 

@@ -964,3 +964,31 @@ body.dense-list .prow-name{font-size:13.5px}
   #catpage .content>.side{flex-wrap:wrap;overflow:visible}
   #catpage .content>.side button{flex:0 0 auto;white-space:nowrap}
 }
+
+/* ON 서플라이: 모바일 햄버거 → 왼쪽 사이드바 드로어(데스크 기본틀 사이드바를 모바일서 슬라이드) */
+.hamburger{display:none}
+.drawer-scrim{display:none}
+@media(max-width:650px){
+  .hamburger{display:inline-flex;align-items:center;justify-content:center;font-size:22px;line-height:1;background:none;border:0;padding:4px 10px 4px 0;color:var(--ink);cursor:pointer;flex-shrink:0}
+  /* 숨겨뒀던 사이드바를 드로어로 */
+  .sidebar{display:flex!important;position:fixed;left:0;top:0;bottom:0;width:min(84vw,300px);padding:28px 20px;transform:translateX(-102%);transition:transform .26s cubic-bezier(.4,0,.2,1);z-index:60;overflow-y:auto;box-shadow:0 0 44px #0000;border-right:1px solid var(--line)}
+  body.drawer-open .sidebar{transform:none;box-shadow:0 0 60px #0004}
+  .drawer-scrim{position:fixed;inset:0;background:#0007;z-index:59;opacity:0;pointer-events:none;transition:opacity .24s}
+  body.drawer-open .drawer-scrim{display:block;opacity:1;pointer-events:auto}
+  body.drawer-open{overflow:hidden}
+}
+
+/* ON 서플라이: 다크모드 — 밝은 하드코딩(히어로·칩·검색바·카드·행) 어둡게(글자 보이게) */
+body.theme-dark .hero{background:linear-gradient(160deg,var(--surface),#241f1a);border-color:var(--line)}
+body.theme-dark .hero h1{color:var(--ink)}
+body.theme-dark .hero p,body.theme-dark .carddesc,body.theme-dark .prow-sub,body.theme-dark .cat-sub,body.theme-dark .per1k,body.theme-dark .per{color:var(--muted)}
+body.theme-dark .searchbox{background:var(--soft);border-color:var(--line)}
+body.theme-dark .searchbox input{color:var(--ink)}
+body.theme-dark .searchbox input::placeholder{color:var(--muted)}
+body.theme-dark .chip,body.theme-dark .geotab,body.theme-dark .sc-sec,body.theme-dark .prow,body.theme-dark .card,body.theme-dark .growth,body.theme-dark .side,body.theme-dark .hotsec,body.theme-dark .eyebrow{background:var(--surface);border-color:var(--line);color:var(--ink)}
+body.theme-dark .geotab.active{background:var(--accent);color:#fff}
+
+/* ON 서플라이: 롱프레스 공유/저장/복사 메뉴 방지(입력창만 예외) — 최우선 */
+html,body,button,a,span,div,h1,h2,h3,p,b,small,em,article,section,.prow,.card,.sc-sec,.sidebar,header,#mobile-nav{-webkit-touch-callout:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}
+input,textarea,select,[contenteditable],.oinput,#odLink,#odQtyNum,#amtCustom{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
+img{-webkit-touch-callout:none;pointer-events:none}
