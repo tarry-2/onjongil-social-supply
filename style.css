@@ -642,8 +642,8 @@ td strong{font-size:12.5px;color:var(--ink);font-weight:800}
 .wst.ok{color:var(--teal);background:#ff8a2b18}
 .wst.wait{color:#e08a00;background:#ffb02018}
 /* 마이페이지 탭 */
-.wtabs{display:flex;gap:8px;margin:20px 0 4px}
-.wtab-btn{background:var(--card);border:1px solid var(--line);color:var(--muted);border-radius:13px;padding:11px 20px;font-size:13.5px;font-weight:800;transition:.16s}
+.wtabs{display:flex;gap:8px;margin:20px 0 4px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:3px}
+.wtab-btn{flex-shrink:0;white-space:nowrap;background:var(--card);border:1px solid var(--line);color:var(--muted);border-radius:13px;padding:11px 20px;font-size:13.5px;font-weight:800;transition:.16s}
 .wtab-btn:hover{border-color:var(--violet);color:var(--violet)}
 .wtab-btn.active{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 8px 18px #f5652438}
 .wtab-panel{display:none} .wtab-panel.active{display:block;animation:fade .3s ease}
@@ -953,7 +953,8 @@ body.dense-list .prow-ic{width:32px;height:32px;font-size:15px}
 body.dense-list .prow-price .per{display:none}
 body.dense-list .prow-name{font-size:13.5px}
 .sc-toolbar{display:none}
-@media(max-width:650px){.sc-toolbar{display:flex;justify-content:flex-end;margin:0 0 10px}}
+@media(max-width:650px){.sc-toolbar{display:flex;justify-content:flex-end;margin:0 0 10px}
+  .wtab-btn{padding:10px 14px;font-size:13px}}
 
 /* ON 서플라이: 모바일 catpage 필터 압축(나라+정렬 가로 2열, 작게보기 전체폭) — 상품 빨리 보이게 */
 @media(max-width:650px){
