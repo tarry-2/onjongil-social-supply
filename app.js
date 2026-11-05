@@ -717,21 +717,20 @@ const ORDER_INPUT={
   트래픽:{label:'유입시킬 페이지 주소',hint:'🔑 검색 유입 상품은 키워드도 중요해요(상세 설명 참고). 유입시킬 페이지 링크를 넣어주세요.'},
   기타:{label:'주문 주소',hint:'작업할 공개 링크를 넣어주세요.'},
 };
-/* 종류(group)별 상품 안내 — 인스타몬스터식 서비스개요·주의 */
+/* 종류(group)별 상품 상세설명 — 인스타몬스터식: 개요(o)·주요특징(f)·주문전안내(w) */
 const ORDER_GUIDE={
-  팔로워:['실제 유저 기반으로 팔로워를 늘려 계정 신뢰도·노출을 높입니다.','작업 중 계정을 비공개로 바꾸지 마세요.'],
-  구독자:['채널 구독자를 늘려 노출과 신뢰도를 높입니다.','공개 채널이어야 합니다.'],
-  좋아요:['게시물 좋아요를 늘려 참여율·추천 노출을 높입니다.','비공개·삭제 시 작업이 불가합니다.'],
-  댓글:['실제 반응형 댓글로 게시물 신뢰도를 높입니다.','댓글은 주제 기반으로 자연스럽게 작성됩니다.'],
-  조회수:['영상 조회수를 늘려 추천·인기 노출에 유리하게 합니다.','공개 영상 링크여야 합니다.'],
-  재생:['음원 재생수를 늘려 차트·추천에 유리하게 합니다.'],
-  시청자:['라이브 방송에 실시간 시청자를 유입합니다.','방송이 켜져 있을 때만 작동합니다.'],
-  멤버:['그룹·채널 멤버를 늘려 활성도를 높입니다.','공개 초대 링크가 필요합니다.'],
-  공유:['게시물 공유로 확산·노출을 높입니다.'],
-  트래픽:['검색·외부 경로로 실제 페이지 방문을 유입합니다.','검색 유입은 아래 키워드가 중요합니다.'],
-  기타:['상품 설명을 확인하고 주문해 주세요.'],
+  팔로워:{o:'실제 유저 기반으로 계정 팔로워를 늘려 신뢰도와 노출을 높입니다.',f:['자연스러운 유입 속도로 안전','계정 신뢰도·검색 노출 상승','브랜드·개인 계정 모두 효과'],w:['작업 중 계정을 비공개로 바꾸지 마세요','아이디 변경 시 작업이 멈출 수 있어요','진행 중 주문 완료 후 재주문하세요']},
+  구독자:{o:'채널 구독자를 늘려 노출과 신뢰도를 높입니다.',f:['채널 성장·추천 노출에 유리','수익화 조건 달성에 도움'],w:['공개 채널이어야 합니다','채널 주소(핸들/URL)를 정확히 입력하세요']},
+  좋아요:{o:'게시물 좋아요를 늘려 참여율과 추천 노출을 높입니다.',f:['빠른 반영으로 초기 반응 부스트','탐색·추천 노출 유리'],w:['비공개·삭제 시 작업 불가','게시물 링크를 정확히 입력하세요']},
+  댓글:{o:'실제 반응형 댓글로 게시물 신뢰도를 높입니다.',f:['자연스러운 주제 기반 댓글','참여 지표 상승'],w:['댓글 수정·삭제·환불 불가','소량 테스트 후 이용을 권장합니다']},
+  조회수:{o:'영상 조회수를 늘려 추천·인기 노출에 유리하게 합니다.',f:['빠른 조회수 유입','알고리즘 도달·노출 상승'],w:['공개 영상 링크여야 합니다','작업 중 영상 삭제 금지']},
+  재생:{o:'음원 재생수를 늘려 차트·추천에 유리하게 합니다.',f:['스트리밍 지표 상승','추천·플레이리스트 노출'],w:['공개 트랙 링크가 필요합니다']},
+  시청자:{o:'라이브 방송에 실시간 시청자를 유입합니다.',f:['방송 순위·추천 노출 상승','실시간 활기 연출'],w:['방송이 켜져 있을 때만 작동','방송 시작 후 주문하세요']},
+  멤버:{o:'그룹·채널 멤버를 늘려 활성도를 높입니다.',f:['커뮤니티 규모·신뢰도 상승'],w:['공개 초대 링크가 필요합니다','가입 제한 설정을 해제하세요']},
+  공유:{o:'게시물 공유로 확산·노출을 높입니다.',f:['도달·확산 상승'],w:['공개 게시물이어야 합니다']},
+  트래픽:{o:'검색·외부 경로로 실제 페이지 방문을 유입합니다.',f:['검색/추천 지표 개선','실제 방문 기반'],w:['검색 유입은 키워드가 중요합니다(아래 입력)','유입시킬 페이지를 공개 상태로 두세요']},
+  기타:{o:'상품 설명을 확인하고 주문해 주세요.',f:[],w:['공개 링크를 정확히 입력하세요']},
 };
-const ORDER_COMMON='잔액·링크 공개 상태를 확인하세요 / 같은 게시물에 이전 작업이 끝나기 전 중복주문은 피하세요.';
 function openOrder(btn){
   const c=btn.closest('.card')||btn.closest('.prow')||btn;const d=c.dataset;
   closeDetail();
@@ -747,12 +746,18 @@ function openOrder(btn){
     `<span class="meta">최대 ${(+d.max).toLocaleString('ko-KR')}${d.unit}</span>`+
     `<span class="meta">${d.refill}</span>`+
     `<span class="meta">1개 단위 주문</span>`;
-  // 상품 안내(종류별 서비스개요·주의)
-  const guide=ORDER_GUIDE[d.kind]||ORDER_GUIDE.기타;
-  const og=document.getElementById('odGuide');
-  if(og)og.innerHTML='<div class="og-t">📋 이 상품 안내</div>'+guide.map(t=>`<div class="og-li">· ${esc(t)}</div>`).join('')+`<div class="og-sub">⚠️ ${esc(ORDER_COMMON)}</div>`;
-  // 링크 — 종류(group)별 맞춤 라벨/안내
+  // 상품 상세설명(종류별 개요·특징·주문전안내·주문방법)
+  const g=ORDER_GUIDE[d.kind]||ORDER_GUIDE.기타;
   const spec=ORDER_INPUT[d.kind]||ORDER_INPUT.기타;
+  const og=document.getElementById('odGuide');
+  if(og){
+    let h=`<div class="og-sec"><b>🔆 서비스 개요</b><p>${esc(g.o)}</p></div>`;
+    if(g.f&&g.f.length)h+=`<div class="og-sec"><b>⏩ 주요 특징</b>${g.f.map(t=>`<div class="og-li">· ${esc(t)}</div>`).join('')}</div>`;
+    if(g.w&&g.w.length)h+=`<div class="og-sec"><b>⚙️ 주문 전 안내</b>${g.w.map(t=>`<div class="og-li">※ ${esc(t)}</div>`).join('')}</div>`;
+    h+=`<div class="og-sec"><b>🔤 주문 방법</b><div class="og-li">1. <b>${esc(spec.label)}</b>${d.kind==='트래픽'?' + 🔑검색 키워드':''} 입력</div><div class="og-li">2. 수량 선택 후 주문</div>${d.ph?`<div class="og-ex">예시: ${esc(d.ph)}</div>`:''}</div>`;
+    og.innerHTML=h;
+  }
+  // 링크 — 종류(group)별 맞춤 라벨/안내
   const ll=document.getElementById('odLinkLabel'); if(ll)ll.textContent='🔗 '+spec.label;
   const lh=document.getElementById('odLinkHint'); if(lh)lh.textContent=spec.hint;
   const link=document.getElementById('odLink');link.value='';link.placeholder=d.ph;
