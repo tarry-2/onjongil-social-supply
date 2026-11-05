@@ -703,6 +703,20 @@ function openDetail(el){
 function closeDetail(){const m=document.getElementById('detailModal');if(m)m.classList.remove('show');}
 function detailToOrder(){ if(detailEl)openOrder(detailEl); }
 
+/* 종류(group)별 주문 입력 — 잘되는 패널 벤치마크: 무엇을 어디에 넣는지가 종류마다 다름 */
+const ORDER_INPUT={
+  팔로워:{label:'계정 아이디 / 프로필 주소',hint:'공개 계정이어야 해요(비공개 불가). @아이디 또는 프로필 링크를 넣어주세요.'},
+  구독자:{label:'채널 주소',hint:'구독자를 받을 공개 채널 링크를 넣어주세요.'},
+  좋아요:{label:'게시물 주소',hint:'좋아요 받을 게시물의 공개 링크(비공개·삭제 시 작업 불가).'},
+  댓글:{label:'게시물 주소',hint:'댓글이 달릴 게시물의 공개 링크를 넣어주세요.'},
+  조회수:{label:'영상 주소',hint:'조회수를 올릴 영상의 공개 링크를 넣어주세요.'},
+  재생:{label:'트랙 주소',hint:'재생수를 올릴 음원/플레이리스트 링크를 넣어주세요.'},
+  시청자:{label:'라이브 주소',hint:'진행 중인 라이브 방송 링크를 넣어주세요(방송 중에만 유입).'},
+  멤버:{label:'그룹 / 채널 주소',hint:'멤버를 받을 공개 그룹·채널 초대 링크를 넣어주세요.'},
+  공유:{label:'게시물 주소',hint:'공유될 게시물의 공개 링크를 넣어주세요.'},
+  트래픽:{label:'유입시킬 페이지 주소',hint:'🔑 검색 유입 상품은 키워드도 중요해요(상세 설명 참고). 유입시킬 페이지 링크를 넣어주세요.'},
+  기타:{label:'주문 주소',hint:'작업할 공개 링크를 넣어주세요.'},
+};
 function openOrder(btn){
   const c=btn.closest('.card')||btn.closest('.prow')||btn;const d=c.dataset;
   closeDetail();
@@ -718,7 +732,10 @@ function openOrder(btn){
     `<span class="meta">최대 ${(+d.max).toLocaleString('ko-KR')}${d.unit}</span>`+
     `<span class="meta">${d.refill}</span>`+
     `<span class="meta">1개 단위 주문</span>`;
-  // 링크
+  // 링크 — 종류(group)별 맞춤 라벨/안내
+  const spec=ORDER_INPUT[d.kind]||ORDER_INPUT.기타;
+  const ll=document.getElementById('odLinkLabel'); if(ll)ll.textContent='🔗 '+spec.label;
+  const lh=document.getElementById('odLinkHint'); if(lh)lh.textContent=spec.hint;
   const link=document.getElementById('odLink');link.value='';link.placeholder=d.ph;
   // 수량 슬라이더/입력 — 1개 단위, 기본값=최소수량(상품마다 min/max 다름)
   const range=document.getElementById('odQty'),num=document.getElementById('odQtyNum');
