@@ -958,3 +958,9 @@ body.dense-list .prow-name{font-size:13.5px}
   .shopbar-sel .viewtoggle{grid-column:1/-1}
   .shopbar-sel select{margin:0;width:100%}
 }
+
+/* ON 서플라이: 모바일 catpage 플랫폼바 — 가로스크롤(글자 짤림) 대신 줄바꿈으로 다 보이게 */
+@media(max-width:650px){
+  #catpage .content>.side{flex-wrap:wrap;overflow:visible}
+  #catpage .content>.side button{flex:0 0 auto;white-space:nowrap}
+}
