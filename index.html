@@ -910,5 +910,12 @@
     <div class="rc-hist" id="rcHist"></div>
   </div>
 </div>
+<div id="logConsole" class="logcon">
+  <button class="logcon-bar" type="button" onclick="toggleLog()"><span class="logcon-dot"></span>📋 활동 로그 <span class="logcon-n" id="logN">0</span><span class="logcon-arr">▴</span></button>
+  <div class="logcon-body">
+    <div class="logcon-head"><b>📋 활동 로그</b><span class="logcon-actions"><button type="button" onclick="copyLog()">복사</button><button type="button" onclick="toggleLog()">닫기</button></span></div>
+    <div class="logcon-lines" id="logLines"></div>
+  </div>
+</div>
 <div id="toast" role="status"></div>
 <script src="services.js"></script><script src="app.js"></script></body></html>

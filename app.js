@@ -777,6 +777,7 @@ function openOrder(btn){
   document.getElementById('odRefill').textContent=d.refill;
   calcOrder();
   document.getElementById('orderModal').classList.add('show');
+  if(typeof logLine==='function')logLine('info','상품 선택: '+(d.name||'')+' ('+(d.platform||'')+'·'+(d.kind||'')+')');
 }
 function closeOrder(){document.getElementById('orderModal').classList.remove('show');}
 function clampQty(v){if(!odData)return 0;v=Math.round(v||0);return Math.max(odData.min,Math.min(odData.max,v));}
@@ -801,8 +802,10 @@ function submitOrder(){
   var kwWrap=document.getElementById('odKeywordWrap');
   if(kwWrap&&kwWrap.style.display==='block'&&!document.getElementById('odKeyword').value.trim()){toast('검색 키워드를 입력해 주세요');document.getElementById('odKeyword').focus();return;}
   const q=clampQty(+document.getElementById('odQtyNum').value);
+  var onm=(document.getElementById('odName')||{}).textContent||'';
   closeOrder();
   toast(`주문 접수(시안): ${odData.unit} ${q.toLocaleString('ko-KR')} · ${won(odData.price*q/1000)}`);
+  if(typeof logLine==='function')logLine('ok','주문 접수: '+onm+' / '+odData.unit+' '+q.toLocaleString('ko-KR')+' / '+won(odData.price*q/1000)+' / 링크 '+link.slice(0,40));
 }
 document.getElementById('orderModal').addEventListener('click',e=>{if(e.target.id==='orderModal')closeOrder();});
 document.getElementById('detailModal').addEventListener('click',e=>{if(e.target.id==='detailModal')closeDetail();});
@@ -940,6 +943,18 @@ function updateDenseBtn(){var b=document.getElementById('denseBtn');if(b)b.textC
 function toggleDense(){var d=document.body.classList.toggle('dense-list');try{localStorage.setItem('supply_dense',d?'1':'0')}catch(e){}updateDenseBtn();}
 try{if(localStorage.getItem('supply_dense')==='1')document.body.classList.add('dense-list');}catch(e){}
 updateDenseBtn();
+
+/* ===== 하단 활동 로그 콘솔 (회원·관리자 공통, 누적·localStorage. 영구 DB는 나중 Supabase) ===== */
+function nowTime(){var d=new Date();var z=function(n){return('0'+n).slice(-2)};return z(d.getHours())+':'+z(d.getMinutes())+':'+z(d.getSeconds());}
+function loadLogs(){try{return JSON.parse(localStorage.getItem('supply_logs')||'[]');}catch(e){return[];}}
+function saveLogs(a){try{localStorage.setItem('supply_logs',JSON.stringify(a.slice(-400)));}catch(e){}}
+var LOGS=loadLogs();
+function renderLogs(){var box=document.getElementById('logLines');if(box){box.innerHTML=LOGS.slice(-250).map(function(l){return '<div class="logline '+(l.type||'info')+'"><span class="lt">'+l.t+'</span> '+esc(l.msg)+'</div>';}).join('');box.scrollTop=box.scrollHeight;}var n=document.getElementById('logN');if(n)n.textContent=LOGS.length;}
+function logLine(type,msg){LOGS.push({t:nowTime(),type:type||'info',msg:msg});saveLogs(LOGS);renderLogs();}
+function toggleLog(){var c=document.getElementById('logConsole');if(c)c.classList.toggle('open');}
+function copyLog(){var txt=LOGS.map(function(l){return '['+l.t+'] '+l.msg;}).join('\n');if(navigator.clipboard)navigator.clipboard.writeText(txt).then(function(){toast('활동 로그를 복사했습니다');},function(){toast('복사 실패');});}
+renderLogs();
+logLine('sys','접속 — '+new Date().toLocaleString('ko-KR'));
 
 /* 초기 라우트 */
 if(typeof showView==="function")showView("store");

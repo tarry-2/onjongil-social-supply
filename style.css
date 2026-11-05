@@ -1006,3 +1006,20 @@ body.theme-dark .oguide{background:var(--surface);border-color:var(--line)}
 .oguide .og-sec>b{font-size:12.5px;font-weight:800;color:var(--ink);display:block;margin-bottom:4px}
 .oguide .og-sec p{font-size:12.5px;color:var(--muted);line-height:1.6;margin:0}
 .og-ex{font-size:11px;color:var(--accent);margin-top:5px;word-break:break-all}
+
+/* ON 서플라이: 하단 활동 로그 콘솔 */
+.logcon{position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;flex-direction:column;align-items:center;pointer-events:none}
+.logcon-bar{pointer-events:auto;display:inline-flex;align-items:center;gap:7px;background:#252a32;color:#fff;border:0;border-radius:11px 11px 0 0;padding:7px 15px;font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 -4px 16px #0002}
+.logcon-dot{width:7px;height:7px;border-radius:50%;background:#13b36b;box-shadow:0 0 6px #13b36b}
+.logcon-n{background:var(--accent);color:#fff;border-radius:10px;padding:1px 7px;font-size:11px}
+.logcon-arr{transition:.2s}.logcon.open .logcon-arr{transform:rotate(180deg)}
+.logcon-body{display:none;pointer-events:auto;width:min(96vw,760px);background:#1b1f26;border-radius:12px 12px 0 0;box-shadow:0 -8px 40px #0004;overflow:hidden}
+.logcon.open .logcon-body{display:block}
+.logcon-head{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;color:#fff;border-bottom:1px solid #333}
+.logcon-head b{font-size:13px}
+.logcon-actions button{background:#333d4d;color:#cbd3dd;border:0;border-radius:7px;padding:5px 10px;font-size:11px;margin-left:6px;cursor:pointer}
+.logcon-lines{max-height:40vh;overflow-y:auto;padding:8px 14px 12px;font:12px/1.7 ui-monospace,Menlo,monospace}
+.logline{color:#b7c0cc;white-space:pre-wrap;word-break:break-all}
+.logline .lt{color:#6b7684;margin-right:6px}
+.logline.sys{color:#8fb9ff}.logline.ok{color:#5fd39a}.logline.warn{color:#ffb86b}.logline.err{color:#ff7a7a}
+@media(max-width:650px){.logcon{bottom:60px}.logcon-body{width:100vw;border-radius:0}}
