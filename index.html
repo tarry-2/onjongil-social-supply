@@ -569,6 +569,7 @@ smb1234│@내아이디│1000"></textarea>
       <button class="atab-btn active" data-atab="status" onclick="adminTab('status')">📊 현황</button>
       <button class="atab-btn" data-atab="products" onclick="adminTab('products')">🗂️ 상품·가격</button>
       <button class="atab-btn" data-atab="support" onclick="adminTab('support')">🎫 고객지원</button>
+      <button class="atab-btn" data-atab="refer" onclick="adminTab('refer')">🤝 추천</button>
     </div>
 
     <div class="atab-panel active" id="atab-status">
@@ -694,6 +695,12 @@ smb1234│@내아이디│1000"></textarea>
       <section class="panel" style="padding:14px" id="atkList"></section>
     </div><!-- /atab-support -->
 
+    <div class="atab-panel" id="atab-refer">
+      <h3 class="admin-sub">🤝 추천 프로그램 현황 <span>추천을 통한 가입·적립·지급 관리</span></h3>
+      <div class="atk-stats" id="arefStats"></div>
+      <section class="panel" style="padding:14px"><div id="arefList"></div></section>
+    </div><!-- /atab-refer -->
+
     <div class="footnote">관리자 콘솔 · 공급처 실데이터(Stream-Promotion·SMB Panel·RealSite) · 잔액 API 실시간, 충전은 요청 기록 방식입니다.</div>
   </div>
 </section>
@@ -724,6 +731,7 @@ smb1234│@내아이디│1000"></textarea>
       <button class="wtab-btn active" data-wtab="charge">💳 충전</button>
       <button class="wtab-btn" data-wtab="orders">📋 주문 내역</button>
       <button class="wtab-btn" data-wtab="support">🎫 고객지원</button>
+      <button class="wtab-btn" data-wtab="refer">🤝 추천</button>
     </div>
 
     <div id="wtab-charge" class="wtab-panel active">
@@ -872,6 +880,36 @@ smb1234│@내아이디│1000"></textarea>
         <aside class="panel">
           <div class="panelhead"><h3>📋 내 문의 내역</h3><span id="tkCount">0건</span></div>
           <div id="tkList" class="tk-list"></div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- 추천 탭 -->
+    <div id="wtab-refer" class="wtab-panel">
+      <section class="panel ref-hero">
+        <div class="ref-hero-top"><div class="ref-emoji">🤝</div><div><h3>친구 추천하고 적립받기</h3><p>친구가 내 링크로 가입해 충전하면 <b>충전액의 5%</b>를 현금처럼 적립해 드려요.</p></div></div>
+        <div class="ref-code-box">
+          <div class="ref-code-main"><label>내 추천 코드</label><b id="refCode">—</b></div>
+          <button class="ref-copy" onclick="copyRef()">코드 복사</button>
+        </div>
+        <div class="ref-linkrow">
+          <input id="refLink" class="oinput" readonly>
+          <button class="ref-share" onclick="copyRefLink()">🔗 링크 복사</button>
+        </div>
+      </section>
+      <div class="two-col" style="margin-top:16px">
+        <section class="panel">
+          <div class="panelhead"><h3>추천 현황</h3><span>실시간</span></div>
+          <div class="ref-stats">
+            <div class="ref-stat"><b id="refN">0</b><span>추천한 친구</span></div>
+            <div class="ref-stat"><b id="refEarned">₩0</b><span>누적 적립</span></div>
+            <div class="ref-stat"><b id="refAvail">₩0</b><span>전환 가능</span></div>
+          </div>
+          <button class="oorder-go" onclick="convertRefEarn()" style="margin-top:14px">적립금 → 잔액 전환</button>
+        </section>
+        <aside class="panel">
+          <div class="panelhead"><h3>추천한 친구</h3><span id="refFriendN">0명</span></div>
+          <div id="refFriends" class="ref-friends"></div>
         </aside>
       </div>
     </div>

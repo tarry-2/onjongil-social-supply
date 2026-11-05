@@ -1078,6 +1078,7 @@ document.querySelectorAll('.wtab-btn').forEach(b=>b.addEventListener('click',()=
   document.querySelectorAll('.wtab-panel').forEach(p=>p.classList.toggle('active',p.id==='wtab-'+b.dataset.wtab));
   if(b.dataset.wtab==='support'&&typeof renderTickets==='function')renderTickets();
   if(b.dataset.wtab==='orders'&&typeof renderOrders==='function')renderOrders();
+  if(b.dataset.wtab==='refer'&&typeof renderRefer==='function')renderRefer();
 }));
 document.querySelectorAll('.ofilter').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('.ofilter').forEach(x=>x.classList.toggle('active',x===b));
@@ -1315,8 +1316,40 @@ function adminTab(name){
   document.querySelectorAll('.atab-btn').forEach(function(b){b.classList.toggle('active',b.dataset.atab===name);});
   document.querySelectorAll('.atab-panel').forEach(function(p){p.classList.toggle('active',p.id==='atab-'+name);});
   if(name==='support')renderAdminTickets();
+  if(name==='refer')renderAdminRefer();
 }
 document.getElementById('ticketModal').addEventListener('click',function(e){if(e.target.id==='ticketModal')closeTicket();});
+
+/* ===== 🤝 추천 프로그램 (Affiliates) — 실제 적립은 회원 연동 후 ===== */
+var REF_RATE=0.05;
+(function(){var m=location.search.match(/[?&]ref=([A-Z0-9]+)/i);if(m){try{localStorage.setItem('supply_referred_by',m[1].toUpperCase())}catch(e){}}})();
+function myRefCode(){var c=null;try{c=localStorage.getItem('supply_refcode')}catch(e){}if(!c){c=Math.random().toString(36).slice(2,8).toUpperCase();try{localStorage.setItem('supply_refcode',c)}catch(e){}}return c;}
+function getRef(){try{return JSON.parse(localStorage.getItem('supply_ref')||'{}')}catch(e){return{}}}
+function saveRef(r){try{localStorage.setItem('supply_ref',JSON.stringify(r))}catch(e){}}
+function renderRefer(){
+  var code=myRefCode();
+  var cEl=document.getElementById('refCode');if(cEl)cEl.textContent=code;
+  var lEl=document.getElementById('refLink');if(lEl)lEl.value=location.origin+location.pathname+'?ref='+code;
+  var r=getRef(),friends=r.friends||[],earned=r.earned||0,conv=r.converted||0,avail=Math.max(0,earned-conv);
+  var n=document.getElementById('refN');if(n)n.textContent=friends.length;
+  var e=document.getElementById('refEarned');if(e)e.textContent=won(earned);
+  var a=document.getElementById('refAvail');if(a)a.textContent=won(avail);
+  var fn=document.getElementById('refFriendN');if(fn)fn.textContent=friends.length+'명';
+  var fl=document.getElementById('refFriends');
+  if(fl){if(!friends.length)fl.innerHTML='<div class="empty">아직 추천한 친구가 없어요.<br>링크를 공유해 보세요!</div>';
+    else fl.innerHTML=friends.map(function(f){return '<div class="ref-friend"><b>'+esc(f.name||'친구')+'</b><span>'+esc(f.date||'')+'</span><em>+'+won(f.earned||0)+'</em></div>';}).join('');}
+}
+function copyRef(){var c=myRefCode();if(navigator.clipboard)navigator.clipboard.writeText(c).then(function(){toast('추천 코드 복사: '+c)},function(){});}
+function copyRefLink(){var l=document.getElementById('refLink').value;if(navigator.clipboard)navigator.clipboard.writeText(l).then(function(){toast('추천 링크를 복사했어요 — 친구에게 공유하세요!')},function(){});}
+function convertRefEarn(){var r=getRef();var avail=(r.earned||0)-(r.converted||0);if(avail<=0){toast('전환할 적립금이 없어요');return;}r.converted=(r.converted||0)+avail;saveRef(r);renderRefer();if(typeof logLine==='function')logLine('ok','적립금 전환: '+won(avail));toast('✅ '+won(avail)+'을 잔액으로 전환했어요');}
+function renderAdminRefer(){
+  var box=document.getElementById('arefList');if(!box)return;
+  var r=getRef(),friends=r.friends||[],earned=r.earned||0;
+  var st=document.getElementById('arefStats');
+  if(st)st.innerHTML='<div class="atk-s"><b>'+friends.length+'</b>추천 가입</div><div class="atk-s done"><b>'+won(earned)+'</b>총 적립</div><div class="atk-s"><b>'+won(r.converted||0)+'</b>전환 완료</div>';
+  if(!friends.length){box.innerHTML='<div class="empty">아직 추천 가입이 없습니다.<br>고객이 추천 링크로 친구를 데려오면 여기에 쌓입니다.</div>';return;}
+  box.innerHTML=friends.map(function(f){return '<div class="tk-item"><div class="tk-item-top"><b>'+esc(f.name||'친구')+'</b><span class="ost done">+'+won(f.earned||0)+'</span></div><div class="tk-item-sub">추천인 '+esc(f.by||'')+' · '+esc(f.date||'')+'</div></div>';}).join('');
+}
 /* 앱 시작 시 Supabase에서 주문·로그 당겨와 기기 통합(어느 기기서 봐도 동일) */
 async function syncFromSupa(){
   if(!window._supa)return;
