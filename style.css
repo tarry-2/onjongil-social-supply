@@ -1052,6 +1052,45 @@ body.theme-dark .lg-ex{background:var(--surface)}
 .drip-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
 .adv-lbl{display:block;font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:5px}
 .oinput.advin{margin-bottom:0}
+
+/* 🔐 관리자 컨트롤타워 탭 */
+.atab-bar{display:flex;gap:8px;overflow-x:auto;margin:0 0 22px;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+.atab-btn{flex-shrink:0;border:1px solid var(--line);background:var(--surface,#fff);color:var(--muted);border-radius:12px;padding:11px 18px;font-size:14px;font-weight:700;white-space:nowrap;cursor:pointer}
+.atab-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.atab-panel{display:none}
+.atab-panel.active{display:block}
+.atk-stats{display:flex;gap:10px;margin-bottom:16px}
+.atk-s{flex:1;background:var(--surface,#fff);border:1px solid var(--line);border-radius:14px;padding:14px;text-align:center;font-size:12px;color:var(--muted);font-weight:700}
+.atk-s b{display:block;font-size:24px;letter-spacing:-1px;margin-bottom:3px;color:var(--ink)}
+.atk-s.wait b{color:#e08a00}.atk-s.done b{color:#229277}
+/* 🎫 티켓 목록·대화 */
+.tk-list{display:flex;flex-direction:column;gap:10px}
+.tk-item{border:1px solid var(--line);border-radius:14px;padding:14px 16px;cursor:pointer;transition:.15s;background:var(--surface,#fff)}
+.tk-item:hover{border-color:var(--accent)}
+.tk-item-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px}
+.tk-item-top b{font-size:14px;font-weight:800}
+.tk-item-sub{font-size:11px;color:var(--muted);margin-bottom:6px}
+.tk-item-last{font-size:12.5px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tk-ta{min-height:90px;resize:vertical}
+.tk-mhead{display:flex;align-items:center;gap:10px;margin-bottom:8px;padding-right:24px}
+.tk-mhead h3{font-size:17px;font-weight:900;margin:0}
+.tk-minfo{font-size:11.5px;color:var(--muted);margin-bottom:14px}
+.tk-thread{max-height:46vh;overflow-y:auto;display:flex;flex-direction:column;gap:10px;margin-bottom:14px;padding:4px}
+.tk-bubble{max-width:82%;display:flex;flex-direction:column}
+.tk-bubble.user{align-self:flex-end;align-items:flex-end}
+.tk-bubble.agent{align-self:flex-start;align-items:flex-start}
+.tk-bw{padding:10px 13px;border-radius:14px;font-size:13.5px;line-height:1.5;word-break:break-word}
+.tk-bubble.user .tk-bw{background:var(--accent);color:#fff;border-bottom-right-radius:4px}
+.tk-bubble.agent .tk-bw{background:var(--soft,#f1f2f4);color:var(--ink);border-bottom-left-radius:4px}
+.tk-bt{font-size:10px;color:var(--muted);margin-top:4px}
+.tk-reply{display:flex;flex-direction:column;gap:10px}
+.tk-reply-acts{display:flex;gap:8px}
+.tk-reply-acts .oorder-go{flex:1}
+.tk-close-btn{flex-shrink:0;padding:12px 18px}
+.tk-closed{text-align:center;color:var(--muted);font-size:13px;padding:10px}
+body.theme-dark .atab-btn,body.theme-dark .atk-s,body.theme-dark .tk-item{background:var(--surface)}
+body.theme-dark .tk-bubble.agent .tk-bw{background:#333d4d}
+@media(max-width:650px){.atk-stats{gap:6px}.atk-s{padding:11px 6px}.atk-s b{font-size:20px}.tk-bubble{max-width:88%}}
 .nod-id{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--muted);margin-bottom:14px;flex-wrap:wrap}
 .nod-id code{background:var(--soft,#f5f6f8);border:1px solid var(--line);border-radius:6px;padding:3px 8px;font-size:12px;color:var(--accent);font-weight:700}
 .nod-copy{border:1px solid var(--line);background:var(--surface,#fff);border-radius:7px;padding:4px 9px;font-size:11px;font-weight:700;color:var(--ink)}

@@ -1076,6 +1076,8 @@ calcCharge();
 document.querySelectorAll('.wtab-btn').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('.wtab-btn').forEach(x=>x.classList.toggle('active',x===b));
   document.querySelectorAll('.wtab-panel').forEach(p=>p.classList.toggle('active',p.id==='wtab-'+b.dataset.wtab));
+  if(b.dataset.wtab==='support'&&typeof renderTickets==='function')renderTickets();
+  if(b.dataset.wtab==='orders'&&typeof renderOrders==='function')renderOrders();
 }));
 document.querySelectorAll('.ofilter').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('.ofilter').forEach(x=>x.classList.toggle('active',x===b));
@@ -1226,7 +1228,95 @@ function renderOrders(filter){
 function requestRefill(id){var o=ORDERS.filter(function(x){return x.id===id;})[0];if(!o)return;if(typeof logLine==='function')logLine('info','리필 요청: '+o.name+' / '+id);toast('🔄 리필 요청이 접수되었습니다');}
 function addOrder(o){ORDERS.push(o);saveOrders();renderOrders();try{if(window._supa)window._supa.from('orders').insert({id:o.id,name:o.name,unit:o.unit,qty:o.qty,total:o.total,link:o.link,kw:o.kw,status:o.status}).then(function(r){if(r&&r.error)logLine('warn','내역 저장 경고: '+r.error.message);},function(){});}catch(e){}}
 function cancelOrder(id){var o=ORDERS.filter(function(x){return x.id===id;})[0];if(!o)return;if(!confirm('이 주문을 취소할까요? (환불 처리됩니다)'))return;o.status='취소';saveOrders();renderOrders();try{if(window._supa)window._supa.from('orders').update({status:'취소'}).eq('id',id).then(function(){},function(){});}catch(e){}if(typeof logLine==='function')logLine('warn','주문 취소: '+o.name+' / '+o.id);toast('주문을 취소했습니다');}
-function inquireOrder(id){if(typeof logLine==='function')logLine('info','문의 접수: 주문 '+id);toast('문의가 접수되었습니다');}
+function inquireOrder(id){showView('wallet');var b=document.querySelector('.wtab-btn[data-wtab="support"]');if(b)b.click();var o=document.getElementById('tkOrder');if(o)o.value=id||'';var s=document.getElementById('tkSubject');if(s)setTimeout(function(){s.focus();},150);toast('문의 내용을 작성해 주세요');}
+
+/* ===== 🎫 고객지원 티켓 (localStorage + Supabase 준비) ===== */
+var TICKETS=(function(){try{return JSON.parse(localStorage.getItem('supply_tickets')||'[]');}catch(e){return[];}})();
+function saveTickets(){try{localStorage.setItem('supply_tickets',JSON.stringify(TICKETS.slice(-100)));}catch(e){}}
+var TK_CLS={'열림':'wait','답변완료':'done','종료':'cancel'};
+function tkNow(){return new Date().toLocaleString('ko-KR',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});}
+function submitTicket(){
+  var cat=document.getElementById('tkCat').value, ord=document.getElementById('tkOrder').value.trim();
+  var sub=document.getElementById('tkSubject').value.trim(), body=document.getElementById('tkBody').value.trim();
+  if(!sub){toast('제목을 입력해 주세요');document.getElementById('tkSubject').focus();return;}
+  if(!body){toast('내용을 입력해 주세요');document.getElementById('tkBody').focus();return;}
+  var t={id:'TK'+Date.now(),cat:cat,orderId:ord,subject:sub,status:'열림',msgs:[{who:'나',text:body,time:tkNow()}],created:tkNow()};
+  TICKETS.push(t);saveTickets();
+  try{if(window._supa)window._supa.from('tickets').insert({id:t.id,cat:cat,order_id:ord,subject:sub,status:'열림',msgs:t.msgs}).then(function(){},function(){});}catch(e){}
+  if(typeof logLine==='function')logLine('ok','문의 접수: '+sub);
+  document.getElementById('tkSubject').value='';document.getElementById('tkBody').value='';document.getElementById('tkOrder').value='';
+  renderTickets();toast('🎫 문의가 접수됐어요. 답변은 문의 내역에서 확인하세요.');
+}
+function renderTickets(){
+  var box=document.getElementById('tkList');if(!box)return;
+  var cnt=document.getElementById('tkCount');if(cnt)cnt.textContent=TICKETS.length+'건';
+  if(!TICKETS.length){box.innerHTML='<div class="empty">아직 문의 내역이 없어요.</div>';return;}
+  box.innerHTML=TICKETS.slice().reverse().map(function(t){
+    var cls=TK_CLS[t.status]||'wait',last=t.msgs[t.msgs.length-1];
+    return '<div class="tk-item" onclick="openTicket(\''+t.id+'\',false)">'
+      +'<div class="tk-item-top"><b>'+esc(t.subject)+'</b><span class="ost '+cls+'">'+esc(t.status)+'</span></div>'
+      +'<div class="tk-item-sub">'+esc(t.cat)+(t.orderId?' · '+esc(t.orderId):'')+' · '+esc(t.created)+'</div>'
+      +'<div class="tk-item-last">'+(last.who==='상담원'?'💬 상담원: ':'')+esc(last.text.slice(0,50))+'</div></div>';
+  }).join('');
+}
+var curTicket=null,curAdminMode=false;
+function openTicket(id,adminMode){
+  var t=TICKETS.filter(function(x){return x.id===id;})[0];if(!t)return;
+  curTicket=id;curAdminMode=!!adminMode;
+  document.getElementById('tkmSubject').textContent=t.subject;
+  var stEl=document.getElementById('tkmStatus');stEl.textContent=t.status;stEl.className='ost '+(TK_CLS[t.status]||'wait');
+  document.getElementById('tkmInfo').innerHTML=esc(t.cat)+(t.orderId?' · 주문 '+esc(t.orderId):'')+' · '+esc(t.created);
+  document.getElementById('tkmThread').innerHTML=t.msgs.map(function(m){
+    return '<div class="tk-bubble '+(m.who==='상담원'?'agent':'user')+'"><div class="tk-bw">'+esc(m.text)+'</div><div class="tk-bt">'+esc(m.who)+' · '+esc(m.time)+'</div></div>';
+  }).join('');
+  var acts=document.getElementById('tkmActs'),msgEl=document.getElementById('tkmMsg');
+  if(t.status==='종료'){msgEl.style.display='none';acts.innerHTML='<div class="tk-closed">종료된 문의입니다.</div>';}
+  else{msgEl.style.display='';msgEl.value='';
+    if(adminMode)acts.innerHTML='<button class="oorder-go" onclick="sendTicket(true)">답변 보내기</button><button class="secondary tk-close-btn" onclick="closeTicketStatus()">종료</button>';
+    else acts.innerHTML='<button class="oorder-go" onclick="sendTicket(false)">메시지 보내기</button>';}
+  document.getElementById('ticketModal').classList.add('show');
+  setTimeout(function(){var th=document.getElementById('tkmThread');th.scrollTop=th.scrollHeight;},50);
+}
+function closeTicket(){document.getElementById('ticketModal').classList.remove('show');}
+function sendTicket(adminMode){
+  var t=TICKETS.filter(function(x){return x.id===curTicket;})[0];if(!t)return;
+  var msg=document.getElementById('tkmMsg').value.trim();if(!msg){toast('메시지를 입력해 주세요');return;}
+  t.msgs.push({who:adminMode?'상담원':'나',text:msg,time:tkNow()});
+  t.status=adminMode?'답변완료':'열림';saveTickets();
+  try{if(window._supa)window._supa.from('tickets').update({msgs:t.msgs,status:t.status}).eq('id',t.id).then(function(){},function(){});}catch(e){}
+  openTicket(curTicket,adminMode);renderTickets();if(typeof renderAdminTickets==='function')renderAdminTickets();
+  toast(adminMode?'답변을 보냈습니다':'메시지를 보냈습니다');
+}
+function closeTicketStatus(){
+  var t=TICKETS.filter(function(x){return x.id===curTicket;})[0];if(!t)return;
+  t.status='종료';saveTickets();
+  try{if(window._supa)window._supa.from('tickets').update({status:'종료'}).eq('id',t.id).then(function(){},function(){});}catch(e){}
+  openTicket(curTicket,curAdminMode);renderTickets();if(typeof renderAdminTickets==='function')renderAdminTickets();toast('문의를 종료했습니다');
+}
+function renderAdminTickets(){
+  var box=document.getElementById('atkList');if(!box)return;
+  var f=document.getElementById('atkFilter')?document.getElementById('atkFilter').value:'all';
+  var st=document.getElementById('atkStats');
+  var op=TICKETS.filter(function(t){return t.status==='열림';}).length;
+  var rp=TICKETS.filter(function(t){return t.status==='답변완료';}).length;
+  var cl=TICKETS.filter(function(t){return t.status==='종료';}).length;
+  if(st)st.innerHTML='<div class="atk-s wait"><b>'+op+'</b>열림</div><div class="atk-s done"><b>'+rp+'</b>답변완료</div><div class="atk-s cancel"><b>'+cl+'</b>종료</div>';
+  var list=TICKETS.slice().reverse();if(f!=='all')list=list.filter(function(t){return t.status===f;});
+  if(!list.length){box.innerHTML='<div class="empty">문의가 없습니다.</div>';return;}
+  box.innerHTML=list.map(function(t){
+    var cls=TK_CLS[t.status]||'wait',last=t.msgs[t.msgs.length-1];
+    return '<div class="tk-item" onclick="openTicket(\''+t.id+'\',true)">'
+      +'<div class="tk-item-top"><b>'+esc(t.subject)+'</b><span class="ost '+cls+'">'+esc(t.status)+'</span></div>'
+      +'<div class="tk-item-sub">'+esc(t.cat)+(t.orderId?' · '+esc(t.orderId):'')+' · '+esc(t.created)+'</div>'
+      +'<div class="tk-item-last">'+esc(last.who)+': '+esc(last.text.slice(0,60))+'</div></div>';
+  }).join('');
+}
+function adminTab(name){
+  document.querySelectorAll('.atab-btn').forEach(function(b){b.classList.toggle('active',b.dataset.atab===name);});
+  document.querySelectorAll('.atab-panel').forEach(function(p){p.classList.toggle('active',p.id==='atab-'+name);});
+  if(name==='support')renderAdminTickets();
+}
+document.getElementById('ticketModal').addEventListener('click',function(e){if(e.target.id==='ticketModal')closeTicket();});
 /* 앱 시작 시 Supabase에서 주문·로그 당겨와 기기 통합(어느 기기서 봐도 동일) */
 async function syncFromSupa(){
   if(!window._supa)return;
