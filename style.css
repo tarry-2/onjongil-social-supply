@@ -1217,3 +1217,31 @@ body.theme-dark .oprog i.wait,body.theme-dark .oprog i.cancel{background:#4a525e
   .catrow .ccount{font-size:9.5px}
   .catrow button{padding:7px 8px;font-size:11px}
 }
+
+/* ===== 공급처 잔액: 동적 13곳 compact 한 줄 + 섹션 접기/펴기 (2026-11-05 테리) ===== */
+.prov-toggle{margin-left:auto;margin-right:8px;border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 12px;font-size:12px;font-weight:800;color:var(--muted);cursor:pointer}
+.provider-list{display:flex;flex-direction:column;gap:8px;overflow:hidden;transition:max-height .3s ease,opacity .2s;max-height:3000px}
+.provider-list.collapsed{max-height:0;opacity:0;gap:0;margin:0}
+.provider-list .provider{display:flex;align-items:center;gap:11px;background:var(--soft,#f7f8fa);border:1px solid var(--line);border-radius:13px;padding:10px 13px;margin:0}
+.provider-list .providerlogo{width:38px;height:38px;min-width:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:var(--accent);color:#fff;font-size:12px;font-weight:900;letter-spacing:-.5px}
+.provider-list .provider-name{flex:1;min-width:0}
+.provider-list .provider-name h3{font-size:14px;font-weight:800;margin:0;display:flex;align-items:center;gap:6px}
+.provider-list .provider-name p{font-size:11px;color:var(--muted);margin:2px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prov-main{font-size:9.5px;font-weight:800;color:var(--accent);background:color-mix(in srgb,var(--accent) 13%,#fff);border:1px solid color-mix(in srgb,var(--accent) 35%,#fff);border-radius:6px;padding:1px 6px}
+.provider-list .bal-v{font-size:14px;font-weight:900;color:var(--ink);white-space:nowrap}
+.provider-list .bal-v small{font-size:10px;color:var(--muted);font-weight:700}
+.bal-off{color:var(--muted);font-size:12px;font-weight:700}
+.provider-list .recharge{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:9px;padding:8px 13px;font-size:12px;font-weight:800;white-space:nowrap;cursor:pointer}
+.provider-list .provider.low{border-color:var(--pop,#ff4d5e);background:color-mix(in srgb,var(--pop,#ff4d5e) 7%,#fff)}
+.provider-list .provider.low .bal-v{color:var(--pop,#ff4d5e)}
+body.theme-dark .prov-toggle{background:var(--surface,#2b3442);color:var(--muted,#aab4c2);border-color:var(--line,#3d4757)}
+body.theme-dark .provider-list .provider{background:var(--surface,#2b3442);border-color:var(--line,#3d4757)}
+body.theme-dark .provider-list .bal-v{color:var(--ink,#eef2f7)}
+@media(max-width:540px){
+  .provider-list .provider{gap:8px;padding:9px 10px}
+  .provider-list .providerlogo{width:32px;height:32px;min-width:32px;font-size:10.5px}
+  .provider-list .provider-name h3{font-size:12.5px}
+  .provider-list .provider-name p{font-size:10px}
+  .provider-list .bal-v{font-size:12.5px}
+  .provider-list .recharge{padding:7px 10px;font-size:11px}
+}

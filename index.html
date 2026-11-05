@@ -576,49 +576,16 @@ smb1234│@내아이디│1000"></textarea>
 
     <div class="atab-panel active" id="atab-status">
     <h3 class="admin-sub">💰 공급처 잔액 <span>API 실시간 · 떨어지면 충전</span>
-      <button class="admin-dash" style="margin-left:auto;padding:7px 13px" onclick="loadBalances()">⟳ 실시간 불러오기</button></h3>
-    <div class="provider-row">
-      <div class="provider">
-        <div class="provider-head">
-          <div class="providerlogo">SP</div>
-          <div class="provider-name"><h3>Stream-Promotion</h3><p>스트리밍 전문 · 라이브 원청</p></div>
-          <span class="connected">연결됨</span>
-        </div>
-        <div class="bal-row">
-          <div class="bal"><label>남은 잔액 <span class="api-badge">API 실시간</span></label><strong id="balSP">— <small>USD</small></strong></div>
-          <button class="recharge" onclick="openRecharge('Stream-Promotion')">충전하기</button>
-        </div>
-      </div>
-      <div class="provider">
-        <div class="provider-head">
-          <div class="providerlogo">SMB</div>
-          <div class="provider-name"><h3>SMB Panel</h3><p>종합 SNS 상품</p></div>
-          <span class="connected">연결됨</span>
-        </div>
-        <div class="bal-row">
-          <div class="bal"><label>남은 잔액 <span class="api-badge">API 실시간</span></label><strong id="balSMB">— <small>USD</small></strong></div>
-          <button class="recharge" onclick="openRecharge('SMB Panel')">충전하기</button>
-        </div>
-      </div>
-      <div class="provider">
-        <div class="provider-head">
-          <div class="providerlogo">RS</div>
-          <div class="provider-name"><h3>RealSite</h3><p>한국 특화 · 인스타·좋아요</p></div>
-          <span class="connected">연결됨</span>
-        </div>
-        <div class="bal-row">
-          <div class="bal"><label>남은 잔액 <span class="api-badge">API 실시간</span></label><strong id="balREAL">— <small>USD</small></strong></div>
-          <button class="recharge" onclick="openRecharge('RealSite')">충전하기</button>
-        </div>
-      </div>
-    </div>
+      <button class="prov-toggle" id="provToggle" onclick="toggleProviders()" aria-expanded="true">접기 ▲</button>
+      <button class="admin-dash" style="padding:7px 13px" onclick="loadBalances()">⟳ 불러오기</button></h3>
+    <div class="provider-list" id="providerList"><!-- renderProviders() 동적 생성 --></div>
 
     <h3 class="admin-sub">📊 내부 지표</h3>
     <div class="stats">
       <div class="stat"><label>전체 상품</label><strong id="aTotal">0</strong><em>3개 공급처 수집·한국어화</em></div>
       <div class="stat"><label>판매 공개 중</label><strong id="aLiveN">0</strong><em>고객에게 노출</em></div>
       <div class="stat"><label>🇰🇷 한국 프리미엄</label><strong id="aKrN">0</strong><em>보유 상품</em></div>
-      <div class="stat"><label>연결 공급처</label><strong>2</strong><em>Stream·SMB</em></div>
+      <div class="stat"><label>연결 공급처</label><strong id="aProvN">13</strong><em>주력 3 + 보조</em></div>
     </div>
     </div><!-- /atab-status -->
 

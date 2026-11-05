@@ -539,17 +539,50 @@ async function loadCatalog(){
 /* ===== 공급처 실시간 잔액(Vercel 백엔드 /api/balance, 키 숨김) ===== */
 // 사이트가 Vercel이면 상대경로, GitHub Pages면 api.온종일.com 절대경로로 폴백.
 const API_BASE = location.hostname.endsWith('github.io') ? 'https://api.xn--zk5biyyw.com' : '';
-/* 공급처 키 → {잔액칸 id, 로고} 매핑 */
-const PROVIDERS={'Stream-Promotion':{el:'balSP',logo:'SP'},'SMB Panel':{el:'balSMB',logo:'SMB'},'RealSite':{el:'balREAL',logo:'RS'}};
+/* 공급처 → {로고, 설명}. 연동은 다양하게(없는 게 없게), 충전은 주력만(테리 2026-11-05).
+   ★주력(충전 대상)=main:true. 나머지는 재고만 노출. */
+const PROVIDERS={
+  'Stream-Promotion':{logo:'SP', desc:'스트리밍 전문 · 라이브 시청자', main:true},
+  'smmwiz':          {logo:'WZ', desc:'올라운더 · 네이버/카카오 트래픽·성별', main:true},
+  'major':           {logo:'MJ', desc:'틱톡 · 한국 페북 전기능', main:true},
+  'rezz':            {logo:'RZ', desc:'스포티파이 · 인스타 한국 품질'},
+  'JAP':             {logo:'JAP',desc:'해외 대량 · 인스타/유튜브/틱톡'},
+  'morethan':        {logo:'MT', desc:'틱톡댓글 · 유튜브SEO · 스포티파이'},
+  'n1panel':         {logo:'N1', desc:'텔레그램 · 쿠팡/무신사 트래픽'},
+  'Peakerr':         {logo:'PK', desc:'해외 성별타겟 · 커스텀댓글'},
+  'pacysmm':         {logo:'PC', desc:'글로벌 트래픽 보조'},
+  'SMB Panel':       {logo:'SMB',desc:'종합 SNS · 웹트래픽·물량'},
+  'RealSite':        {logo:'RS', desc:'한국 특화 · 인스타·좋아요'},
+  'SMMVALY':         {logo:'VL', desc:'결제·세금계산서·차일드패널'},
+  'allsmm':          {logo:'AL', desc:'글로벌 보조'},
+};
 let BAL={}; // 공급처별 현재 잔액(USD) — 충전 낙관적 반영용
+function esc2(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+/* 공급처 잔액 카드(동적) — 공급처 많아져도 한 줄 compact + 섹션 접기/펴기 */
+function renderProviders(){
+  const box=document.getElementById('providerList'); if(!box)return;
+  box.innerHTML=Object.entries(PROVIDERS).map(([name,p])=>
+    `<div class="provider" data-prov="${esc2(name)}">
+       <div class="providerlogo">${esc2(p.logo)}</div>
+       <div class="provider-name"><h3>${esc2(name)}${p.main?' <span class="prov-main">주력</span>':''}</h3><p>${esc2(p.desc)}</p></div>
+       <strong class="bal-v" data-bal="${esc2(name)}">—</strong>
+       <button class="recharge" onclick="openRecharge('${esc2(name).replace(/'/g,"\\'")}')">충전</button>
+     </div>`).join('');
+}
+function toggleProviders(){
+  const box=document.getElementById('providerList'), btn=document.getElementById('provToggle'); if(!box)return;
+  const collapsed=box.classList.toggle('collapsed');
+  if(btn){btn.textContent=collapsed?'펴기 ▼':'접기 ▲'; btn.setAttribute('aria-expanded', String(!collapsed));}
+}
 function paintBal(name){
-  const el=document.getElementById(PROVIDERS[name].el); if(!el)return;
+  const el=document.querySelector(`.bal-v[data-bal="${CSS.escape(name)}"]`); if(!el)return;
   const v=BAL[name];
-  el.innerHTML = (v!=null&&isFinite(v)) ? `$${Number(v).toFixed(2)} <small>USD</small>` : '<span style="color:var(--pop)">백엔드 미연결</span>';
+  el.innerHTML = (v!=null&&isFinite(v)) ? `$${Number(v).toFixed(2)} <small>USD</small>` : '<span class="bal-off">미연결</span>';
   const card=el.closest('.provider'); if(card)card.classList.toggle('low', v!=null&&v<10); // 10달러 미만 경고
 }
 async function loadBalances(){
-  Object.keys(PROVIDERS).forEach(n=>{const el=document.getElementById(PROVIDERS[n].el);if(el)el.innerHTML='불러오는 중…';});
+  if(!document.getElementById('providerList').children.length) renderProviders();
+  document.querySelectorAll('.bal-v').forEach(el=>el.innerHTML='…');
   try{
     const r=await fetch(API_BASE+'/api/balance',{cache:'no-store'});
     if(!r.ok) throw new Error('HTTP '+r.status);
@@ -647,6 +680,7 @@ function adminLogin(){
   if(pw===ADMIN_PW){
     closeAdmin();
     showView('admin');
+    try{renderProviders();}catch(e){}  // 공급처 잔액 카드 동적 생성
     try{loadBalances();}catch(e){}  // 진입 시 공급처 잔액 자동 로드
     toast('관리자 콘솔에 입장했습니다');
   }else{
