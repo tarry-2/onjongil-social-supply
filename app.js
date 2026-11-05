@@ -71,21 +71,116 @@ function priceOf(c){
 // 1개당 단가(1,000당 가격 ÷ 1000). 비교용 — 소수점 나오면 2자리까지.
 function per1(per1000){const v=per1000/1000;return '₩'+(v>=1?Math.round(v).toLocaleString('ko-KR'):v.toFixed(2));}
 function unitOf(c){return UNIT[c.group]||'개';}
+
+/* ===== 💎 상품 등급(저가·고품질·프리미엄) + 🪂 이탈 표기 — 대행사 컨설팅식 ===== */
+/* 원청 데이터의 품질/이탈 신호로 판정. 신호 없으면 그룹 내 가격분위로 보조 배정. */
+function _sig(c){
+  const b=Array.isArray(c.badges)?c.badges:[], en=(c.en||'').toLowerCase();
+  return {
+    real:b.includes('실제계정')||/\breal\b|active user|real user/.test(en),
+    life:/lifetime/.test(en)||b.includes('초고품질'),
+    nodrop:b.includes('이탈없음')||/non.?drop|no.?drop/.test(en),
+    refill:c.refill||b.includes('리필보장')||(/refill/.test(en)&&!/no.?refill/.test(en)),
+    hq:b.includes('고품질')||/high quality|\bhq\b/.test(en),
+    low:/cheap|\blow\b|\blq\b|\bbot/.test(en),
+    norefill:/no.?refill/.test(en),
+    drop:/drop/.test(en)&&!/non.?drop|no.?drop/.test(en)
+  };
+}
+/* 이탈 표기: 이탈없음 / 이탈가능 / 일반 (실제계정·리필·평생이면 안 빠짐 우선) */
+function dropOf(c){
+  const s=_sig(c);
+  if(s.nodrop||s.life||s.real||s.refill)return'이탈없음';
+  if(s.drop||s.norefill)return'이탈가능';
+  return'일반';
+}
+/* 신호 기반 1차 등급(미정은 가격분위로 후속 배정) */
+function _tierSig(c){
+  const s=_sig(c);
+  if(s.real||s.life||(s.nodrop&&s.refill))return'프리미엄';
+  if(s.low||s.drop||(s.norefill&&!s.hq&&!s.nodrop))return'저가';
+  if(s.hq||s.refill||s.nodrop)return'고품질';
+  return'';
+}
+/* 품질 점수(대표 선정용): 높을수록 좋은 상품 */
+function qscore(c){
+  const b=Array.isArray(c.badges)?c.badges:[];let s=0;
+  if(b.includes('실제계정'))s+=4;
+  if(b.includes('초고품질'))s+=3;
+  if(b.includes('이탈없음'))s+=3;
+  if(b.includes('고품질'))s+=2;
+  if(c.refill||b.includes('리필보장'))s+=2;
+  if(b.includes('즉시시작'))s+=1;
+  if(c._drop==='이탈가능')s-=2;
+  return s;
+}
+/* CAT 전체에 _tier/_drop 주입. 미정은 (플랫폼·종류·나라) 그룹 내 가격 중앙값으로 저가/고품질 배정. */
+function annotateTiers(){
+  if(!Array.isArray(CAT))return;
+  const undec={};
+  CAT.forEach(c=>{
+    c._drop=dropOf(c);
+    const t=_tierSig(c);
+    if(t){c._tier=t;}
+    else{c._tier='';const k=c.plat+'|'+c.kind+'|'+c.geo;(undec[k]=undec[k]||[]).push(c);}
+  });
+  // 미정: 그룹 내 가격 중앙값 미만=저가, 이상=고품질
+  for(const k in undec){
+    const arr=undec[k];
+    const prices=arr.map(c=>c.wholesale||0).sort((a,b)=>a-b);
+    const mid=prices[Math.floor(prices.length/2)]||0;
+    arr.forEach(c=>{c._tier=(c.wholesale<=mid)?'저가':'고품질';});
+  }
+}
+/* 등급 메타(라벨·이모지·색) — MZ·귀엽게 */
+const TIER_META={
+  프리미엄:{emo:'🏆',label:'프리미엄',cls:'t-prem',tip:'실제 유저·리필·안 빠짐'},
+  고품질:{emo:'⭐',label:'고품질',cls:'t-hq',tip:'안정적이고 품질 좋아요'},
+  저가:{emo:'💨',label:'저가형',cls:'t-low',tip:'가볍게 숫자 채우기용'},
+};
+const DROP_META={
+  이탈없음:{emo:'🛡️',label:'안 빠져요',cls:'d-safe'},
+  이탈가능:{emo:'🪂',label:'이탈 가능',cls:'d-drop'},
+};
+function tierBadge(c){const m=TIER_META[c._tier];return m?`<span class="tier ${m.cls}">${m.emo} ${m.label}</span>`:'';}
+function dropBadge(c){const m=DROP_META[c._drop];return m?`<span class="drop ${m.cls}">${m.emo} ${m.label}</span>`:'';}
+
 /* 특성 뱃지(품질·안정·속도) + 소스(유입경로). 폴백 데이터엔 없을 수 있어 방어적. */
 const SRC_ICON={외부유입:'🔗',광고:'📣',실유저:'🙋','검색/탐색':'🔎',프로필:'👤'};
 function badgeHtml(c){
   const bs=Array.isArray(c.badges)?c.badges:[];
-  let h=bs.map(t=>`<span class="bdg">${esc(t)}</span>`).join('');
+  let h=tierBadge(c)+dropBadge(c);                            // 💎 등급·이탈 먼저(눈에 딱)
+  h+=bs.map(t=>`<span class="bdg">${esc(t)}</span>`).join('');
   if(c.source)h+=`<span class="bdg src">${SRC_ICON[c.source]||'•'} ${esc(c.source)}</span>`;
   return h?`<div class="bdgs">${h}</div>`:'';
 }
 function clsOf(c){return CLS[c.plat]||'etc';}
 function phOf(c){return PH[c.plat]||'주문할 공개 링크를 입력하세요';}
 
+annotateTiers();   // 💎 CAT에 _tier/_drop 주입(공개셋 계산 전에)
 /* 공개 목록(관리자 토글) — localStorage. 없으면 기본 공개셋 자동 생성 */
 function defaultLive(){
-  // 기본 공개 = 깨지지 않은 전체 상품(9천여개 다 노출). 관리자가 숨기고 싶은 것만 끄면 됨.
+  // 전체 공개 = 깨지지 않은 전체 상품(중복 포함 다 노출). 관리자 '전체공개' 버튼용.
   return new Set(CAT.filter(c=>!c.broken).map(c=>c.id));
+}
+/* 🧹 중복정리 공개셋(기본) — 똑같은 잉여만 숨기고 대표만 노출.
+   한국=잘게(수량까지 구분) 많이 남겨 디테일 / 해외=나라·종류·등급별 대표 1개로 간결.
+   각 그룹 대표 = 품질점수 높은 것 → 같으면 최저가. 삭제 아님(숨김), 복구 가능. */
+function dedupLive(){
+  const keep=new Set(), grp={};
+  CAT.forEach(c=>{
+    if(c.broken)return;
+    if(c.premium){keep.add(c.id);return;}           // 🇰🇷 한국은 묶지 않고 전부 노출(디테일)
+    // 해외만 나라·종류·등급별로 묶어 대표 1개
+    const k=[c.plat,c.sub,c.kind,c.geo,c._tier].join('|');
+    (grp[k]=grp[k]||[]).push(c);
+  });
+  for(const k in grp){
+    const arr=grp[k];
+    arr.sort((a,b)=>qscore(b)-qscore(a)||priceOf(a)-priceOf(b)); // 품질↑, 같으면 가격↓
+    keep.add(arr[0].id);
+  }
+  return keep;
 }
 /* 추천 셋(관리자 '추천 기본셋 적용'용) — 기본템 위주 선별 */
 function curatedLive(){
@@ -98,10 +193,10 @@ function curatedLive(){
   CAT.filter(c=>c.premium&&!c.broken).slice(0,40).forEach(c=>picked.add(c.id));
   return picked;
 }
-const LIVE_VER='4'; // 🔴 옛 공개설정(주요플랫폼만) 잔재가 라자다/디스코드/치지직 등 가림 → 버전 올려 전체공개 재적용
+const LIVE_VER='5'; // 🧹 중복정리(dedup) 기본 적용 — 옛 저장분 무효화
 function loadLive(){ try{
   if(localStorage.getItem('supply_live_v')===LIVE_VER){const s=localStorage.getItem('supply_live'); if(s)return new Set(JSON.parse(s));}
-}catch(e){} return defaultLive(); }
+}catch(e){} return dedupLive(); }
 function saveLive(){ try{localStorage.setItem('supply_live',JSON.stringify([...LIVE]));localStorage.setItem('supply_live_v',LIVE_VER);}catch(e){} }
 let LIVE=loadLive();
 /* 인기상품(박스로 크게 노출) — 관리자가 지정. 나머지는 리스트형. */
@@ -516,6 +611,11 @@ function openAllLive(){
   LIVE=defaultLive(); saveLive(); adminRender(); try{renderShowcase();renderCards();}catch(e){}
   toast('전체 공개 — '+LIVE.size.toLocaleString('ko-KR')+'개');
 }
+/* 🧹 중복정리 — 똑같은 잉여 숨기고 대표(한국 세분화·해외 등급별)만 공개 */
+function trimDupLive(){
+  LIVE=dedupLive(); saveLive(); adminRender(); try{renderShowcase();renderCards();}catch(e){}
+  toast('🧹 중복정리 완료 — 대표 '+LIVE.size.toLocaleString('ko-KR')+'개만 공개');
+}
 
 /* ===== 원청 상품 실시간 동기화(Vercel /api/services) ===== */
 // 공급처가 새 상품을 올리면 '상품 동기화'로 최신 전체를 받아 한국어 변환본으로 교체한다.
@@ -527,6 +627,7 @@ async function loadCatalog(){
     const d=await r.json();
     if(d && d.catalog && d.catalog.length){
       CAT=d.catalog; META=d.meta||META;
+      annotateTiers(); LIVE=dedupLive(); saveLive();   // 💎 새 데이터 등급 주입 + 🧹 중복정리 재적용
       fillSide(); fillGeo(); fillAdminSelects(); renderPills(); renderCatAdmin(); renderShowcase(); resetAndRender(); adminRender(); updateMarginUI();
       const errN=d.errors?Object.keys(d.errors).length:0;
       toast('✅ 동기화 완료 — 전체 '+CAT.length.toLocaleString('ko-KR')+'개'+(errN?' (일부 공급처 오류)':''));

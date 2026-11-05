@@ -352,6 +352,18 @@ header{position:sticky;top:0;z-index:30;backdrop-filter:blur(14px);background:co
 .bdg{font-size:10px;font-weight:800;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px 8px;line-height:1.1}
 .bdg.src{color:var(--pop);border-color:color-mix(in srgb,var(--pop) 35%,var(--line))}
 .prow .bdgs{margin:5px 0 0}
+/* 💎 등급·🪂이탈 뱃지 — MZ·귀엽게(살짝 통통, 또렷한 색) */
+.tier,.drop{font-size:10px;font-weight:900;border-radius:999px;padding:3px 9px;line-height:1.15;border:1.5px solid transparent;letter-spacing:-.2px;white-space:nowrap}
+.tier.t-prem{color:#8a5a00;background:linear-gradient(135deg,#fff3c4,#ffe08a);border-color:#ffd25a;box-shadow:0 1px 0 #ffeaa0 inset}
+.tier.t-hq{color:#7a4bd6;background:#f1ebff;border-color:#d8c7ff}
+.tier.t-low{color:#5a7a92;background:#eef4f8;border-color:#d4e2ec}
+.drop.d-safe{color:#128a5a;background:#e6f9ef;border-color:#b7ebcf}
+.drop.d-drop{color:#d84a6b;background:#fff0f3;border-color:#ffc9d6}
+body.theme-dark .tier.t-prem{color:#ffe08a;background:rgba(255,210,90,.14);border-color:rgba(255,210,90,.4);box-shadow:none}
+body.theme-dark .tier.t-hq{color:#cbb3ff;background:rgba(150,110,240,.16);border-color:rgba(150,110,240,.4)}
+body.theme-dark .tier.t-low{color:#a8c4d8;background:rgba(120,160,190,.14);border-color:rgba(120,160,190,.35)}
+body.theme-dark .drop.d-safe{color:#7fe3b2;background:rgba(30,200,130,.14);border-color:rgba(30,200,130,.35)}
+body.theme-dark .drop.d-drop{color:#ff9fb4;background:rgba(240,80,120,.15);border-color:rgba(240,80,120,.4)}
 /* 카테고리 페이지(전체보기) */
 .catpage-top{margin:4px 0 18px}
 .backbtn{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:9px 15px;font-size:12.5px;font-weight:800;color:var(--ink);cursor:pointer;transition:.16s;margin-bottom:13px}
@@ -948,7 +960,7 @@ body.theme-dark .subpill.active{background:color-mix(in srgb,var(--accent) 22%,v
 .viewtoggle:hover{border-color:var(--accent);color:var(--accent)}
 body.dense-list .viewtoggle{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,#fff)}
 body.dense-list .rows .prow,body.dense-list .sc-rows .prow{padding:8px 12px;gap:9px}
-body.dense-list .prow-sub,body.dense-list .prow .bdgs{display:none}
+body.dense-list .prow-sub,body.dense-list .prow .bdg{display:none} /* 작게보기: 세부특성 pill만 숨김 — 💎등급·🪂이탈 뱃지(.tier/.drop)는 항상 보임 */
 body.dense-list .prow-ic{width:32px;height:32px;font-size:15px}
 body.dense-list .prow-price .per{display:none}
 body.dense-list .prow-name{font-size:13.5px}
