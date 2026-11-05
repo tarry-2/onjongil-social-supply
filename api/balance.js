@@ -4,6 +4,10 @@ const PROVIDERS = {
   'Stream-Promotion': { url: 'https://stream-promotion.com/api/v2', key: process.env.SP_KEY },
   'SMB Panel':        { url: 'https://smbpanel.net/api/v2',        key: process.env.SMB_KEY },
   'RealSite':         { url: 'https://realsite.shop/api/v2',       key: process.env.REAL_KEY },
+  'Peakerr':          { url: 'https://peakerr.com/api/v2',         key: process.env.PEAKERR_KEY },
+  'smmwiz':           { url: 'https://smmwiz.com/api/v2',          key: process.env.SMMWIZ_KEY },
+  'SMMVALY':          { url: 'https://smmvaly.com/api/v2',         key: process.env.SMMVALY_KEY },
+  'allsmm':           { url: 'https://allsmm.net/api/v2',          key: process.env.ALLSMM_KEY },
 };
 
 export default async function handler(req, res) {

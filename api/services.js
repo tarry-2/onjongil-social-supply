@@ -6,6 +6,10 @@ const SOURCES = [
   ['https://stream-promotion.com/api/v2', process.env.SP_KEY,   'Stream-Promotion'],
   ['https://smbpanel.net/api/v2',         process.env.SMB_KEY,  'SMB Panel'],
   ['https://realsite.shop/api/v2',        process.env.REAL_KEY, 'RealSite'],
+  ['https://peakerr.com/api/v2',          process.env.PEAKERR_KEY, 'Peakerr'],
+  ['https://smmwiz.com/api/v2',           process.env.SMMWIZ_KEY,  'smmwiz'],
+  ['https://smmvaly.com/api/v2',          process.env.SMMVALY_KEY, 'SMMVALY'],
+  ['https://allsmm.net/api/v2',           process.env.ALLSMM_KEY,  'allsmm'],
 ];
 
 export default async function handler(req, res) {

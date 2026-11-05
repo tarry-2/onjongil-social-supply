@@ -168,7 +168,7 @@ function detailKo(name){const toks=[];for(const b of (name.match(/\[([^\]]+)\]/g
   const out=[];for(const t of toks){const ko=oneTok(t);if(ko&&!out.includes(ko))out.push(ko);}return out.slice(0,5).join(' · ');}
 
 export function transform(raw, srcname){
-  const pref = {'Stream-Promotion':'sp','SMB Panel':'smb','RealSite':'real'}[srcname] || 'x';
+  const pref = {'Stream-Promotion':'sp','SMB Panel':'smb','RealSite':'real','Peakerr':'pk','smmwiz':'wz','SMMVALY':'vl','allsmm':'al'}[srcname] || 'x';
   return raw.map(s=>{
     const name=s.name||'', cat=s.category||'', blob=name+' '+cat;
     const [plat,ic]=platOf(blob),[kind,group]=kindOf(blob);
