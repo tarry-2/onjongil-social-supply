@@ -34,6 +34,7 @@
     if(e.target.closest('[data-action="replay-intro"]')){try{sessionStorage.removeItem('ss_intro')}catch(e2){}location.reload();}
     if(e.target.closest('[data-action="profile"]')){if(typeof openAuth==='function')openAuth('login');}
     if(e.target.closest('[data-action="install"]')){if(typeof pwaInstall==='function')pwaInstall();}
+    if(e.target.closest('[data-action="notices"]')){if(typeof openNotices==='function')openNotices();}
   });
   // 로고: 5번 연속 클릭=관리자 비번 / 평소=홈 이동. a href 기본동작(새로고침 느낌) 차단
   var lc=0,lt; document.addEventListener('click',function(e){
@@ -1317,6 +1318,7 @@ function adminTab(name){
   document.querySelectorAll('.atab-panel').forEach(function(p){p.classList.toggle('active',p.id==='atab-'+name);});
   if(name==='support')renderAdminTickets();
   if(name==='refer')renderAdminRefer();
+  if(name==='notice')renderAdminNotices();
 }
 document.getElementById('ticketModal').addEventListener('click',function(e){if(e.target.id==='ticketModal')closeTicket();});
 
@@ -1350,6 +1352,43 @@ function renderAdminRefer(){
   if(!friends.length){box.innerHTML='<div class="empty">아직 추천 가입이 없습니다.<br>고객이 추천 링크로 친구를 데려오면 여기에 쌓입니다.</div>';return;}
   box.innerHTML=friends.map(function(f){return '<div class="tk-item"><div class="tk-item-top"><b>'+esc(f.name||'친구')+'</b><span class="ost done">+'+won(f.earned||0)+'</span></div><div class="tk-item-sub">추천인 '+esc(f.by||'')+' · '+esc(f.date||'')+'</div></div>';}).join('');
 }
+
+/* ===== 📢 공지사항 (Updates) ===== */
+var NOTICES=(function(){try{return JSON.parse(localStorage.getItem('supply_notices')||'[]')}catch(e){return[]}})();
+function saveNotices(){try{localStorage.setItem('supply_notices',JSON.stringify(NOTICES.slice(-50)))}catch(e){}}
+function submitNotice(){
+  var type=document.getElementById('ntType').value,title=document.getElementById('ntTitle').value.trim(),body=document.getElementById('ntBody').value.trim();
+  if(!title){toast('제목을 입력해 주세요');document.getElementById('ntTitle').focus();return;}
+  if(!body){toast('내용을 입력해 주세요');document.getElementById('ntBody').focus();return;}
+  var n={id:'NT'+Date.now(),type:type,title:title,body:body,created:tkNow()};
+  NOTICES.push(n);saveNotices();
+  try{if(window._supa)window._supa.from('notices').insert({id:n.id,type:type,title:title,body:body}).then(function(){},function(){});}catch(e){}
+  document.getElementById('ntTitle').value='';document.getElementById('ntBody').value='';
+  renderAdminNotices();noticeBadge();if(typeof logLine==='function')logLine('ok','공지 발행: '+title);toast('📢 공지를 발행했어요');
+}
+function deleteNotice(id){if(!confirm('이 공지를 삭제할까요?'))return;NOTICES=NOTICES.filter(function(n){return n.id!==id});saveNotices();try{if(window._supa)window._supa.from('notices').delete().eq('id',id).then(function(){},function(){})}catch(e){}renderAdminNotices();noticeBadge();toast('공지를 삭제했습니다');}
+function renderAdminNotices(){
+  var box=document.getElementById('antList');if(!box)return;
+  if(!NOTICES.length){box.innerHTML='<div class="empty">발행된 공지가 없습니다.</div>';return;}
+  box.innerHTML=NOTICES.slice().reverse().map(function(n){return '<div class="tk-item"><div class="tk-item-top"><b>'+esc(n.type)+' '+esc(n.title)+'</b><button class="nt-del" onclick="deleteNotice(\''+n.id+'\')">삭제</button></div><div class="tk-item-sub">'+esc(n.created)+'</div><div class="tk-item-last">'+esc(n.body.slice(0,60))+'</div></div>';}).join('');
+}
+function openNotices(){
+  var box=document.getElementById('noticeList');
+  if(!NOTICES.length)box.innerHTML='<div class="empty">아직 공지가 없어요.</div>';
+  else box.innerHTML=NOTICES.slice().reverse().map(function(n){return '<div class="notice-item"><div class="notice-it-top"><b>'+esc(n.type)+' '+esc(n.title)+'</b><span>'+esc(n.created)+'</span></div><div class="notice-it-body">'+esc(n.body)+'</div></div>';}).join('');
+  document.getElementById('noticeModal').classList.add('show');
+  try{localStorage.setItem('supply_notice_seen',NOTICES.length?NOTICES[NOTICES.length-1].id:'')}catch(e){}
+  noticeBadge();
+}
+function closeNotices(){document.getElementById('noticeModal').classList.remove('show');}
+function noticeBadge(){
+  var dot=document.getElementById('noticeDot');if(!dot)return;
+  var seen=null;try{seen=localStorage.getItem('supply_notice_seen')}catch(e){}
+  var last=NOTICES.length?NOTICES[NOTICES.length-1].id:null;
+  dot.hidden=!(last&&last!==seen);
+}
+document.getElementById('noticeModal').addEventListener('click',function(e){if(e.target.id==='noticeModal')closeNotices();});
+noticeBadge();
 /* 앱 시작 시 Supabase에서 주문·로그 당겨와 기기 통합(어느 기기서 봐도 동일) */
 async function syncFromSupa(){
   if(!window._supa)return;

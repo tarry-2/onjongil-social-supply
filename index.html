@@ -191,7 +191,7 @@
   ov.querySelector('.intro-skip').addEventListener('click',function(){clearTimeout(timer);end();});
 })();
 </script>
-<aside class="sidebar"><a class="logo" href="#store"><span class="brand-icon">ON</span>서플라이<span class="logo-dot">.</span></a><div class="logo-sub">SOCIAL SUPPLY</div><nav id="desktop-nav" aria-label="주요 메뉴"></nav><div class="side-bottom"><div class="help-card"><b>한국어·한국카드로 떡상.</b><p>소셜 성장을 한곳에서.</p><span>ON SUPPLY ↗</span></div><button class="profile" data-action="profile"><span class="avatar">나</span><span><b>내 계정</b><small>소셜 서플라이</small></span><span>⌘</span></button></div></aside><div class="shell"><header><button class="hamburger" data-action="drawer" type="button" aria-label="메뉴 열기">☰</button><a class="logo hdr-logo" href="#store" aria-label="ON 서플라이 로고 (7번 누르면 관리자)"><span class="brand-icon">ON</span></a><span id="breadcrumb">서비스몰</span><div class="header-right"><button class="install-btn" data-action="install" hidden>📲 앱 설치</button><button class="theme-toggle" data-action="replay-intro" title="인트로 다시보기" aria-label="인트로 다시보기">🎬</button><button class="theme-toggle" data-action="theme" aria-label="화면 모드 전환">🌙</button><button class="wallet-hdr" data-view="wallet">💳 <b id="hdrBal">₩24,600</b></button><button class="avatar small" data-action="profile" aria-label="프로필">나</button></div></header><main id="main">
+<aside class="sidebar"><a class="logo" href="#store"><span class="brand-icon">ON</span>서플라이<span class="logo-dot">.</span></a><div class="logo-sub">SOCIAL SUPPLY</div><nav id="desktop-nav" aria-label="주요 메뉴"></nav><div class="side-bottom"><div class="help-card"><b>한국어·한국카드로 떡상.</b><p>소셜 성장을 한곳에서.</p><span>ON SUPPLY ↗</span></div><button class="profile" data-action="profile"><span class="avatar">나</span><span><b>내 계정</b><small>소셜 서플라이</small></span><span>⌘</span></button></div></aside><div class="shell"><header><button class="hamburger" data-action="drawer" type="button" aria-label="메뉴 열기">☰</button><a class="logo hdr-logo" href="#store" aria-label="ON 서플라이 로고 (7번 누르면 관리자)"><span class="brand-icon">ON</span></a><span id="breadcrumb">서비스몰</span><div class="header-right"><button class="install-btn" data-action="install" hidden>📲 앱 설치</button><button class="theme-toggle notice-bell" data-action="notices" title="공지사항" aria-label="공지사항">📢<span class="notice-dot" id="noticeDot" hidden></span></button><button class="theme-toggle" data-action="replay-intro" title="인트로 다시보기" aria-label="인트로 다시보기">🎬</button><button class="theme-toggle" data-action="theme" aria-label="화면 모드 전환">🌙</button><button class="wallet-hdr" data-view="wallet">💳 <b id="hdrBal">₩24,600</b></button><button class="avatar small" data-action="profile" aria-label="프로필">나</button></div></header><main id="main">
 <section id="store" class="view active">
   <div class="wrap">
     <section class="hero">
@@ -570,6 +570,7 @@ smb1234│@내아이디│1000"></textarea>
       <button class="atab-btn" data-atab="products" onclick="adminTab('products')">🗂️ 상품·가격</button>
       <button class="atab-btn" data-atab="support" onclick="adminTab('support')">🎫 고객지원</button>
       <button class="atab-btn" data-atab="refer" onclick="adminTab('refer')">🤝 추천</button>
+      <button class="atab-btn" data-atab="notice" onclick="adminTab('notice')">📢 공지</button>
     </div>
 
     <div class="atab-panel active" id="atab-status">
@@ -700,6 +701,21 @@ smb1234│@내아이디│1000"></textarea>
       <div class="atk-stats" id="arefStats"></div>
       <section class="panel" style="padding:14px"><div id="arefList"></div></section>
     </div><!-- /atab-refer -->
+
+    <div class="atab-panel" id="atab-notice">
+      <h3 class="admin-sub">📢 공지 작성 <span>발행하면 고객 헤더 📢에 알림이 떠요</span></h3>
+      <section class="panel" style="padding:18px">
+        <label class="olabel">유형</label>
+        <select id="ntType" class="no-sel"><option>📣 일반</option><option>🆕 신규 상품</option><option>💰 가격 변동</option><option>🔧 점검 안내</option><option>🎉 이벤트</option></select>
+        <label class="olabel">제목</label>
+        <input id="ntTitle" class="oinput" placeholder="공지 제목">
+        <label class="olabel">내용</label>
+        <textarea id="ntBody" class="oinput tk-ta" placeholder="공지 내용을 적어주세요"></textarea>
+        <button class="oorder-go" onclick="submitNotice()">📢 공지 발행</button>
+      </section>
+      <h3 class="admin-sub">발행된 공지</h3>
+      <section class="panel" style="padding:14px"><div id="antList"></div></section>
+    </div><!-- /atab-notice -->
 
     <div class="footnote">관리자 콘솔 · 공급처 실데이터(Stream-Promotion·SMB Panel·RealSite) · 잔액 API 실시간, 충전은 요청 기록 방식입니다.</div>
   </div>
@@ -968,6 +984,15 @@ smb1234│@내아이디│1000"></textarea>
     <div class="dt-info" id="dtInfo"></div>
     <button class="oorder-go" onclick="detailToOrder()">🚀 이 상품 주문하기</button>
     <div class="osafe">🔒 비밀번호를 요구하지 않는 안전 방식으로 전달됩니다.</div>
+  </div>
+</div>
+
+<!-- 공지사항 모달 (고객) -->
+<div id="noticeModal" class="omodal">
+  <div class="omodal-box">
+    <button class="omodal-x" onclick="closeNotices()" aria-label="닫기">✕</button>
+    <div class="tk-mhead"><h3>📢 공지사항</h3></div>
+    <div id="noticeList" class="notice-list"></div>
   </div>
 </div>
 
