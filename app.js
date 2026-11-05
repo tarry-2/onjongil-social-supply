@@ -628,7 +628,7 @@ function showView(id){
   if(bc)bc.textContent={store:'서비스몰',order:'빠른주문',reseller:'파트너·API',wallet:'지갑',admin:'관리자'}[navId]||'서비스몰';
   if(id==='store'&&typeof renderShowcase==='function')renderShowcase();
   if(id==='order'&&typeof renderOrderView==='function'){try{renderOrderView();}catch(e){console.warn('[빠른주문]',e.message);}}
-  if(id==='admin'&&typeof adminRender==='function'){try{fillAdminSelects();adminRender();}catch(e){console.warn('[관리자] 렌더 오류',e.message);}}
+  if(id==='admin'&&typeof adminRender==='function'){try{fillAdminSelects();adminRender();if(typeof bindAdmAccordion==='function')bindAdmAccordion();}catch(e){console.warn('[관리자] 렌더 오류',e.message);}}
   if(id==='wallet'&&typeof renderOrders==='function'){try{renderOrders();}catch(e){}}
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -1319,6 +1319,20 @@ function adminTab(name){
   if(name==='support')renderAdminTickets();
   if(name==='refer')renderAdminRefer();
   if(name==='notice')renderAdminNotices();
+}
+/* 관리자 섹션 접기/펴기 (admin-sub 헤더 클릭) */
+function admToggle(h,e){
+  if(e&&e.target&&e.target.closest('button,select,input'))return; // 내부 액션은 토글 제외
+  var col=h.classList.toggle('adm-collapsed');
+  var el=h.nextElementSibling;
+  while(el&&!(el.classList&&el.classList.contains('admin-sub'))){el.style.display=col?'none':'';el=el.nextElementSibling;}
+}
+function bindAdmAccordion(){
+  document.querySelectorAll('#admin .admin-sub').forEach(function(h){
+    if(h._accBound)return; h._accBound=true;
+    h.style.cursor='pointer';
+    h.addEventListener('click',function(e){admToggle(h,e);});
+  });
 }
 document.getElementById('ticketModal').addEventListener('click',function(e){if(e.target.id==='ticketModal')closeTicket();});
 

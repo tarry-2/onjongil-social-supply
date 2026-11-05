@@ -1130,6 +1130,24 @@ body.theme-dark .ref-friend em{color:#5fd39a}
 .notice-it-body{font-size:13px;color:var(--ink);line-height:1.6;white-space:pre-wrap;word-break:break-word}
 .nt-del{border:1px solid var(--line);background:none;color:var(--muted);border-radius:7px;padding:4px 10px;font-size:11px;cursor:pointer;flex-shrink:0}
 .nt-del:hover{border-color:#e16363;color:#e16363}
+
+/* 🔐 관리자 콘솔 모바일 깨짐 수정 */
+@media(max-width:650px){
+  .api-view .dash-title{flex-direction:column;align-items:stretch;gap:12px}
+  .api-view .dash-title h1{font-size:21px;white-space:nowrap;margin-bottom:4px}
+  .admin-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .admin-actions button{flex:1;min-width:0;white-space:nowrap;padding:11px 10px}
+  .admin-sub{display:block;font-size:14.5px}
+  .admin-sub span{display:inline;margin-left:6px;font-weight:700}
+  .admin-sub button{margin:9px 6px 0 0!important;display:inline-flex;float:none}
+  .api-view .tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:12px}
+  .api-view table{min-width:800px}
+  .api-view th,.api-view td{white-space:nowrap}
+}
+/* 관리자 섹션 접기/펴기 화살표 */
+.admin-sub{cursor:pointer;position:relative;padding-right:24px}
+.admin-sub::after{content:'▾';position:absolute;right:2px;top:2px;color:var(--muted);font-size:13px;font-weight:400}
+.admin-sub.adm-collapsed::after{content:'▸'}
 .nod-id{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--muted);margin-bottom:14px;flex-wrap:wrap}
 .nod-id code{background:var(--soft,#f5f6f8);border:1px solid var(--line);border-radius:6px;padding:3px 8px;font-size:12px;color:var(--accent);font-weight:700}
 .nod-copy{border:1px solid var(--line);background:var(--surface,#fff);border-radius:7px;padding:4px 9px;font-size:11px;font-weight:700;color:var(--ink)}
