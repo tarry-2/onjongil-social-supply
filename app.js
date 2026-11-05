@@ -97,7 +97,7 @@ function curatedLive(){
   CAT.filter(c=>c.premium&&!c.broken).slice(0,40).forEach(c=>picked.add(c.id));
   return picked;
 }
-const LIVE_VER='2'; // 기본 공개셋 의미 변경(전체공개) → 옛 저장분 1회 무효화
+const LIVE_VER='4'; // 🔴 옛 공개설정(주요플랫폼만) 잔재가 라자다/디스코드/치지직 등 가림 → 버전 올려 전체공개 재적용
 function loadLive(){ try{
   if(localStorage.getItem('supply_live_v')===LIVE_VER){const s=localStorage.getItem('supply_live'); if(s)return new Set(JSON.parse(s));}
 }catch(e){} return defaultLive(); }
@@ -120,8 +120,17 @@ function saveCats(){try{localStorage.setItem('supply_cats',JSON.stringify(CATS))
 let CATS=loadCats();
 function renderPills(){
   const box=document.getElementById('pills'); if(!box)return;
+  // 🔴 현재 플랫폼의 실제 종류로(유튜브=구독자, 인스타=팔로워, 트위치=라이브시청자…). 전체 선택 시엔 통합(group)
+  var cnt={};
+  CAT.forEach(function(c){ if(c.broken||!LIVE.has(c.id))return;
+    if(origin!=='all'&&(origin==='kr'?!c.premium:c.premium))return;
+    if(platform!=='all'&&c.plat!==platform)return;
+    var key=(platform==='all')?c.group:c.kind;
+    cnt[key]=(cnt[key]||0)+1;
+  });
+  var order=Object.entries(cnt).sort(function(a,b){return b[1]-a[1];});
   let h=`<button class="pill${kind==='all'?' active':''}" data-kind="all">전체</button>`;
-  CATS.filter(c=>!c.hidden).forEach(c=>{h+=`<button class="pill${kind===c.key?' active':''}" data-kind="${esc(c.key)}">${esc(c.label)}</button>`;});
+  order.forEach(function(e){h+=`<button class="pill${kind===e[0]?' active':''}" data-kind="${esc(e[0])}">${esc(e[0])} <em>${e[1].toLocaleString('ko-KR')}</em></button>`;});
   box.innerHTML=h;
   box.querySelectorAll('.pill').forEach(b=>b.addEventListener('click',()=>{kind=b.dataset.kind;renderPills();resetAndRender();}));
 }
@@ -153,7 +162,7 @@ function matchedAll(onlyLive){
     (origin==='all'||(origin==='kr'?c.premium:!c.premium))&&   // 🇰🇷한국인 / 🌍외국인 분리
     (platform==='all'||c.plat===platform)&&
     (subf==='all'||c.sub===subf)&&
-    (kind==='all'||c.group===kind)&&
+    (kind==='all'||(platform==='all'?c.group===kind:c.kind===kind))&&
     (geo==='all'||c.geo===geo)&&
     (!q||(c.ko+c.plat+c.group+c.geo+c.en).toLowerCase().includes(q))
   );
@@ -261,6 +270,9 @@ function renderShowcase(){
 /* 전체보기 → 카테고리 페이지 */
 function openCat(plat){
   platform=plat; kind='all'; geo='all'; subf='all'; catPage=0;
+  // 🔴 현재 한국/외국 탭에 이 플랫폼 상품이 없으면 '전체'로 자동 전환(빈 화면 방지)
+  var hasInOrigin=CAT.some(function(c){return c.plat===plat&&!c.broken&&LIVE.has(c.id)&&(origin==='all'||(origin==='kr'?c.premium:!c.premium));});
+  if(!hasInOrigin){origin='all';document.querySelectorAll('.geotab').forEach(function(x){x.classList.toggle('active',x.dataset.origin==='all');});}
   document.querySelectorAll('#platSide button').forEach(x=>x.classList.toggle('selected',x.dataset.platform===plat));
   const gs=document.getElementById('geoSel'); if(gs)gs.value='all';
   setCatTitle();
@@ -283,7 +295,7 @@ function rerenderCurrent(){
 document.querySelectorAll('.geotab').forEach(b=>b.addEventListener('click',()=>{
   origin=b.dataset.origin;
   document.querySelectorAll('.geotab').forEach(x=>x.classList.toggle('active',x.dataset.origin===origin));
-  renderSubPills(); rerenderCurrent();
+  renderPills(); renderSubPills(); rerenderCurrent();
 }));
 
 /* 사이드바(실제 공급 플랫폼) 채우기 — 재호출 가능(동기화 후 갱신) */
@@ -317,7 +329,7 @@ fillGeo();
 document.getElementById('platSide').addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b)return;
   document.querySelectorAll('#platSide button').forEach(x=>x.classList.toggle('selected',x===b));
-  platform=b.dataset.platform;subf='all';setCatTitle();renderSubPills();resetAndRender();
+  platform=b.dataset.platform;kind='all';subf='all';setCatTitle();renderPills();renderSubPills();resetAndRender();
 });
 renderPills();
 document.getElementById('geoSel').addEventListener('change',e=>{geo=e.target.value;resetAndRender();});
@@ -735,7 +747,7 @@ const ORDER_GUIDE={
 function openOrder(btn){
   const c=btn.closest('.card')||btn.closest('.prow')||btn;const d=c.dataset;
   closeDetail();
-  odData={price:+d.price,min:+d.min,max:+d.max,unit:d.unit};
+  odData={price:+d.price,min:+d.min,max:+d.max,unit:d.unit,plat:d.platform||'',kind:d.kind||'',ph:d.ph||'',icon:d.icon||'',iconcls:d.iconcls||''};
   // 헤더
   const ic=document.getElementById('odIcon');
   ic.textContent=d.icon;ic.className='omodal-ic '+d.iconcls;
