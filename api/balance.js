@@ -11,7 +11,7 @@ const PROVIDERS = {
   'morethan':         { url: 'https://morethanpanel.com/api/v2',    key: process.env.MORETHAN_KEY },
   'n1panel':          { url: 'https://n1panel.com/api/v2',          key: process.env.N1PANEL_KEY },
   'Peakerr':          { url: 'https://peakerr.com/api/v2',          key: process.env.PEAKERR_KEY },
-  'pacysmm':          { url: 'https://pacysmm.com/api/v1',          key: process.env.PACYSMM_KEY },
+  // pacysmm = Vercel IP Cloudflare 차단으로 제외(services.js 참고)
   'SMMVALY':          { url: 'https://smmvaly.com/api/v2',          key: process.env.SMMVALY_KEY },
   'allsmm':           { url: 'https://allsmm.net/api/v2',           key: process.env.ALLSMM_KEY },
 };

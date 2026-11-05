@@ -550,7 +550,6 @@ const PROVIDERS={
   'morethan':        {logo:'MT', desc:'틱톡댓글 · 유튜브SEO · 스포티파이'},
   'n1panel':         {logo:'N1', desc:'텔레그램 · 쿠팡/무신사 트래픽'},
   'Peakerr':         {logo:'PK', desc:'해외 성별타겟 · 커스텀댓글'},
-  'pacysmm':         {logo:'PC', desc:'글로벌 트래픽 보조'},
   'SMB Panel':       {logo:'SMB',desc:'종합 SNS · 웹트래픽·물량'},
   'RealSite':        {logo:'RS', desc:'한국 특화 · 인스타·좋아요'},
   'SMMVALY':         {logo:'VL', desc:'결제·세금계산서·차일드패널'},
@@ -561,6 +560,7 @@ function esc2(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;'
 /* 공급처 잔액 카드(동적) — 공급처 많아져도 한 줄 compact + 섹션 접기/펴기 */
 function renderProviders(){
   const box=document.getElementById('providerList'); if(!box)return;
+  const pn=document.getElementById('aProvN'); if(pn)pn.textContent=Object.keys(PROVIDERS).length;
   box.innerHTML=Object.entries(PROVIDERS).map(([name,p])=>
     `<div class="provider" data-prov="${esc2(name)}">
        <div class="providerlogo">${esc2(p.logo)}</div>

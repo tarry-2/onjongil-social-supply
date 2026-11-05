@@ -15,7 +15,7 @@ const SOURCES = [
   ['https://morethanpanel.com/api/v2',    process.env.MORETHAN_KEY, 'morethan'],
   ['https://n1panel.com/api/v2',          process.env.N1PANEL_KEY,  'n1panel'],
   ['https://peakerr.com/api/v2',          process.env.PEAKERR_KEY,  'Peakerr'],
-  ['https://pacysmm.com/api/v1',          process.env.PACYSMM_KEY,  'pacysmm'],
+  // pacysmm(/api/v1) = Vercel 서버 IP를 Cloudflare로 차단 → 서버 fetch 불가(로컬만 됨). 트래픽 보조라 제외.
   ['https://smmvaly.com/api/v2',          process.env.SMMVALY_KEY,  'SMMVALY'],
   ['https://allsmm.net/api/v2',           process.env.ALLSMM_KEY,   'allsmm'],
 ];
