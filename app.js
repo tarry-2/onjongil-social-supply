@@ -1,6 +1,6 @@
 /* ===== ON 서플라이 — FlowDesk 셸 연결 (네비·테마·관리자·인트로·PWA) ===== */
 (function(){
-  const NAV=[['store','서비스몰','🛍'],['reseller','파트너·API','⚡'],['wallet','지갑','💳']];
+  const NAV=[['store','서비스몰','🛍'],['order','빠른주문','🛒'],['reseller','파트너·API','⚡'],['wallet','지갑','💳']];
   window._buildNav=function(active){
     const nav=NAV.map(([v,t,ic])=>`<a href="#${v}" data-view="${v}" class="${active===v?'active':''}"><span class="nav-emoji" aria-hidden="true">${ic}</span><span>${t}</span></a>`).join('');
     const d=document.getElementById('desktop-nav'),m=document.getElementById('mobile-nav');
@@ -624,8 +624,9 @@ function showView(id){
   const navId = id==='catpage' ? 'store' : id;
   if(window._buildNav)window._buildNav(navId);
   const bc=document.getElementById('breadcrumb');
-  if(bc)bc.textContent={store:'서비스몰',reseller:'파트너·API',wallet:'지갑',admin:'관리자'}[navId]||'서비스몰';
+  if(bc)bc.textContent={store:'서비스몰',order:'빠른주문',reseller:'파트너·API',wallet:'지갑',admin:'관리자'}[navId]||'서비스몰';
   if(id==='store'&&typeof renderShowcase==='function')renderShowcase();
+  if(id==='order'&&typeof renderOrderView==='function'){try{renderOrderView();}catch(e){console.warn('[빠른주문]',e.message);}}
   if(id==='admin'&&typeof adminRender==='function'){try{fillAdminSelects();adminRender();}catch(e){console.warn('[관리자] 렌더 오류',e.message);}}
   if(id==='wallet'&&typeof renderOrders==='function'){try{renderOrders();}catch(e){}}
   window.scrollTo({top:0,behavior:'smooth'});
@@ -904,6 +905,75 @@ function submitOrder(){
 }
 document.getElementById('orderModal').addEventListener('click',e=>{if(e.target.id==='orderModal')closeOrder();});
 document.getElementById('detailModal').addEventListener('click',e=>{if(e.target.id==='detailModal')closeDetail();});
+
+/* ===== ⚡ 빠른 주문 (New Order, PerfectPanel식) — 기존 odData·linkValid·addOrder 재사용 ===== */
+function noLive(){return CAT.filter(c=>!c.broken&&(typeof LIVE==='undefined'||!LIVE||!LIVE.has||LIVE.has(c.id)));}
+function renderOrderView(){
+  const sel=document.getElementById('noPlat'); if(!sel)return;
+  const byPlat={}; noLive().forEach(c=>{byPlat[c.plat]=(byPlat[c.plat]||0)+1;});
+  const plats=Object.entries(byPlat).sort((a,b)=>b[1]-a[1]);
+  if(!plats.length){sel.innerHTML='';document.getElementById('noDetail').innerHTML='<div class="no-empty">공개된 상품이 없어요. 관리자에서 상품을 공개해 주세요.</div>';return;}
+  sel.innerHTML=plats.map(([p,n])=>`<option value="${esc(p)}">${esc(p)} (${n.toLocaleString('ko-KR')})</option>`).join('');
+  noPlatChange();
+}
+function noPlatChange(){
+  const plat=document.getElementById('noPlat').value;
+  const kinds=[...new Set(noLive().filter(c=>c.plat===plat).map(c=>c.group))];
+  document.getElementById('noKind').innerHTML=kinds.map(k=>`<option value="${esc(k)}">${esc(k)}</option>`).join('');
+  noKindChange();
+}
+function noKindChange(){
+  const plat=document.getElementById('noPlat').value, kind=document.getElementById('noKind').value;
+  const svs=noLive().filter(c=>c.plat===plat&&c.group===kind).sort((a,b)=>priceOf(a)-priceOf(b));
+  document.getElementById('noService').innerHTML=svs.map(c=>`<option value="${esc(c.id)}">${esc(c.ko)} — ${per1(priceOf(c))}/1${unitOf(c)}</option>`).join('');
+  noServiceChange();
+}
+function noServiceChange(){
+  const id=document.getElementById('noService').value;
+  const c=CAT.find(x=>x.id===id); if(!c)return;
+  const unit=unitOf(c), pr=priceOf(c);
+  odData={price:pr,min:+c.min,max:+c.max,unit:unit,plat:c.plat,kind:c.group,ph:phOf(c),icon:c.ic,iconcls:clsOf(c)};
+  const spec=ORDER_INPUT[c.group]||ORDER_INPUT.기타;
+  document.getElementById('noLinkLabel').textContent='🔗 '+spec.label;
+  document.getElementById('noLinkHint').textContent=spec.hint;
+  const link=document.getElementById('noLink'); link.placeholder=phOf(c);
+  document.getElementById('noKeywordWrap').style.display=(c.group==='트래픽')?'block':'none';
+  const kwi=document.getElementById('noKeyword'); if(kwi)kwi.value='';
+  const q=document.getElementById('noQty'); q.min=c.min;q.max=c.max;q.step=1;q.value=c.min;
+  document.getElementById('noRange').textContent=`(최소 ${(+c.min).toLocaleString('ko-KR')} ~ 최대 ${(+c.max).toLocaleString('ko-KR')}${unit} · 1개 단위)`;
+  document.getElementById('noUnitPrice').textContent=per1(pr)+'/1'+unit+' (1,000당 '+won(pr)+')';
+  document.getElementById('noStart').textContent='0~수 시간';
+  // 상세 패널(종류별 가이드)
+  const g=ORDER_GUIDE[c.group]||ORDER_GUIDE.기타, refillTxt=c.refill?'리필 포함':'리필 미포함';
+  let h=`<div class="nod-head"><div class="omodal-ic ${clsOf(c)}">${esc(c.ic)}</div><div><h3>${esc(c.ko)}</h3><div class="nod-plat">${esc(c.plat)} · ${esc(c.group)}</div></div></div>`;
+  h+=`<div class="nod-chips"><span class="meta">최소 ${(+c.min).toLocaleString('ko-KR')}${unit}</span><span class="meta">최대 ${(+c.max).toLocaleString('ko-KR')}${unit}</span><span class="meta">${refillTxt}</span><span class="meta">${c.premium?'🇰🇷 한국인':esc((c.flag||'')+' '+(c.geo||''))}</span></div>`;
+  h+=`<div class="og-sec"><b>🔆 서비스 개요</b><p>${esc(g.o)}</p></div>`;
+  if(g.f&&g.f.length)h+=`<div class="og-sec"><b>⏩ 주요 특징</b>${g.f.map(t=>`<div class="og-li">· ${esc(t)}</div>`).join('')}</div>`;
+  if(g.w&&g.w.length)h+=`<div class="og-sec"><b>⚙️ 주문 전 안내</b>${g.w.map(t=>`<div class="og-li">※ ${esc(t)}</div>`).join('')}</div>`;
+  document.getElementById('noDetail').innerHTML=h;
+  noCalc();
+}
+function noClamp(){const q=document.getElementById('noQty');let v=Math.round(+q.value||0);if(odData)v=Math.max(odData.min,Math.min(odData.max,v));return v;}
+function noCalc(){if(!odData)return;const q=noClamp();document.getElementById('noTotal').textContent=won(odData.price*q/1000);}
+function submitNewOrder(){
+  if(!odData){toast('상품을 먼저 선택해 주세요');return;}
+  const link=document.getElementById('noLink').value.trim();
+  if(!link){toast('링크를 입력해 주세요');document.getElementById('noLink').focus();return;}
+  if(!linkValid(link)){toast('⚠️ 링크 형식이 올바르지 않아요 — 입력 방법을 확인해 주세요');document.getElementById('noLink').focus();openLinkGuide();return;}
+  const kwWrap=document.getElementById('noKeywordWrap');
+  const kwOn=kwWrap&&kwWrap.style.display==='block';
+  const kw=kwOn?document.getElementById('noKeyword').value.trim():'';
+  if(kwOn&&!kw){toast('검색 키워드를 입력해 주세요');document.getElementById('noKeyword').focus();return;}
+  const q=noClamp();
+  const opt=document.getElementById('noService').selectedOptions[0];
+  const onm=opt?opt.textContent.split(' — ')[0]:'상품';
+  toast(`✅ 주문 완료 — ${onm} ${odData.unit} ${q.toLocaleString('ko-KR')} · ${won(odData.price*q/1000)}`);
+  if(typeof logLine==='function')logLine('ok','빠른주문 접수: '+onm+' / '+odData.unit+' '+q.toLocaleString('ko-KR')+' / '+won(odData.price*q/1000)+' / 링크 '+link.slice(0,40));
+  if(typeof addOrder==='function')addOrder({id:'ORD'+Date.now(),name:onm,unit:odData.unit,qty:q,total:odData.price*q/1000,link:link,kw:kw,status:'대기',date:new Date().toLocaleString('ko-KR',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})});
+  document.getElementById('noLink').value='';
+  if(typeof showView==='function')showView('wallet');
+  setTimeout(function(){var ob=document.querySelector('.wtab-btn[data-wtab="orders"]');if(ob)ob.click();},120);
+}
 
 /* ===== 충전 / 지갑 ===== */
 let chargeAmt=50000,chargePm='가상계좌';

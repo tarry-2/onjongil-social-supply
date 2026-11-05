@@ -1027,6 +1027,26 @@ body.theme-dark .oguide{background:var(--surface);border-color:var(--line)}
 .lg-ex code{font-size:12.5px;color:var(--accent);word-break:break-all;font-family:ui-monospace,Menlo,monospace}
 body.theme-dark .lg-ex{background:var(--surface)}
 
+/* ⚡ 빠른 주문 (New Order) */
+.no-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;max-width:1000px}
+.no-form{display:flex;flex-direction:column}
+.no-sel{width:100%;border:1px solid var(--line);border-radius:11px;background:var(--soft,#fafbfc);padding:13px;margin:0 0 16px;font-size:14px;font-weight:600;color:var(--ink);appearance:auto}
+.no-form .olabel{margin-bottom:8px}
+.oinput.noqty{margin-bottom:14px}
+.no-detail{position:sticky;top:20px;min-height:200px}
+.no-empty{color:var(--muted);font-size:14px;text-align:center;padding:50px 14px;line-height:1.7}
+.nod-head{display:flex;gap:12px;align-items:center;margin-bottom:14px}
+.nod-head .omodal-ic{width:46px;height:46px;border-radius:13px;font-size:20px}
+.nod-head h3{margin:0 0 4px;font-size:17px;font-weight:800;letter-spacing:-.4px}
+.nod-plat{color:var(--muted);font-size:12px;font-weight:700}
+.nod-chips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+.nod-chips .meta{border:1px solid var(--line);background:var(--soft,#f5f6f8);color:var(--muted);font-size:10.5px;font-weight:700;padding:6px 10px;border-radius:8px}
+.no-detail .og-sec{margin-bottom:12px}
+.no-detail .og-sec>b{font-size:12.5px;font-weight:800;color:var(--ink);display:block;margin-bottom:5px}
+.no-detail .og-sec p{font-size:12.5px;color:var(--muted);line-height:1.6;margin:0}
+.no-detail .og-li{font-size:12.5px;color:var(--muted);line-height:1.7}
+@media(max-width:860px){.no-grid{grid-template-columns:1fr}.no-detail{position:static}}
+
 /* ON 서플라이: 하단 활동 로그 콘솔 */
 .logcon{position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;flex-direction:column;align-items:center;pointer-events:none}
 .logcon-bar{pointer-events:auto;display:inline-flex;align-items:center;gap:7px;background:#252a32;color:#fff;border:0;border-radius:11px 11px 0 0;padding:7px 15px;font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 -4px 16px #0002}

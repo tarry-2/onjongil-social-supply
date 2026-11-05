@@ -369,6 +369,43 @@
   </div>
 </section>
 
+<!-- ======== ⚡ 빠른 주문 (New Order, PerfectPanel식) ======== -->
+<section id="order" class="view">
+  <div class="heading">
+    <div><div class="eyebrow">QUICK ORDER</div><h1>⚡ 빠른 주문</h1>
+    <p>플랫폼·종류·상품을 고르면 설명과 가격이 자동으로 떠요. 링크·수량만 넣으면 끝.</p></div>
+  </div>
+  <div class="no-grid">
+    <div class="no-form panel">
+      <label class="olabel">1️⃣ 플랫폼</label>
+      <select id="noPlat" class="no-sel" onchange="noPlatChange()"></select>
+      <label class="olabel">2️⃣ 종류</label>
+      <select id="noKind" class="no-sel" onchange="noKindChange()"></select>
+      <label class="olabel">3️⃣ 상품 선택</label>
+      <select id="noService" class="no-sel" onchange="noServiceChange()"></select>
+      <div class="olabel-row">
+        <label class="olabel" id="noLinkLabel">🔗 링크</label>
+        <button type="button" class="olink-help" onclick="openLinkGuide()">📎 입력 방법?</button>
+      </div>
+      <input id="noLink" class="oinput" type="text" placeholder="링크를 붙여넣으세요">
+      <div class="ohint" id="noLinkHint">상품을 먼저 선택해 주세요.</div>
+      <div id="noKeywordWrap" style="display:none">
+        <label class="olabel">🔑 검색 키워드</label>
+        <input id="noKeyword" class="oinput" type="text" placeholder="유입시킬 검색 키워드 (예: 강남 치과)">
+      </div>
+      <label class="olabel">🔢 수량 <span class="olabel-range" id="noRange"></span></label>
+      <input id="noQty" class="oinput noqty" type="number" inputmode="numeric" oninput="noCalc()">
+      <div class="osum">
+        <div class="osum-row"><span>단가</span><b id="noUnitPrice">—</b></div>
+        <div class="osum-row"><span>예상 시작</span><b id="noStart">—</b></div>
+        <div class="osum-total"><span>결제 금액</span><b id="noTotal">₩0</b></div>
+      </div>
+      <button class="oorder-go" onclick="submitNewOrder()">🚀 주문하고 떡상 시작</button>
+    </div>
+    <aside class="no-detail panel" id="noDetail"><div class="no-empty">상품을 선택하면 상세 설명이 여기 나와요.</div></aside>
+  </div>
+</section>
+
 <!-- ======== 카테고리 페이지(전체보기) ======== -->
 <section id="catpage" class="view">
   <div class="wrap">
