@@ -1203,3 +1203,17 @@ body.theme-dark .mass-sum.ok{color:#5fd39a}body.theme-dark .mass-sum.bad,body.th
 .oprog i.cancel{background:#c7ccd3}
 body.theme-dark .ost.cancel{background:#3a3f48;color:#aab4c2}
 body.theme-dark .oprog i.wait,body.theme-dark .oprog i.cancel{background:#4a525e}
+
+/* ===== 모바일: 카드 좌우 최대 확장 + 카테고리 행 짤림 해결 (2026-11-05 테리 지시) ===== */
+@media(max-width:540px){
+  /* 바깥 여백 최소화 → 카드 폭 최대한 좌우로 확장(관리자 카드 전반) */
+  main{padding-left:10px;padding-right:10px}
+  .wrap,.wrap.api-view{padding-left:9px;padding-right:9px}
+  .panel{padding-left:10px;padding-right:10px}
+  /* 카테고리 관리 행: 요소 압축해 보임·삭제 버튼 안 짤리게 */
+  .catrow{gap:5px;padding:8px 9px}
+  .catrow input.cname{min-width:50px;padding:7px 9px;font-size:12.5px}
+  .catrow .ckey{font-size:9.5px}
+  .catrow .ccount{font-size:9.5px}
+  .catrow button{padding:7px 8px;font-size:11px}
+}
