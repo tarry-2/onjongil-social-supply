@@ -992,3 +992,10 @@ body.theme-dark .geotab.active{background:var(--accent);color:#fff}
 html,body,button,a,span,div,h1,h2,h3,p,b,small,em,article,section,.prow,.card,.sc-sec,.sidebar,header,#mobile-nav{-webkit-touch-callout:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}
 input,textarea,select,[contenteditable],.oinput,#odLink,#odQtyNum,#amtCustom{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
 img{-webkit-touch-callout:none;pointer-events:none}
+
+/* ON 서플라이: 주문모달 상품 안내(종류별 서비스개요) */
+.oguide{background:var(--soft,#f5f6f8);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:2px 0 8px}
+.og-t{font-size:12.5px;font-weight:800;color:var(--ink);margin-bottom:6px}
+.og-li{font-size:12.5px;color:var(--muted);line-height:1.7}
+.og-sub{font-size:11.5px;color:var(--accent);margin-top:8px;line-height:1.55;font-weight:600}
+body.theme-dark .oguide{background:var(--surface);border-color:var(--line)}

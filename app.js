@@ -717,6 +717,21 @@ const ORDER_INPUT={
   트래픽:{label:'유입시킬 페이지 주소',hint:'🔑 검색 유입 상품은 키워드도 중요해요(상세 설명 참고). 유입시킬 페이지 링크를 넣어주세요.'},
   기타:{label:'주문 주소',hint:'작업할 공개 링크를 넣어주세요.'},
 };
+/* 종류(group)별 상품 안내 — 인스타몬스터식 서비스개요·주의 */
+const ORDER_GUIDE={
+  팔로워:['실제 유저 기반으로 팔로워를 늘려 계정 신뢰도·노출을 높입니다.','작업 중 계정을 비공개로 바꾸지 마세요.'],
+  구독자:['채널 구독자를 늘려 노출과 신뢰도를 높입니다.','공개 채널이어야 합니다.'],
+  좋아요:['게시물 좋아요를 늘려 참여율·추천 노출을 높입니다.','비공개·삭제 시 작업이 불가합니다.'],
+  댓글:['실제 반응형 댓글로 게시물 신뢰도를 높입니다.','댓글은 주제 기반으로 자연스럽게 작성됩니다.'],
+  조회수:['영상 조회수를 늘려 추천·인기 노출에 유리하게 합니다.','공개 영상 링크여야 합니다.'],
+  재생:['음원 재생수를 늘려 차트·추천에 유리하게 합니다.'],
+  시청자:['라이브 방송에 실시간 시청자를 유입합니다.','방송이 켜져 있을 때만 작동합니다.'],
+  멤버:['그룹·채널 멤버를 늘려 활성도를 높입니다.','공개 초대 링크가 필요합니다.'],
+  공유:['게시물 공유로 확산·노출을 높입니다.'],
+  트래픽:['검색·외부 경로로 실제 페이지 방문을 유입합니다.','검색 유입은 아래 키워드가 중요합니다.'],
+  기타:['상품 설명을 확인하고 주문해 주세요.'],
+};
+const ORDER_COMMON='잔액·링크 공개 상태를 확인하세요 / 같은 게시물에 이전 작업이 끝나기 전 중복주문은 피하세요.';
 function openOrder(btn){
   const c=btn.closest('.card')||btn.closest('.prow')||btn;const d=c.dataset;
   closeDetail();
@@ -732,11 +747,18 @@ function openOrder(btn){
     `<span class="meta">최대 ${(+d.max).toLocaleString('ko-KR')}${d.unit}</span>`+
     `<span class="meta">${d.refill}</span>`+
     `<span class="meta">1개 단위 주문</span>`;
+  // 상품 안내(종류별 서비스개요·주의)
+  const guide=ORDER_GUIDE[d.kind]||ORDER_GUIDE.기타;
+  const og=document.getElementById('odGuide');
+  if(og)og.innerHTML='<div class="og-t">📋 이 상품 안내</div>'+guide.map(t=>`<div class="og-li">· ${esc(t)}</div>`).join('')+`<div class="og-sub">⚠️ ${esc(ORDER_COMMON)}</div>`;
   // 링크 — 종류(group)별 맞춤 라벨/안내
   const spec=ORDER_INPUT[d.kind]||ORDER_INPUT.기타;
   const ll=document.getElementById('odLinkLabel'); if(ll)ll.textContent='🔗 '+spec.label;
   const lh=document.getElementById('odLinkHint'); if(lh)lh.textContent=spec.hint;
   const link=document.getElementById('odLink');link.value='';link.placeholder=d.ph;
+  // 트래픽(검색 유입)만 키워드칸 표시
+  const kw=document.getElementById('odKeywordWrap'); if(kw)kw.style.display=(d.kind==='트래픽')?'block':'none';
+  const kwi=document.getElementById('odKeyword'); if(kwi)kwi.value='';
   // 수량 슬라이더/입력 — 1개 단위, 기본값=최소수량(상품마다 min/max 다름)
   const range=document.getElementById('odQty'),num=document.getElementById('odQtyNum');
   range.min=d.min;range.max=d.max;range.step=1;
@@ -771,6 +793,8 @@ document.getElementById('odQtyNum').addEventListener('blur',e=>{
 function submitOrder(){
   const link=document.getElementById('odLink').value.trim();
   if(!link){toast('링크를 입력해 주세요');document.getElementById('odLink').focus();return;}
+  var kwWrap=document.getElementById('odKeywordWrap');
+  if(kwWrap&&kwWrap.style.display==='block'&&!document.getElementById('odKeyword').value.trim()){toast('검색 키워드를 입력해 주세요');document.getElementById('odKeyword').focus();return;}
   const q=clampQty(+document.getElementById('odQtyNum').value);
   closeOrder();
   toast(`주문 접수(시안): ${odData.unit} ${q.toLocaleString('ko-KR')} · ${won(odData.price*q/1000)}`);
