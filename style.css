@@ -1023,3 +1023,9 @@ body.theme-dark .oguide{background:var(--surface);border-color:var(--line)}
 .logline .lt{color:#6b7684;margin-right:6px}
 .logline.sys{color:#8fb9ff}.logline.ok{color:#5fd39a}.logline.warn{color:#ffb86b}.logline.err{color:#ff7a7a}
 @media(max-width:650px){.logcon{bottom:60px}.logcon-body{width:100vw;border-radius:0}}
+
+/* ON 서플라이: 주문내역 액션(취소/문의) */
+.oitem-acts{display:flex;gap:6px;margin-top:7px}
+.oitem-acts button{background:var(--soft,#f1f2f4);border:1px solid var(--line);color:var(--muted);border-radius:7px;padding:5px 11px;font-size:11px;cursor:pointer}
+.oitem-acts button:first-child:hover{border-color:var(--accent);color:var(--accent)}
+.ost.cancel{background:#edeef0;color:#9aa0a8}

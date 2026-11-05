@@ -615,6 +615,7 @@ function showView(id){
   if(bc)bc.textContent={store:'서비스몰',reseller:'파트너·API',wallet:'지갑',admin:'관리자'}[navId]||'서비스몰';
   if(id==='store'&&typeof renderShowcase==='function')renderShowcase();
   if(id==='admin'&&typeof adminRender==='function'){try{fillAdminSelects();adminRender();}catch(e){console.warn('[관리자] 렌더 오류',e.message);}}
+  if(id==='wallet'&&typeof renderOrders==='function'){try{renderOrders();}catch(e){}}
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -806,6 +807,7 @@ function submitOrder(){
   closeOrder();
   toast(`주문 접수(시안): ${odData.unit} ${q.toLocaleString('ko-KR')} · ${won(odData.price*q/1000)}`);
   if(typeof logLine==='function')logLine('ok','주문 접수: '+onm+' / '+odData.unit+' '+q.toLocaleString('ko-KR')+' / '+won(odData.price*q/1000)+' / 링크 '+link.slice(0,40));
+  if(typeof addOrder==='function')addOrder({id:'ORD'+Date.now(), name:onm, unit:odData.unit, qty:q, total:odData.price*q/1000, link:link, kw:(kwWrap&&kwWrap.style.display==='block')?document.getElementById('odKeyword').value.trim():'', status:'대기', date:new Date().toLocaleString('ko-KR',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})});
 }
 document.getElementById('orderModal').addEventListener('click',e=>{if(e.target.id==='orderModal')closeOrder();});
 document.getElementById('detailModal').addEventListener('click',e=>{if(e.target.id==='detailModal')closeDetail();});
@@ -851,10 +853,7 @@ document.querySelectorAll('.wtab-btn').forEach(b=>b.addEventListener('click',()=
 }));
 document.querySelectorAll('.ofilter').forEach(b=>b.addEventListener('click',()=>{
   document.querySelectorAll('.ofilter').forEach(x=>x.classList.toggle('active',x===b));
-  const f=b.dataset.ofilter;
-  document.querySelectorAll('#olist .oitem').forEach(it=>{
-    it.style.display=(f==='all'||it.dataset.ostatus===f)?'':'none';
-  });
+  if(typeof renderOrders==='function')renderOrders(b.dataset.ofilter);
 }));
 function reorder(name){
   // 같은 상품 카드를 찾아 주문 모달 열기(없으면 토스트)
@@ -944,17 +943,56 @@ function toggleDense(){var d=document.body.classList.toggle('dense-list');try{lo
 try{if(localStorage.getItem('supply_dense')==='1')document.body.classList.add('dense-list');}catch(e){}
 updateDenseBtn();
 
-/* ===== 하단 활동 로그 콘솔 (회원·관리자 공통, 누적·localStorage. 영구 DB는 나중 Supabase) ===== */
+/* ===== Supabase (ON Social Panel) — 주문·로그 기기 통합·영구 저장 ===== */
+var _supa=(window.supabase&&window.supabase.createClient)?window.supabase.createClient('https://tvnhbdjozhqzzmiepjka.supabase.co','sb_publishable_9UOOHF3RGNIgkXjsU4k4bQ_9-M5RhF4'):null;
+window._supa=_supa;
+/* ===== 하단 활동 로그 콘솔 (회원·관리자 공통. localStorage 캐시 + Supabase 동기화) ===== */
 function nowTime(){var d=new Date();var z=function(n){return('0'+n).slice(-2)};return z(d.getHours())+':'+z(d.getMinutes())+':'+z(d.getSeconds());}
 function loadLogs(){try{return JSON.parse(localStorage.getItem('supply_logs')||'[]');}catch(e){return[];}}
 function saveLogs(a){try{localStorage.setItem('supply_logs',JSON.stringify(a.slice(-400)));}catch(e){}}
 var LOGS=loadLogs();
 function renderLogs(){var box=document.getElementById('logLines');if(box){box.innerHTML=LOGS.slice(-250).map(function(l){return '<div class="logline '+(l.type||'info')+'"><span class="lt">'+l.t+'</span> '+esc(l.msg)+'</div>';}).join('');box.scrollTop=box.scrollHeight;}var n=document.getElementById('logN');if(n)n.textContent=LOGS.length;}
-function logLine(type,msg){LOGS.push({t:nowTime(),type:type||'info',msg:msg});saveLogs(LOGS);renderLogs();}
+function logLine(type,msg){LOGS.push({t:nowTime(),type:type||'info',msg:msg});saveLogs(LOGS);renderLogs();try{if(window._supa)window._supa.from('activity_logs').insert({type:type||'info',msg:msg}).then(function(){},function(){});}catch(e){}}
 function toggleLog(){var c=document.getElementById('logConsole');if(c)c.classList.toggle('open');}
 function copyLog(){var txt=LOGS.map(function(l){return '['+l.t+'] '+l.msg;}).join('\n');if(navigator.clipboard)navigator.clipboard.writeText(txt).then(function(){toast('활동 로그를 복사했습니다');},function(){toast('복사 실패');});}
 renderLogs();
 logLine('sys','접속 — '+new Date().toLocaleString('ko-KR'));
+
+/* ===== 주문 내역 (localStorage, 영구 DB는 나중 Supabase) ===== */
+var ORDERS=(function(){try{return JSON.parse(localStorage.getItem('supply_orders')||'[]');}catch(e){return[];}})();
+function saveOrders(){try{localStorage.setItem('supply_orders',JSON.stringify(ORDERS.slice(-200)));}catch(e){}}
+var curOrderFilter='all';
+function renderOrders(filter){
+  if(filter)curOrderFilter=filter;
+  var box=document.getElementById('olist'); if(!box)return;
+  var list=ORDERS.slice().reverse();
+  if(curOrderFilter==='done')list=list.filter(function(o){return o.status==='완료';});
+  else if(curOrderFilter==='running')list=list.filter(function(o){return o.status!=='완료'&&o.status!=='취소';});
+  if(!list.length){box.innerHTML='<div class="empty">아직 주문 내역이 없어요.<br>상품을 주문하면 여기에 쌓입니다.</div>';return;}
+  box.innerHTML=list.map(function(o){
+    var st=o.status||'대기', cls=st==='완료'?'done':(st==='취소'?'cancel':'run');
+    return '<div class="oitem"><div class="oitem-ic">◎</div><div class="oitem-main">'
+      +'<div class="oitem-top"><b>'+esc(o.name||'')+'</b><span class="ost '+cls+'">'+esc(st)+'</span></div>'
+      +'<div class="oitem-link">🔗 '+esc((o.link||'').slice(0,44))+'</div>'
+      +'<div class="oitem-meta">'+esc(o.unit||'개')+' '+(o.qty||0).toLocaleString('ko-KR')+' · 주문 '+esc(o.id)+(o.kw?' · 🔑'+esc(o.kw):'')+'</div>'
+      +(st==='대기'||st==='진행중'?'<div class="oitem-acts"><button type="button" onclick="cancelOrder(\''+o.id+'\')">주문 취소</button><button type="button" onclick="inquireOrder(\''+o.id+'\')">문의</button></div>':'')
+      +'</div><div class="oitem-side"><div class="oitem-amt">'+won(o.total||0)+'</div><div class="oitem-date">'+esc(o.date||'')+'</div></div></div>';
+  }).join('');
+}
+function addOrder(o){ORDERS.push(o);saveOrders();renderOrders();try{if(window._supa)window._supa.from('orders').insert({id:o.id,name:o.name,unit:o.unit,qty:o.qty,total:o.total,link:o.link,kw:o.kw,status:o.status}).then(function(r){if(r&&r.error)logLine('warn','내역 저장 경고: '+r.error.message);},function(){});}catch(e){}}
+function cancelOrder(id){var o=ORDERS.filter(function(x){return x.id===id;})[0];if(!o)return;if(!confirm('이 주문을 취소할까요? (환불 처리됩니다)'))return;o.status='취소';saveOrders();renderOrders();try{if(window._supa)window._supa.from('orders').update({status:'취소'}).eq('id',id).then(function(){},function(){});}catch(e){}if(typeof logLine==='function')logLine('warn','주문 취소: '+o.name+' / '+o.id);toast('주문을 취소했습니다');}
+function inquireOrder(id){if(typeof logLine==='function')logLine('info','문의 접수: 주문 '+id);toast('문의가 접수되었습니다');}
+/* 앱 시작 시 Supabase에서 주문·로그 당겨와 기기 통합(어느 기기서 봐도 동일) */
+async function syncFromSupa(){
+  if(!window._supa)return;
+  try{
+    var r1=await window._supa.from('orders').select('*').order('created_at',{ascending:true});
+    if(r1&&r1.data){ORDERS=r1.data.map(function(o){return {id:o.id,name:o.name,unit:o.unit,qty:o.qty,total:o.total,link:o.link,kw:o.kw,status:o.status,date:new Date(o.created_at).toLocaleString('ko-KR',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})};});saveOrders();renderOrders();}
+    var r2=await window._supa.from('activity_logs').select('*').order('created_at',{ascending:false}).limit(250);
+    if(r2&&r2.data){LOGS=r2.data.reverse().map(function(l){return {t:new Date(l.created_at).toLocaleTimeString('ko-KR',{hour12:false}),type:l.type,msg:l.msg};});saveLogs(LOGS);renderLogs();}
+  }catch(e){}
+}
+syncFromSupa();
 
 /* 초기 라우트 */
 if(typeof showView==="function")showView("store");
