@@ -31,7 +31,7 @@ function kindOf(t){const s=t.toLowerCase();
   if(s.includes('vote')||s.includes('poll'))return['투표','기타'];
   if(s.includes('play'))return['재생','재생'];
   if(s.includes('view')||s.includes('viewer'))return['조회수','조회수'];
-  if(s.includes('traffic')||s.includes('visit'))return['트래픽','조회수'];
+  if(s.includes('traffic')||s.includes('visit'))return['트래픽','트래픽'];  // 트래픽=유입, 조회수와 분리(독립 종류)
   return['기타','기타'];
 }
 

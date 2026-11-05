@@ -326,14 +326,15 @@ function fillAdminSelects(){
     Object.entries(obj).sort((a,b)=>b[1]-a[1]).forEach(([k,n])=>h+=`<option value="${esc(k)}">${esc(k)} (${n})</option>`);
     document.getElementById(sel).innerHTML=h;};
   const SRCS={}; CAT.forEach(c=>SRCS[c.src]=(SRCS[c.src]||0)+1);   // 공급처(회사)별 집계
-  mk('aPlat',META.plats||{},'모든 플랫폼'); mk('aKind',META.kinds||{},'모든 종류');
+  const GROUPS={}; CAT.forEach(c=>{if(!c.broken)GROUPS[c.group]=(GROUPS[c.group]||0)+1;}); // 종류=group 통일(서비스몰과 동일, 구독자=팔로워)
+  mk('aPlat',META.plats||{},'모든 플랫폼'); mk('aKind',GROUPS,'모든 종류');
   mk('aGeo',META.geos||{},'모든 나라'); mk('aSrc',SRCS,'🏢 모든 공급처');
 }
 fillAdminSelects();
 function adminFilter(){
   const q=document.getElementById('aSearch').value.trim().toLowerCase();
   return CAT.filter(c=>
-    (aPlat==='all'||c.plat===aPlat)&&(aKind==='all'||c.kind===aKind)&&(aGeo==='all'||c.geo===aGeo)&&
+    (aPlat==='all'||c.plat===aPlat)&&(aKind==='all'||c.group===aKind)&&(aGeo==='all'||c.geo===aGeo)&&
     (aSrc==='all'||c.src===aSrc)&&
     (!q||(c.ko+c.plat+c.kind+c.geo+c.en).toLowerCase().includes(q)));
 }
@@ -358,7 +359,7 @@ function adminRender(){
     const pr=priceOf(c), profit=pr-c.wholesale;
     return `<tr>
     <td><strong>${esc(c.ic)} ${esc(c.ko)}</strong><div class="arow-desc">${esc(c.desc||c.en)}</div></td>
-    <td>${esc(c.kind)}</td>
+    <td>${esc(c.group)}${c.kind!==c.group?`<div class="arow-sub">${esc(c.kind)}</div>`:''}</td>
     <td>${c.premium?'🇰🇷 <b>한국</b>':esc(c.flag)+' '+esc(c.geo)}</td>
     <td class="arange"><b>${c.min.toLocaleString('ko-KR')}</b> ~ ${c.max.toLocaleString('ko-KR')}</td>
     <td class="attrs">${attrBadges(c)}</td>
