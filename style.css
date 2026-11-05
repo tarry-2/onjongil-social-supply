@@ -1046,6 +1046,26 @@ body.theme-dark .lg-ex{background:var(--surface)}
 .no-detail .og-sec p{font-size:12.5px;color:var(--muted);line-height:1.6;margin:0}
 .no-detail .og-li{font-size:12.5px;color:var(--muted);line-height:1.7}
 @media(max-width:860px){.no-grid{grid-template-columns:1fr}.no-detail{position:static}}
+.nod-id{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--muted);margin-bottom:14px;flex-wrap:wrap}
+.nod-id code{background:var(--soft,#f5f6f8);border:1px solid var(--line);border-radius:6px;padding:3px 8px;font-size:12px;color:var(--accent);font-weight:700}
+.nod-copy{border:1px solid var(--line);background:var(--surface,#fff);border-radius:7px;padding:4px 9px;font-size:11px;font-weight:700;color:var(--ink)}
+.mass-wrap{margin-top:18px;border-top:1px solid var(--line);padding-top:16px}
+.mass-wrap summary{font-size:13.5px;font-weight:800;cursor:pointer;color:var(--ink);list-style:none}
+.mass-wrap summary::-webkit-details-marker{display:none}
+.mass-wrap summary:before{content:'▸ ';color:var(--accent)}
+.mass-wrap[open] summary:before{content:'▾ '}
+.mass-hint{font-size:11.5px;color:var(--muted);line-height:1.6;margin:12px 0 10px}
+.mass-hint code{background:var(--soft,#f5f6f8);border:1px solid var(--line);border-radius:5px;padding:2px 6px;font-size:11px;color:var(--accent);font-weight:700}
+.mass-ta{width:100%;min-height:96px;resize:vertical;font-family:ui-monospace,Menlo,monospace;font-size:12.5px;line-height:1.7;margin-bottom:12px}
+.mass-actions{display:flex;gap:8px;margin-bottom:12px}
+.massbtn{flex:1;margin:0}
+.mass-result:not(:empty){background:var(--soft,#f5f6f8);border:1px solid var(--line);border-radius:11px;padding:12px 14px;font-size:12.5px}
+.mass-sum{font-weight:800;margin:4px 0 8px}
+.mass-sum.ok{color:#229277}.mass-sum.bad{color:#cd4e39;margin-top:12px}
+.mass-line{font-size:12px;line-height:1.7;color:var(--muted);word-break:break-all}
+.mass-line.bad{color:#cd4e39}
+body.theme-dark .mass-result:not(:empty),body.theme-dark .nod-id code,body.theme-dark .mass-hint code{background:var(--surface)}
+body.theme-dark .mass-sum.ok{color:#5fd39a}body.theme-dark .mass-sum.bad,body.theme-dark .mass-line.bad{color:#ff7a7a}
 
 /* ON 서플라이: 하단 활동 로그 콘솔 */
 .logcon{position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;flex-direction:column;align-items:center;pointer-events:none}

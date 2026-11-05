@@ -401,6 +401,18 @@
         <div class="osum-total"><span>결제 금액</span><b id="noTotal">₩0</b></div>
       </div>
       <button class="oorder-go" onclick="submitNewOrder()">🚀 주문하고 떡상 시작</button>
+      <details class="mass-wrap">
+        <summary>📑 여러 개 한 번에 주문 (대량)</summary>
+        <p class="mass-hint">한 줄에 하나씩 <code>상품ID│링크│수량</code> 형식으로 넣어주세요. 상품ID는 위에서 상품을 고르면 오른쪽에 표시돼요.</p>
+        <textarea id="massInput" class="oinput mass-ta" placeholder="예시)
+sp7119│https://twitch.tv/내채널│500
+smb1234│@내아이디│1000"></textarea>
+        <div class="mass-actions">
+          <button type="button" class="secondary massbtn" onclick="massPreview()">🔍 미리보기</button>
+          <button type="button" class="oorder-go massbtn" onclick="submitMassOrder()">🚀 대량 주문</button>
+        </div>
+        <div id="massResult" class="mass-result"></div>
+      </details>
     </div>
     <aside class="no-detail panel" id="noDetail"><div class="no-empty">상품을 선택하면 상세 설명이 여기 나와요.</div></aside>
   </div>
