@@ -57,7 +57,7 @@
 let CAT=window.CATALOG||[], META=window.CATALOG_META||{plats:{},kinds:{},geos:{}};
 const UNIT={팔로워:'명',시청자:'명',멤버:'명',좋아요:'개',조회수:'회',재생:'회',댓글:'개',공유:'회',기타:'개'};
 const CLS={트위치:'tw',킥:'kk',유튜브:'yt',텔레그램:'tg',인스타그램:'ig',틱톡:'tt',페이스북:'fb',스포티파이:'sp',디스코드:'ds','X(트위터)':'xk',트위터:'xk',브콘탁테:'vk',라이키:'lk',레딧:'rd',스레드:'th',스냅챗:'sc',사운드클라우드:'scl',럼블:'rb',트로보:'tv','숲(아프리카)':'soop',네이버:'nv',카카오:'ka',치지직:'ch',밴드:'bd',쇼피:'shop',라자다:'laz',웹트래픽:'web',구글:'gg',기타:'etc',글로벌:'etc'};
-const PH={인스타그램:'https://instagram.com/내아이디',틱톡:'https://tiktok.com/@내아이디',유튜브:'https://youtube.com/watch?v=...',트위치:'https://twitch.tv/내채널',킥:'https://kick.com/내채널',텔레그램:'https://t.me/내채널',스포티파이:'https://open.spotify.com/...',페이스북:'https://facebook.com/내페이지',디스코드:'https://discord.gg/초대코드'};
+const PH={인스타그램:'https://instagram.com/내아이디',틱톡:'https://tiktok.com/@내아이디',유튜브:'https://youtube.com/watch?v=...',트위치:'https://twitch.tv/내채널',킥:'https://kick.com/내채널',텔레그램:'https://t.me/내채널',스포티파이:'https://open.spotify.com/...',페이스북:'https://facebook.com/내페이지',디스코드:'https://discord.gg/초대코드',웹트래픽:'https://내사이트.com/페이지',스마트스토어:'https://smartstore.naver.com/상점',네이버:'https://blog.naver.com/내아이디',치지직:'https://chzzk.naver.com/내채널',스레드:'https://threads.net/@내아이디','X(트위터)':'https://x.com/내아이디',트위터:'https://x.com/내아이디','숲(아프리카)':'https://sooplive.co.kr/내아이디',레딧:'https://reddit.com/r/채널',사운드클라우드:'https://soundcloud.com/내트랙',왓츠앱:'https://wa.me/번호',카카오:'https://pf.kakao.com/내채널'};
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 /* 판매가 = (개별지정 있으면 그 값) / 없으면 도매가 × (1 + 마진%/100). 둘 다 localStorage. */
 let MARGIN=(()=>{try{const v=+localStorage.getItem('supply_margin');return v>0?v:150;}catch(e){return 150;}})();
@@ -744,6 +744,77 @@ const ORDER_GUIDE={
   트래픽:{o:'검색·외부 경로로 실제 페이지 방문을 유입합니다.',f:['검색/추천 지표 개선','실제 방문 기반'],w:['검색 유입은 키워드가 중요합니다(아래 입력)','유입시킬 페이지를 공개 상태로 두세요']},
   기타:{o:'상품 설명을 확인하고 주문해 주세요.',f:[],w:['공개 링크를 정확히 입력하세요']},
 };
+/* 플랫폼(한글 plat명)별 허용 링크 호스트 — 아무 글자나 넣는 오주문 방지 */
+const LINK_HOST={
+  인스타그램:/instagram\.com|instagr\.am/i,
+  틱톡:/tiktok\.com|vt\.tiktok/i,
+  유튜브:/youtube\.com|youtu\.be/i,
+  트위치:/twitch\.tv/i,
+  킥:/kick\.com/i,
+  텔레그램:/t\.me|telegram\.(me|org|dog)/i,
+  스포티파이:/spotify\.com|spoti\.fi/i,
+  페이스북:/facebook\.com|fb\.(com|watch|me)/i,
+  디스코드:/discord\.(gg|com)|discordapp\.com/i,
+  'X(트위터)':/twitter\.com|x\.com/i,
+  트위터:/twitter\.com|x\.com/i,
+  스레드:/threads\.net/i,
+  네이버:/naver\.(com|me)/i,
+  카카오:/kakao\.com|kakaocorp|pf\.kakao|open\.kakao/i,
+  치지직:/chzzk\.naver\.com/i,
+  '숲(아프리카)':/sooplive\.co\.kr|afreeca(tv)?\.com|bj\.afreeca/i,
+  레딧:/reddit\.com|redd\.it/i,
+  스냅챗:/snapchat\.com/i,
+  사운드클라우드:/soundcloud\.com|snd\.sc/i,
+  럼블:/rumble\.com/i,
+  브콘탁테:/vk\.com|vk\.ru/i,
+  라이키:/likee\.(com|video)/i,
+  콰이:/kuaishou\.com|kwai\.com/i,
+  왓츠앱:/whatsapp\.com|wa\.me|chat\.whatsapp/i,
+  쇼피:/shopee\./i,
+  라자다:/lazada\./i,
+  와일드베리:/wildberries\./i,
+  붐플레이:/boomplay\.com/i,
+  웹트래픽:/^https?:\/\//i,
+};
+/* @아이디·핸들만 넣어도 되는 종류(전체 URL 불필요) */
+const ID_KINDS=['팔로워','구독자','멤버'];
+const ID_RX=/^@?[\w.가-힣-]{2,}$/;
+/* 종류별 "링크 얻는 법" 단계 — 처음 쓰는 사람도 따라하게 */
+const LINK_STEP={
+  팔로워:['대상 프로필 화면을 엽니다.','상단 아이디(@뒤 글자)를 쓰거나, [공유]→[링크 복사]로 프로필 주소를 복사합니다.','아래 칸에 붙여넣습니다.'],
+  구독자:['채널 홈을 엽니다.','핸들(@채널명) 또는 채널 URL을 복사합니다.','아래 칸에 붙여넣습니다.'],
+  좋아요:['좋아요를 받을 게시물을 엽니다.','[···] 또는 [공유]→[링크 복사]를 누릅니다.','복사된 게시물 주소를 붙여넣습니다.'],
+  댓글:['댓글을 받을 게시물을 엽니다.','[···] 또는 [공유]→[링크 복사]를 누릅니다.','복사된 게시물 주소를 붙여넣습니다.'],
+  공유:['공유될 게시물을 엽니다.','[공유]→[링크 복사]를 누릅니다.','복사된 게시물 주소를 붙여넣습니다.'],
+  조회수:['조회수를 올릴 영상을 엽니다.','[공유]→[링크 복사]를 누릅니다(youtu.be/… 형태 가능).','복사된 영상 주소를 붙여넣습니다.'],
+  재생:['대상 트랙/플레이리스트를 엽니다.','[···]→[공유]→[링크 복사]를 누릅니다.','복사된 주소를 붙여넣습니다.'],
+  시청자:['라이브 방송을 먼저 켭니다.','방송 중인 화면의 주소(URL)를 복사합니다.','아래 칸에 붙여넣습니다. (방송 중에만 유입)'],
+  멤버:['그룹/채널의 초대 링크를 엽니다(t.me/…, discord.gg/… 등).','초대 링크를 복사합니다.','아래 칸에 붙여넣습니다.'],
+  트래픽:['유입시킬 페이지(https://…) 주소를 복사합니다.','아래 링크 칸에 붙여넣습니다.','🔑 검색 키워드 칸도 함께 채웁니다.'],
+  기타:['상품 설명을 확인합니다.','작업 대상의 공개 주소(https://…)를 복사합니다.','아래 칸에 붙여넣습니다.'],
+};
+/* 링크 형식 검증: URL 호스트 일치 또는 (ID 종류일 때) @아이디 형식이면 통과 */
+function linkValid(link){
+  if(!odData)return true;
+  const host=LINK_HOST[odData.plat];
+  const urlOk=host?host.test(link):/^https?:\/\//i.test(link);
+  const idOk=ID_KINDS.includes(odData.kind)&&!/\s/.test(link)&&ID_RX.test(link);
+  return urlOk||idOk;
+}
+function openLinkGuide(){
+  if(!odData)return;
+  const plat=odData.plat||'', kind=odData.kind||'기타';
+  const steps=LINK_STEP[kind]||LINK_STEP.기타;
+  const ex=PH[plat]||odData.ph||'';
+  const idNote=ID_KINDS.includes(kind)?`<div class="lg-note">💡 <b>${esc(plat)} ${esc(kind)}</b>는 전체 주소 대신 <b>@아이디</b>만 넣어도 돼요.</div>`:'';
+  document.getElementById('lgTitle').textContent=`${plat} ${kind} · 링크 입력 방법`;
+  document.getElementById('lgBody').innerHTML=
+    steps.map((s,i)=>`<div class="lg-step"><span class="lg-n">${i+1}</span><span>${esc(s)}</span></div>`).join('')+
+    idNote+
+    (ex?`<div class="lg-ex"><label>입력 예시</label><code>${esc(ex)}</code></div>`:'');
+  document.getElementById('linkGuideModal').classList.add('show');
+}
+function closeLinkGuide(){const m=document.getElementById('linkGuideModal');if(m)m.classList.remove('show');}
 function openOrder(btn){
   const c=btn.closest('.card')||btn.closest('.prow')||btn;const d=c.dataset;
   closeDetail();
@@ -812,6 +883,13 @@ document.getElementById('odQtyNum').addEventListener('blur',e=>{
 function submitOrder(){
   const link=document.getElementById('odLink').value.trim();
   if(!link){toast('링크를 입력해 주세요');document.getElementById('odLink').focus();return;}
+  if(!linkValid(link)){
+    toast('⚠️ 링크 형식이 올바르지 않아요 — 입력 방법을 확인해 주세요');
+    document.getElementById('odLink').focus();
+    openLinkGuide();
+    if(typeof logLine==='function')logLine('warn','링크 형식 불일치: '+(odData.plat||'')+'·'+(odData.kind||'')+' / '+link.slice(0,40));
+    return;
+  }
   var kwWrap=document.getElementById('odKeywordWrap');
   if(kwWrap&&kwWrap.style.display==='block'&&!document.getElementById('odKeyword').value.trim()){toast('검색 키워드를 입력해 주세요');document.getElementById('odKeyword').focus();return;}
   const q=clampQty(+document.getElementById('odQtyNum').value);

@@ -834,7 +834,10 @@
 
     <div class="oguide" id="odGuide"></div>
 
-    <label class="olabel" id="odLinkLabel">🔗 링크</label>
+    <div class="olabel-row">
+      <label class="olabel" id="odLinkLabel">🔗 링크</label>
+      <button type="button" class="olink-help" onclick="openLinkGuide()">📎 입력 방법?</button>
+    </div>
     <input id="odLink" class="oinput" type="text" placeholder="링크를 붙여넣으세요">
     <div class="ohint" id="odLinkHint">주문할 게시물·프로필·채널의 공개 링크를 넣어주세요.</div>
 
@@ -860,6 +863,16 @@
 
     <button class="oorder-go" onclick="submitOrder()">🚀 주문하고 떡상 시작</button>
     <div class="osafe">🔒 비밀번호를 요구하지 않는 안전 방식으로 전달됩니다.</div>
+  </div>
+</div>
+
+<!-- 링크 입력 가이드 팝업 -->
+<div id="linkGuideModal" class="omodal">
+  <div class="omodal-box lg-box">
+    <button class="omodal-x" onclick="closeLinkGuide()" aria-label="닫기">✕</button>
+    <div class="lg-head"><span class="lg-ico">📎</span><h3 id="lgTitle">링크 입력 방법</h3></div>
+    <div id="lgBody" class="lg-body"></div>
+    <button class="oorder-go" onclick="closeLinkGuide()">확인했어요</button>
   </div>
 </div>
 
