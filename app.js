@@ -805,9 +805,12 @@ function submitOrder(){
   const q=clampQty(+document.getElementById('odQtyNum').value);
   var onm=(document.getElementById('odName')||{}).textContent||'';
   closeOrder();
-  toast(`주문 접수(시안): ${odData.unit} ${q.toLocaleString('ko-KR')} · ${won(odData.price*q/1000)}`);
+  toast(`✅ 주문 완료 — ${onm} ${odData.unit} ${q.toLocaleString('ko-KR')} · ${won(odData.price*q/1000)}`);
   if(typeof logLine==='function')logLine('ok','주문 접수: '+onm+' / '+odData.unit+' '+q.toLocaleString('ko-KR')+' / '+won(odData.price*q/1000)+' / 링크 '+link.slice(0,40));
   if(typeof addOrder==='function')addOrder({id:'ORD'+Date.now(), name:onm, unit:odData.unit, qty:q, total:odData.price*q/1000, link:link, kw:(kwWrap&&kwWrap.style.display==='block')?document.getElementById('odKeyword').value.trim():'', status:'대기', date:new Date().toLocaleString('ko-KR',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})});
+  // 주문 후 지갑 > 주문 내역으로 이동해 방금 주문 바로 보이게
+  if(typeof showView==='function')showView('wallet');
+  setTimeout(function(){var ob=document.querySelector('.wtab-btn[data-wtab="orders"]');if(ob)ob.click();},120);
 }
 document.getElementById('orderModal').addEventListener('click',e=>{if(e.target.id==='orderModal')closeOrder();});
 document.getElementById('detailModal').addEventListener('click',e=>{if(e.target.id==='detailModal')closeDetail();});
