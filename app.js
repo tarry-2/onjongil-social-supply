@@ -11,14 +11,21 @@
   };
   function platListHtml(){
     if(typeof CAT==='undefined'||!CAT.length)return '';
+    const KR_SIDE=(typeof KR_PLATS_SIDE!=='undefined')?KR_PLATS_SIDE:['네이버','치지직','숲(아프리카)','카카오','밴드'];
     const byPlat={},icon={};
     CAT.forEach(function(c){if(c.broken)return;if(typeof LIVE!=='undefined'&&LIVE&&LIVE.has&&!LIVE.has(c.id))return;byPlat[c.plat]=(byPlat[c.plat]||0)+1;if(!icon[c.plat])icon[c.plat]=c.ic;});
-    const order=Object.entries(byPlat).sort((a,b)=>b[1]-a[1]).slice(0,14);
+    const entries=Object.entries(byPlat);
+    // 🇰🇷 국내 플랫폼은 수가 적어도 항상 먼저 노출 / 그 다음 해외 상위
+    const kr=entries.filter(e=>KR_SIDE.includes(e[0])).sort((a,b)=>b[1]-a[1]);
+    const ov=entries.filter(e=>!KR_SIDE.includes(e[0])).sort((a,b)=>b[1]-a[1]).slice(0,14);
+    const order=kr.concat(ov);
     if(!order.length)return '';
     const cur=(typeof platform!=='undefined')?platform:'all';
+    const btn=function(en,krMark){var p=en[0],n=en[1];return '<button class="side-cat'+(cur===p?' on':'')+(krMark?' kr-cat':'')+'" data-plat="'+p.replace(/"/g,'')+'">'+(icon[p]||'🌐')+' <span>'+p+(krMark?' <i class="kr-dot">KR</i>':'')+'</span><em>'+n.toLocaleString('ko-KR')+'</em></button>';};
     return '<div class="nav-cat-label">플랫폼 카테고리</div><div class="side-cats">'+
       '<button class="side-cat'+(cur==='all'?' on':'')+'" data-plat="all">🌐 <span>전체 상품</span></button>'+
-      order.map(function(en){var p=en[0],n=en[1];return '<button class="side-cat'+(cur===p?' on':'')+'" data-plat="'+p.replace(/"/g,'')+'">'+(icon[p]||'🌐')+' <span>'+p+'</span><em>'+n.toLocaleString('ko-KR')+'</em></button>';}).join('')+
+      (kr.length?'<div class="nav-cat-sub">🇰🇷 국내</div>'+kr.map(e=>btn(e,true)).join(''):'')+
+      (ov.length?'<div class="nav-cat-sub">🌍 해외</div>'+ov.map(e=>btn(e,false)).join(''):'')+
       '</div>';
   }
   document.addEventListener('click',function(e){var sc=e.target.closest('.side-cat');if(sc&&typeof openCat==='function'){openCat(sc.dataset.plat);}});
@@ -56,6 +63,8 @@
 
 /* ===== 상품 카탈로그(공급처 실데이터 9,134개 · services.js) ===== */
 let CAT=window.CATALOG||[], META=window.CATALOG_META||{plats:{},kinds:{},geos:{}};
+/* 🇰🇷 국내 플랫폼 — 수가 적어도 사이드바·쇼윈도에 항상 우선 노출 */
+const KR_PLATS_SIDE=['네이버','치지직','숲(아프리카)','카카오','밴드','쿠팡','무신사'];
 const UNIT={팔로워:'명',시청자:'명',멤버:'명',좋아요:'개',조회수:'회',재생:'회',댓글:'개',공유:'회',기타:'개'};
 const CLS={트위치:'tw',킥:'kk',유튜브:'yt',텔레그램:'tg',인스타그램:'ig',틱톡:'tt',페이스북:'fb',스포티파이:'sp',디스코드:'ds','X(트위터)':'xk',트위터:'xk',브콘탁테:'vk',라이키:'lk',레딧:'rd',스레드:'th',스냅챗:'sc',사운드클라우드:'scl',럼블:'rb',트로보:'tv','숲(아프리카)':'soop',네이버:'nv',카카오:'ka',치지직:'ch',밴드:'bd',쇼피:'shop',라자다:'laz',웹트래픽:'web',구글:'gg',기타:'etc',글로벌:'etc'};
 const PH={인스타그램:'https://instagram.com/내아이디',틱톡:'https://tiktok.com/@내아이디',유튜브:'https://youtube.com/watch?v=...',트위치:'https://twitch.tv/내채널',킥:'https://kick.com/내채널',텔레그램:'https://t.me/내채널',스포티파이:'https://open.spotify.com/...',페이스북:'https://facebook.com/내페이지',디스코드:'https://discord.gg/초대코드',웹트래픽:'https://내사이트.com/페이지',스마트스토어:'https://smartstore.naver.com/상점',네이버:'https://blog.naver.com/내아이디',치지직:'https://chzzk.naver.com/내채널',스레드:'https://threads.net/@내아이디','X(트위터)':'https://x.com/내아이디',트위터:'https://x.com/내아이디','숲(아프리카)':'https://sooplive.co.kr/내아이디',레딧:'https://reddit.com/r/채널',사운드클라우드:'https://soundcloud.com/내트랙',왓츠앱:'https://wa.me/번호',카카오:'https://pf.kakao.com/내채널'};
@@ -345,7 +354,10 @@ function renderShowcase(){
   const box=document.getElementById('showcase'); if(!box)return;
   const live=CAT.filter(c=>!c.broken&&LIVE.has(c.id)&&(origin==='all'||(origin==='kr'?c.premium:!c.premium)));
   const byPlat={}; live.forEach(c=>{(byPlat[c.plat]=byPlat[c.plat]||[]).push(c);});
-  const order=Object.entries(byPlat).sort((a,b)=>b[1].length-a[1].length).slice(0,SC_PLATS);
+  // 🇰🇷 국내 플랫폼 섹션 먼저(수 적어도) → 해외 상위 SC_PLATS개
+  const krOrder=Object.entries(byPlat).filter(e=>KR_PLATS_SIDE.includes(e[0])).sort((a,b)=>b[1].length-a[1].length);
+  const ovOrder=Object.entries(byPlat).filter(e=>!KR_PLATS_SIDE.includes(e[0])).sort((a,b)=>b[1].length-a[1].length).slice(0,SC_PLATS);
+  const order=krOrder.concat(ovOrder);
   const empty=document.getElementById('scEmpty');
   if(!order.length){box.innerHTML='';if(empty)empty.style.display='block';return;}
   if(empty)empty.style.display='none';
@@ -933,14 +945,27 @@ const LINK_STEP={
 /* 특징/유입경로 → 귀여운 문장 */
 const FEAT_WORD={초고품질:'💎 초고품질 계정',고품질:'✨ 고품질로 자연스러움',실제계정:'🙋 실제 활동 중인 계정',이탈없음:'🛡️ 한 번 들어오면 잘 안 빠져요',즉시시작:'⚡ 주문하면 바로 시작',빠른속도:'🚀 유입 속도가 빨라요',리필보장:'🔄 이탈 시 리필(A/S) 보장'};
 const SRC_WORD={외부유입:'🔗 외부에서 자연스럽게 유입',광고:'📣 광고를 통해 유입',실유저:'🙋 실제 유저가 직접 반응','검색/탐색':'🔎 검색·탐색 탭에서 유입',프로필:'👤 프로필 방문으로 유입'};
+/* 🇰🇷 국내 플랫폼 전용 디테일 설명 — 종류·세부분류까지 자세히(테리: 국내는 설명부터 완전 디테일) */
+const KR_DESC={
+  네이버:'🟩 네이버 검색·쇼핑·플레이스·블로그 등에서 <b>실제 방문·검색 유입</b>을 만들어요. 커스텀 키워드로 검색 결과·스마트스토어·플레이스 노출을 올리는 데 효과적이에요.',
+  카카오:'💛 카카오(채널·선물하기·카카오스토어) <b>트래픽을 유입</b>해요. 채널 노출·상품 유입에 도움돼요.',
+  치지직:'🟢 네이버 <b>치지직</b> 조회수·시청자·팔로워를 올려 추천·노출에 힘을 실어요.',
+  '숲(아프리카)':'🌲 <b>SOOP(아프리카TV)</b> 실시간 시청자·조회수를 유입해 방송 노출·순위에 도움돼요.',
+  쿠팡:'🛒 <b>쿠팡</b> 상품 페이지에 검색·키워드 유입을 만들어 노출을 올려요.',
+  무신사:'🛍 <b>무신사</b> 상품·브랜드 페이지 유입으로 노출을 높여요.',
+};
+/* 검색 키워드가 중요한 국내 종류(트래픽·검색·쇼핑·플레이스·스토어) */
+function needsKeyword(c){return c.group==='트래픽'||/검색|쇼핑|스토어|플레이스|블로그|키워드/.test((c.sub||'')+(c.kind||''));}
 /* 💬 상품별 상세설명 — 인스타몬스터식(개요·특징·안내·링크기입법+예시). 상품 메타로 상품마다 다르게. */
 function buildGuide(c){
   if(!c)return '';
   const g=ORDER_GUIDE[c.group]||ORDER_GUIDE.기타, unit=unitOf(c);
   const geoTxt=c.premium?'🇰🇷 한국':((c.flag||'🌍')+' '+esc(c.geo));
   const tierWord={프리미엄:'· 최상급 프리미엄 🏆',고품질:'· 고품질 ⭐',저가:'· 가성비 저가형 💨'}[c._tier]||'';
-  // 🔆 개요
-  let o=`${geoTxt} <b>${esc(c.plat)} ${esc(c.kind)}</b> ${tierWord} 상품이에요.`;
+  // 🔆 개요 — 국내 플랫폼은 세부분류·유입방식까지 디테일
+  const isKR=c.premium&&KR_DESC[c.plat];
+  let o=`${geoTxt} <b>${esc(c.plat)}${c.sub?' '+esc(c.sub):''} ${esc(c.kind)}</b> ${tierWord} 상품이에요.`;
+  if(isKR)o+=' '+KR_DESC[c.plat];
   if(c._tier==='프리미엄')o+=' 실제 유저 기반이라 자연스럽고 안정적이에요 💗';
   else if(c._tier==='저가')o+=' 가볍게 숫자를 채우고 싶을 때 딱인 가성비 상품이에요 👍';
   else o+=' 안정적으로 꾸준히 올라가요 😊';
@@ -956,6 +981,7 @@ function buildGuide(c){
   const warns=[];
   warns.push('🕒 주문 후 보통 빠르게 자동으로 시작돼요');
   warns.push(`🔢 수량은 최소 <b>${c.min.toLocaleString('ko-KR')}</b> ~ 최대 <b>${c.max.toLocaleString('ko-KR')}</b>${unit}`);
+  if(needsKeyword(c))warns.push('🔑 검색·키워드 유입 상품이에요 — 유입시킬 <b>검색 키워드</b>를 함께 넣으면 효과가 좋아요');
   if(c._drop==='이탈가능')warns.push('🪂 이탈 가능 상품이라 리필·보장은 없어요 (감안해 주세요)');
   (g.w||[]).forEach(w=>warns.push('· '+esc(w)));
   warns.push('💳 주문 정보 오류로 인한 취소·환불은 어려우니 신중히 입력해 주세요');
